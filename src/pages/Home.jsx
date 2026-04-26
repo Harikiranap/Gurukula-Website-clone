@@ -586,7 +586,7 @@ const GalleryGrid = ({ onOpen }) => {
       <div id="scroll-progress" style={{ width:"100%", transform:"scaleX(0)" }} />
 
       {/* ════════════ HERO ════════════ */}
-      <section id="home" className="scroll-mt-24 relative overflow-hidden bg-slate-50 px-4 pt-20 pb-24 md:px-8">
+      <section id="home" className="scroll-mt-24 relative overflow-hidden bg-slate-50 px-4 pt-32 sm:pt-40 pb-24 md:px-8">
 
         {/* FIX: Static blobs — removed mouse-tracking JS transforms (were causing 60fps re-renders).
             Subtle CSS animation instead gives visual interest with zero JS cost. */}
