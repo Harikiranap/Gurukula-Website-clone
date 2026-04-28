@@ -26,10 +26,11 @@ function Navbar() {
   const closeMenu = () => setMobileMenuOpen(false);
 
   const links = [
-    { label: "Home", href: "#home" },
-    { label: "Courses", href: "#courses" },
-    { label: "Gallery", href: "#gallery" },
-    { label: "Contact", href: "#contact" },
+    { label: "Home", href: "/#home" },
+    { label: "About Us", href: "/#about" },
+    { label: "Courses", href: "/#courses" },
+    { label: "Gallery", href: "/#gallery" },
+    { label: "Contact", href: "/#contact" },
   ];
 
   return (
@@ -49,12 +50,12 @@ function Navbar() {
           }`}
         >
           {/* Logo */}
-          <a href="#home" className="flex items-center flex-shrink-0 group relative z-50" onClick={closeMenu}>
+          <a href="/#home" className="flex items-center flex-shrink-0 group relative z-50" onClick={closeMenu}>
             <div className="absolute inset-0 bg-blue-100 rounded-full blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
             <img
               src={logo}
               alt="Gurukula Computer"
-              className={`w-auto transition-all duration-500 relative z-10 ${scrolled ? 'h-10 sm:h-12' : 'h-12 sm:h-14'}`}
+              className={`w-auto transition-all duration-500 relative z-10 ${scrolled ? 'h-12 sm:h-16' : 'h-16 sm:h-20'}`}
             />
           </a>
 
@@ -70,7 +71,7 @@ function Navbar() {
               </a>
             ))}
             <a
-              href="#aicard"
+              href="/#aicard"
               className="relative flex items-center gap-2 text-[15px] font-bold text-slate-600 hover:text-blue-700 px-4 py-2 rounded-full transition-all duration-300 hover:bg-white hover:shadow-sm group"
             >
               AI Card
@@ -131,7 +132,7 @@ function Navbar() {
                 </a>
               ))}
               <a
-                href="#aicard"
+                href="/#aicard"
                 onClick={closeMenu}
                 className="flex items-center justify-between px-4 py-3 text-[17px] font-bold text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 rounded-2xl transition-colors"
               >

@@ -1,20 +1,20 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import certificateImg from "../images/certificate.jpg";
 
 // ── CONSTANTS ──────────────────────────────────────────────────────────────
 const PHOTOS = [
-  { src: "/images/gallery1.jpg",  caption: "Reception",          tall: false },
-  { src: "/images/gallery11.jpg", caption: "Workshop",           tall: true  },
-  { src: "/images/gallery3.jpg",  caption: "Certificate Ceremony", tall: true },
-  { src: "/images/gallery4.jpg",  caption: "Video Editing Lab",  tall: false },
-  { src: "/images/gallery5.jpg",  caption: "Workshop",           tall: false },
-  { src: "/images/gallery2.jpg",  caption: "Computer Lab",       tall: true  },
-  { src: "/images/gallery7.jpg",  caption: "Campus View",        tall: true  },
-  { src: "/images/gallery6.jpg",  caption: "Workshop",           tall: false },
+  { src: "/images/gallery1.jpg",  caption: "Executive Reception Area",  tall: false, tag: "Campus" },
+  { src: "/images/gallery11.jpg", caption: "Live Training Workshop",    tall: true,  tag: "Education" },
+  { src: "/images/gallery3.jpg",  caption: "Annual Excellence Awards",  tall: true,  tag: "Events" },
+  { src: "/images/gallery4.jpg",  caption: "High-Performance Lab",     tall: false, tag: "Infrastructure" },
+  { src: "/images/gallery5.jpg",  caption: "Collaborative Learning",   tall: false, tag: "Students" },
+  { src: "/images/gallery2.jpg",  caption: "Advanced Computing Suite", tall: true,  tag: "Tech" },
+  { src: "/images/gallery7.jpg",  caption: "Main Campus Wing",         tall: true,  tag: "Campus" },
+  { src: "/images/gallery6.jpg",  caption: "AI Innovation Seminar",    tall: false, tag: "Workshop" },
 ];
-
 const COURSES = [
   { id: 1,  title: "Diploma in Computer Application (DCA) + AI",            category: "Diploma Courses",                duration: "6 Months",   image: "/images/dca.jpg",     popular: false,  description: "DCA is a foundational computer course designed for beginners who want to build strong computer skills. Students learn computer fundamentals, MS Office applications, internet usage, and typing skills along with basic AI tools to improve productivity.", learn: ["Computer Fundamentals & Windows", "MS Word, Excel, PowerPoint", "MS Access", "Internet & Email usage", "English Typing", "Introduction to AI tools"], careers: ["Data Entry Operator", "Computer Operator", "Office Assistant", "Back Office Executive", "Documentation Assistant"] },
   { id: 2,  title: "Advance Diploma in Computer Application (ADCA) + AI",   category: "Diploma Courses",                duration: "6 Months",   image: "/images/adca.jpg",    popular: false, description: "ADCA is an advanced computer course that covers office applications, basic programming, accounting software, and web fundamentals.", learn: ["Computer Fundamentals", "MS Office (Word, Excel, PowerPoint, Access)", "HTML (Basic Web Development)", "C Programming (Basics)", "Tally with GST", "Internet Applications", "AI Tools for productivity"], careers: ["Computer Operator", "Office Administrator", "Junior Web Assistant", "Accounts Assistant", "MIS Executive"] },
@@ -56,7 +56,6 @@ const FAQS = [
 
 const TESTIMONIALS = [
   { name: "Sowjanya",        course: "Photoshop",                rating: 5, location: "Belthangady", text: "I have successfully completed my photoshop course in this institution. I'm so happy with the training and the trainers. the teaching way is so polite. I highly recommend this institution to anyone who looking forward to improve their computer skills." },
-  { name: "Rinwaz",          course: "Advance excel + Tally ERP", rating: 5, location: "Belthangady", text: "I have completed my Advance excel + Tally ERP 9.I am truly grateful to sir and staff for excellent teaching and experience is very good. It is the best training centre. The faculty is knowledgeable and explains concept in simple and understanding. faculty are very friendly. This course was very helpful for my future. The classroom is comfortable with faculty. Honestly Gurukula education is usefull to everyone's. So I suggest everyone who's reading this to join Gurukula computer education class.Thank you for your support and guidance" },
   { name: "Mohammed Irfan",  course: "Tally with GST",           rating: 5, location: "Ujire",       text: "The Tally course was very detailed and practical. I learned everything about GST entries and accounting. The certificate helped me get an accounts assistant job quickly." },
   { name: "Divya Poojary",   course: "ADCA + AI",                rating: 5, location: "Belthangady", text: "Very good institute with experienced teachers. I joined knowing nothing about computers and completed ADCA in 6 months. The AI tools training was a great bonus — very useful for office work." },
   { name: "Suresh Kumar",    course: "Video Editing + AI",        rating: 5, location: "Dharmasthala", text: "Learned Premiere Pro and After Effects professionally here. The trainer is very knowledgeable. I now do freelance video editing and YouTube content for local businesses." },
@@ -87,10 +86,24 @@ const GLOBAL_CSS = `
   @keyframes fadeInUp   { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
   @keyframes fadeInRight{ from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:translateX(0); } }
   @keyframes floatY     { 0%,100%{transform:translateY(0px);} 50%{transform:translateY(-10px);} }
-  @keyframes drawLine   { from{stroke-dashoffset:220;} to{stroke-dashoffset:0;} }
   @keyframes pingLoop   { 75%,100%{transform:scale(2);opacity:0;} }
   @keyframes pulse      { 0%,100%{opacity:1;} 50%{opacity:.5;} }
   @keyframes countUp    { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+  @keyframes drawLine {
+  0% {
+    stroke-dashoffset: 600;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Add this for a more realistic brush-stroke appearance */
+.hero-underline-svg {
+  filter: drop-shadow(0px 2px 2px rgba(249, 115, 22, 0.3));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
   .anim-fadeInUp    { animation: fadeInUp    0.7s ease both; }
   .anim-fadeInUp-1  { animation: fadeInUp    0.7s ease 0.1s both; }
@@ -307,64 +320,108 @@ const CourseModal = ({ course, onClose }) => {
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-0 sm:p-4" onClick={onClose}>
-      <div className="bg-white w-full sm:rounded-3xl sm:max-w-2xl overflow-hidden shadow-2xl max-h-[95dvh] flex flex-col"
-        style={{ animation: "fadeInUp 0.3s ease both" }} onClick={(e) => e.stopPropagation()}>
-        <div className="relative h-44 sm:h-52 overflow-hidden flex-shrink-0">
-          <img src={course.image || "/images/hero.jpg"} alt={course.title} className="w-full h-full object-cover" loading="lazy"/>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-900/80 backdrop-blur-sm p-0 md:p-6" onClick={onClose}>
+      <div 
+        className="bg-white w-full md:rounded-[2.5rem] md:max-w-5xl overflow-hidden shadow-2xl max-h-[95dvh] md:max-h-[85dvh] flex flex-col md:flex-row relative rounded-t-[2.5rem]"
+        style={{ animation: "fadeInUp 0.3s ease both" }} 
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* MOBILE CLOSE BUTTON (FLOATING) */}
+        <button onClick={onClose}
+          className="absolute top-4 right-4 z-20 w-10 h-10 md:hidden rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md flex items-center justify-center text-white transition-all">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+
+        {/* LEFT/TOP: IMAGE SECTION */}
+        <div className="relative h-56 md:h-auto md:w-[45%] flex-shrink-0 bg-slate-100 overflow-hidden">
+          <img src={course.image || "/images/hero.jpg"} alt={course.title} className="w-full h-full object-cover" loading="lazy" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent md:bg-gradient-to-r md:from-transparent md:to-slate-900/50" />
+          
+          {/* BADGES ON IMAGE */}
+          <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8 flex flex-wrap gap-2">
+            <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-lg flex items-center gap-1.5">
+              ⏱ {course.duration}
+            </span>
+            {course.price && (
+              <span className="bg-orange-500/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+                {course.price}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT/BOTTOM: CONTENT SECTION */}
+        <div className="flex-1 flex flex-col bg-slate-50 overflow-hidden relative">
+          {/* DESKTOP CLOSE BUTTON */}
           <button onClick={onClose}
-            className="absolute top-3 right-3 sm:top-4 sm:right-4 w-9 h-9 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Close">
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            className="absolute top-6 right-6 z-10 w-10 h-10 hidden md:flex rounded-full bg-white shadow-sm border border-slate-200 hover:bg-slate-100 items-center justify-center text-slate-500 hover:text-slate-900 transition-all hover:scale-105">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
-          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-            <h3 className="text-lg sm:text-xl font-black text-white leading-snug">{course.title}</h3>
-            <div className="flex flex-wrap gap-2 mt-2">
-              <span className="bg-white/20 backdrop-blur-sm text-white text-xs font-semibold px-2.5 py-1 rounded-full border border-white/20">⏱ {course.duration}</span>
-              {course.price && <span className="bg-orange-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">{course.price}</span>}
-              
+
+          <div className="overflow-y-auto p-6 md:p-10 space-y-8 flex-1">
+            {/* HEADER */}
+            <div className="md:pr-12">
+              <p className="text-blue-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> {course.category}
+              </p>
+              <h3 className="text-2xl md:text-3xl font-black text-slate-900 leading-tight tracking-tight">{course.title}</h3>
             </div>
-          </div>
-        </div>
-        <div className="overflow-y-auto flex-1 p-5 sm:p-6 space-y-6">
-          <p className="text-slate-600 text-sm leading-relaxed">{course.description}</p>
-          <div>
-            <h4 className="text-xs font-black text-slate-900 uppercase tracking-widest mb-3 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-lg bg-blue-100 flex items-center justify-center"><UiIcon name="monitor" className="w-4 h-4 text-blue-700"/></span>
-              What You Will Learn
-            </h4>
-            <div className="grid sm:grid-cols-2 gap-2">
-              {course.learn.map((item) => (
-                <div key={item} className="flex items-start gap-2.5 bg-blue-50 border border-blue-100 rounded-xl px-3 py-2.5">
-                  <div className="w-4 h-4 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg width="8" height="8" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </div>
-                  <span className="text-xs text-blue-900 font-medium leading-snug">{item}</span>
+
+            <p className="text-slate-600 leading-relaxed text-sm md:text-base font-medium">{course.description}</p>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* LEARN SECTION */}
+              <div>
+                <h4 className="text-xs font-black text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                  <span className="w-7 h-7 rounded-xl bg-blue-100 flex items-center justify-center shadow-sm">
+                    <UiIcon name="monitor" className="w-4 h-4 text-blue-700"/>
+                  </span>
+                  What You Will Learn
+                </h4>
+                <div className="space-y-2.5">
+                  {course.learn.map((item) => (
+                    <div key={item} className="flex items-start gap-3 bg-white border border-slate-100 rounded-2xl p-3 shadow-sm hover:border-blue-200 transition-colors">
+                      <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0 mt-0.5 text-blue-600">
+                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      </div>
+                      <span className="text-sm text-slate-700 font-medium leading-snug">{item}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* CAREERS SECTION */}
+              {course.careers && (
+                <div>
+                  <h4 className="text-xs font-black text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span className="w-7 h-7 rounded-xl bg-orange-100 flex items-center justify-center shadow-sm">
+                      <UiIcon name="briefcase" className="w-4 h-4 text-orange-700"/>
+                    </span>
+                    Career Outcomes
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {course.careers.map((item) => (
+                      <span key={item} className="bg-white border border-slate-200 text-slate-700 text-xs font-bold px-4 py-2 rounded-xl shadow-sm hover:border-orange-300 hover:text-orange-600 transition-colors">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-          {course.careers && (
-            <div>
-              <h4 className="text-xs font-black text-slate-900 uppercase tracking-widest mb-3 flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-orange-100 flex items-center justify-center"><UiIcon name="briefcase" className="w-4 h-4 text-orange-700"/></span>
-                Career Opportunities
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {course.careers.map((item) => (
-                  <span key={item} className="bg-orange-50 border border-orange-100 text-orange-800 text-xs font-semibold px-3 py-1.5 rounded-full">{item}</span>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="flex-shrink-0 border-t border-slate-100 p-4 flex gap-3 bg-white">
-          <button onClick={onClose} className="flex-1 rounded-xl border border-slate-200 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">Close</button>
-          <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
-            className="flex-[2] flex items-center justify-center gap-2 rounded-xl bg-green-600 py-3 text-sm font-bold text-white hover:bg-green-700 transition-all hover:-translate-y-0.5">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Apply via WhatsApp
-          </a>
+
+          {/* STICKY FOOTER */}
+          <div className="flex-shrink-0 border-t border-slate-200 p-4 md:p-6 bg-white flex items-center justify-end gap-3 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+            <button onClick={onClose} className="px-6 py-3.5 rounded-xl text-sm font-bold text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all hidden md:block">
+              Close
+            </button>
+            <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
+              className="flex-1 md:flex-none flex items-center justify-center gap-2 rounded-xl bg-green-600 px-8 py-3.5 text-sm font-bold text-white hover:bg-green-700 transition-all hover:shadow-lg hover:-translate-y-0.5">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Apply via WhatsApp
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -406,15 +463,130 @@ const Lightbox = ({ photo, onClose, onPrev, onNext }) => {
   );
 };
 
+// ── TESTIMONIAL SLIDER ─────────────────────────────────────────────────────
+function TestimonialSlider({ testimonials }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerView, setItemsPerView] = useState(3);
+
+  useEffect(() => {
+    const updateView = () => {
+      if (window.innerWidth < 640) setItemsPerView(1);
+      else if (window.innerWidth < 1024) setItemsPerView(2);
+      else setItemsPerView(3);
+    };
+    updateView();
+    window.addEventListener('resize', updateView);
+    return () => window.removeEventListener('resize', updateView);
+  }, []);
+
+  const totalSlides = Math.max(0, testimonials.length - itemsPerView + 1);
+
+  const nextSlide = useCallback(() => {
+    setCurrentIndex(prev => (prev + 1 >= totalSlides ? 0 : prev + 1));
+  }, [totalSlides]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentIndex(prev => (prev - 1 < 0 ? totalSlides - 1 : prev - 1));
+  }, [totalSlides]);
+
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 6000);
+    return () => clearInterval(timer);
+  }, [nextSlide]);
+
+  return (
+    <div className="relative mt-8 sm:mt-12 w-full">
+      {/* Slider Container */}
+      <div className="overflow-hidden px-1 py-4">
+        <div 
+          className="flex transition-transform duration-700 ease-in-out" 
+          style={{ transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)` }}
+        >
+          {testimonials.map((t, i) => (
+            <div 
+              key={i} 
+              className="flex-shrink-0 px-2 sm:px-4 transition-all duration-500" 
+              style={{ width: `${100 / itemsPerView}%` }}
+            >
+              <div className="group relative bg-white border border-slate-100 rounded-[2rem] p-6 sm:p-8 shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.08)] hover:-translate-y-2 hover:border-blue-100 transition-all duration-300 h-full flex flex-col overflow-hidden">
+                <div className="absolute -top-4 -right-2 text-[150px] text-blue-50 font-serif leading-none select-none pointer-events-none group-hover:text-blue-100/70 transition-colors">"</div>
+                <div className="relative z-10 flex-1">
+                  <Stars n={t.rating} size={16} />
+                  <p className="mt-6 text-slate-700 text-sm sm:text-base leading-relaxed italic font-medium">"{t.text}"</p>
+                </div>
+                <div className="relative z-10 mt-8 flex items-center gap-3 sm:gap-4 pt-6 border-t border-slate-100 group-hover:border-blue-50 transition-colors">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center text-white text-sm font-black shadow-lg shadow-blue-200 flex-shrink-0">
+                    {t.name.split(" ").map(n => n[0]).slice(0,2).join("")}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm sm:text-base font-bold text-slate-900 truncate">{t.name}</p>
+                    <p className="text-[11px] sm:text-xs font-semibold text-orange-600 truncate">{t.course} <span className="text-slate-400">· {t.location}</span></p>
+                  </div>
+                </div>
+                {/* Decorative Bottom Line */}
+                <div className="absolute bottom-0 left-0 h-1.5 w-0 bg-gradient-to-r from-blue-600 to-orange-500 group-hover:w-full transition-all duration-500 ease-out" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Controls */}
+      <div className="flex items-center justify-center gap-4 sm:gap-6 mt-8 sm:mt-10">
+        <button 
+          onClick={prevSlide}
+          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all shadow-sm hover:shadow-lg hover:scale-110"
+          aria-label="Previous testimonial"
+        >
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        
+        <div className="flex gap-2 sm:gap-2.5">
+          {Array.from({ length: totalSlides }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentIndex(i)}
+              className={`transition-all duration-300 rounded-full ${currentIndex === i ? "w-6 h-2 sm:w-8 sm:h-2.5 bg-blue-600" : "w-2 h-2 sm:w-2.5 sm:h-2.5 bg-slate-300 hover:bg-blue-400"}`}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
+
+        <button 
+          onClick={nextSlide}
+          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all shadow-sm hover:shadow-lg hover:scale-110"
+          aria-label="Next testimonial"
+        >
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ══════════════════════════════════════════════════════════════════════════
 // HOME COMPONENT
 // ══════════════════════════════════════════════════════════════════════════
 export default function Home() {
   const [openFaq,         setOpenFaq]         = useState(0);
   const [activeCategory,  setActiveCategory]  = useState("All");
+  const [showAllCourses,  setShowAllCourses]  = useState(false);
   const [selectedCourse,  setSelectedCourse]  = useState(null);
   const [lightbox,        setLightbox]        = useState(null);
-  console.log("Active:", activeCategory);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.getElementById(location.hash.slice(1));
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location]);
 
   const statsRef = useRef(null);
   const counts   = useCountUp(statsRef);
@@ -433,11 +605,11 @@ export default function Home() {
   const INDIVIDUAL_KEY = "Individual Courses";
   const ALL_KEY = "All";
 
-  const visibleCategories = useMemo(() => {
-  if (activeCategory === ALL_KEY) return [...new Set(COURSES.map(c => c.category))];
-  if (activeCategory === INDIVIDUAL_KEY) return [];
-  return [activeCategory];
-}, [activeCategory]);
+  const displayedCourses = useMemo(() => {
+    if (activeCategory === ALL_KEY) return COURSES;
+    if (activeCategory === INDIVIDUAL_KEY) return [];
+    return COURSES.filter(c => c.category === activeCategory);
+  }, [activeCategory]);
 
   const lbNext  = useCallback(() => setLightbox(p => { if (!p) return p; const n = (p.index + 1) % PHOTOS.length; return { ...PHOTOS[n], index: n }; }), []);
   const lbPrev  = useCallback(() => setLightbox(p => { if (!p) return p; const n = (p.index - 1 + PHOTOS.length) % PHOTOS.length; return { ...PHOTOS[n], index: n }; }), []);
@@ -469,106 +641,38 @@ export default function Home() {
     if (aboutTiltRef.current) aboutTiltRef.current.style.transform = "";
   }, []);
 
-  // ── GALLERY GRID ───────────────────────────────────────────────────────────
+  // ── UPDATED GALLERY GRID COMPONENT (Fixed Loading Issue) ──────────────────
 const GalleryGrid = ({ onOpen }) => {
-  const [loaded, setLoaded] = useState({});
-  const imgRefs = useRef([]);
-
-  useEffect(() => {
-    // Only observe images that are NOT already natively loaded
-    const observers = [];
-
-    imgRefs.current.forEach((img, i) => {
-      if (!img) return;
-
-      // If already cached/complete, mark immediately
-      if (img.complete && img.naturalWidth > 0) {
-        setLoaded(p => ({ ...p, [i]: true }));
-        return;
-      }
-
-      // Use IntersectionObserver to trigger src swap only when near viewport
-      // This avoids the browser fetching all images at once on page load
-      const io = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry.isIntersecting) return;
-          img.src = img.dataset.src;   // swap in real src only now
-          io.disconnect();
-        },
-        { rootMargin: "200px 0px" }    // start loading 200px before visible
-      );
-      io.observe(img);
-      observers.push(io);
-    });
-
-    return () => observers.forEach(io => io.disconnect());
-  }, []);
-
   return (
-    <div
-      // content-visibility: auto — browser skips layout & paint for off-screen items entirely
-      // This is the single biggest win for long pages with many images
-      className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4"
-    >
+    <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
       {PHOTOS.map((photo, i) => (
         <div
           key={i}
-          className="break-inside-avoid mb-4 group relative overflow-hidden rounded-2xl border border-slate-200 cursor-zoom-in"
-          // content-visibility: auto per-item skips off-screen paint
-          style={{ contentVisibility: "auto", containIntrinsicSize: "0 250px" }}
+          className="break-inside-avoid group relative overflow-hidden rounded-[2.5rem] border border-slate-200 bg-slate-200 p-2.5 transition-all duration-700 hover:shadow-[0_30px_60px_rgba(15,23,42,0.15)] hover:-translate-y-3 cursor-zoom-in"
           onClick={() => onOpen({ ...photo, index: i })}
         >
-          {/* SKELETON — shown until image loads */}
-          {!loaded[i] && (
-            <div
-              className={`w-full bg-slate-100 rounded-2xl overflow-hidden relative ${photo.tall ? "h-72" : "h-48"}`}
-              aria-hidden="true"
-            >
-              {/* Shimmer sweep — pure CSS, zero JS */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)",
-                  animation: "shimmer 1.4s ease infinite",
-                }}
-              />
-            </div>
-          )}
+          <div className={`relative overflow-hidden rounded-[1.8rem] bg-slate-300 ${photo.tall ? "h-[480px]" : "h-[300px]"}`}>
+            <img
+              src={photo.src}
+              alt={photo.caption}
+              loading="eager" 
+              className="w-full h-full object-cover block"
+              onError={(e) => {
+                e.target.style.display = 'none'; // Hides broken image icon
+                e.target.parentElement.classList.add('bg-slate-400'); // Shows a grey block instead
+              }}
+            />
 
-          {/* REAL IMAGE
-              - data-src holds the real URL; src="" prevents any network request
-              - onLoad fires after decode → removes skeleton, reveals image
-              - decoding="async" means decode happens off main thread
-              - No will-change here — only added on :hover via CSS to avoid wasted GPU layers
-          */}
-          <img
-            ref={el => (imgRefs.current[i] = el)}
-            data-src={photo.src}
-            src=""
-            alt={photo.caption}
-            decoding="async"
-            onLoad={() => setLoaded(p => ({ ...p, [i]: true }))}
-            className={`
-              w-full object-cover
-              transition-transform duration-500 ease-out
-              hover:will-change-transform
-              ${photo.tall ? "h-72" : "h-48"}
-              ${loaded[i] ? "opacity-100" : "opacity-0 absolute inset-0"}
-            `}
-            style={{ transform: "translateZ(0)" }}   // force GPU compositing layer
-          />
-
-          {/* HOVER OVERLAY — pure CSS opacity transition, no JS */}
-          {loaded[i] && (
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl flex items-end justify-between p-4">
-              <span className="text-white text-xs sm:text-sm font-semibold">{photo.caption}</span>
-              <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
-                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth="2">
-                  <path strokeLinecap="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"/>
-                </svg>
-              </div>
+            {/* Professional Glassmorphism Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8">
+               <div className="translate-y-8 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                  <span className="inline-block px-4 py-1.5 bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-3 shadow-lg">
+                    {photo.tag || "Gallery"}
+                  </span>
+                  <h4 className="text-white font-black text-xl leading-tight tracking-tight">{photo.caption}</h4>
+               </div>
             </div>
-          )}
+          </div>
         </div>
       ))}
     </div>
@@ -585,222 +689,168 @@ const GalleryGrid = ({ onOpen }) => {
       {/* GPU-composited progress bar — no React state, moved by useScrollProgress */}
       <div id="scroll-progress" style={{ width:"100%", transform:"scaleX(0)" }} />
 
-      {/* ════════════ HERO ════════════ */}
-      <section id="home" className="scroll-mt-24 relative overflow-hidden bg-slate-50 px-4 pt-32 sm:pt-40 pb-24 md:px-8">
-
-        {/* FIX: Static blobs — removed mouse-tracking JS transforms (were causing 60fps re-renders).
-            Subtle CSS animation instead gives visual interest with zero JS cost. */}
+           {/* ════════════ HERO ════════════ */}
+<section id="home" className="scroll-mt-24 relative overflow-hidden bg-slate-50 px-4 pt-32 sm:pt-40 pb-24 md:px-8">
+        
+        {/* Decorative Background Elements */}
         <div className="pointer-events-none absolute -top-40 -left-40 h-[400px] w-[400px] sm:h-[600px] sm:w-[600px] rounded-full bg-blue-100 opacity-50 blur-3xl" style={{ animation:"floatY 12s ease-in-out infinite" }} />
         <div className="pointer-events-none absolute -bottom-40 -right-40 h-[300px] w-[300px] sm:h-[500px] sm:w-[500px] rounded-full bg-orange-100 opacity-40 blur-3xl" style={{ animation:"floatY 15s ease-in-out 2s infinite" }} />
-        <div className="pointer-events-none absolute top-1/2 left-1/2 h-60 w-60 sm:h-80 sm:w-80 rounded-full bg-violet-100 opacity-25 blur-3xl -translate-x-1/2 -translate-y-1/2" />
 
-        {/* FIX: Removed JS-driven parallax on hero grid — was reading scrollY and
-            causing layout thrash + re-renders. Static layout is faster. */}
         <div className="relative mx-auto max-w-7xl grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-
-          {/* LEFT */}
-          <div className="w-full min-w-0">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 sm:px-4 py-1.5 text-xs font-semibold text-blue-700 anim-fadeInUp">
+          
+          {/* LEFT: Minimal Content */}
+          <div className="w-full min-w-0 pr-0 lg:pr-8">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-xs font-bold text-blue-700 shadow-sm anim-fadeInUp">
               <span className="h-2 w-2 flex-shrink-0 rounded-full bg-orange-500 anim-pulse" />
-              <span>Belthangady's Leading Computer Institute</span>
+              <span>Belthangady's Premier Institute</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight text-slate-900 anim-fadeInUp-1">
-              Build Your Career With{" "}
-              <span className="text-blue-700 relative inline-block">
-                Digital Skills
-                <svg className="absolute -bottom-2 left-0 w-full" height="6" viewBox="0 0 200 6" preserveAspectRatio="none">
-                  <path d="M0 3 Q100 0 200 3" stroke="#f97316" strokeWidth="3" fill="none" strokeLinecap="round"
-                    style={{ strokeDasharray:220, strokeDashoffset:0, animation:"drawLine 1s ease 0.9s both" }} />
+            <h1 className="text-5xl sm:text-6xl lg:text-[4.5rem] font-black leading-[1.1] text-slate-900 anim-fadeInUp-1">
+              Shape Your <br className="hidden sm:block" /> Future in <br className="hidden sm:block" />
+              <span className="text-blue-700 relative inline-block mt-2">
+                Technology
+                <svg 
+                  className="absolute -bottom-2 left-0 w-full hero-underline-svg" 
+                  height="12" 
+                  viewBox="0 0 400 12" 
+                  preserveAspectRatio="none"
+                >
+                  <path 
+                    d="M4 9c40-2 80-4 120-4s80 2 120 4c40 2 80 1 150-3" 
+                    stroke="#f97316" 
+                    strokeWidth="6" 
+                    fill="none" 
+                    style={{ 
+                      strokeDasharray: 600, 
+                      strokeDashoffset: 600, 
+                      animation: "drawLine 1.5s cubic-bezier(0.4, 0, 0.2, 1) 1s forwards" 
+                    }} 
+                  />
                 </svg>
               </span>
             </h1>
 
-            <p className="mt-6 text-base sm:text-lg text-slate-500 leading-relaxed anim-fadeInUp-3">
-              Professional computer training in Belthangady — Computer Applications, Graphic Design, Accounting, Data Analytics and Artificial Intelligence.
+            <p className="mt-8 text-lg sm:text-xl text-slate-600 leading-relaxed max-w-lg anim-fadeInUp-3">
+              Expert, job-oriented training in Artificial Intelligence, Graphic Design, Data Analytics, and IT.
             </p>
 
-            <div className="mt-6 flex flex-wrap gap-2 anim-fadeInUp-4">
-              {[
-                { text: "✔ Practical Training",    cls: "border-blue-200   bg-blue-50   text-blue-800"   },
-                { text: "✔ Industry Courses",      cls: "border-green-200  bg-green-50  text-green-800"  },
-                { text: "✔ Job Oriented",          cls: "border-orange-200 bg-orange-50 text-orange-800" },
-                { text: "✔ E-Max India Certified", cls: "border-violet-200 bg-violet-50 text-violet-800" },
-              ].map((pill) => (
-                <span key={pill.text} className={`rounded-full border px-3 py-1.5 text-xs font-semibold cursor-default ${pill.cls}`}>{pill.text}</span>
-              ))}
-            </div>
-
-            {/* AI CARD BANNER */}
-            <div className="mt-7 anim-fadeInUp-5">
-              <a href="https://www.yaticorp.com/ai-card" target="_blank" rel="noreferrer"
-                className="group relative flex items-stretch rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-orange-200"
-                style={{ background:"linear-gradient(135deg,#fff7ed 0%,#fff3e0 50%,#fef9f0 100%)" }}>
-                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none z-10" />
-                <div className="flex-shrink-0 flex flex-col items-center justify-center gap-1.5 px-4 sm:px-5 py-5" style={{ background:"linear-gradient(180deg,#f59e0b 0%,#ea580c 100%)" }}>
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 6.5C4 5.7 4.7 5 5.5 5H10c1.1 0 2 .9 2 2v12c0-1.1-.9-2-2-2H5.5C4.7 17 4 16.3 4 15.5v-9z"/>
-                      <path d="M20 6.5c0-.8-.7-1.5-1.5-1.5H14c-1.1 0-2 .9-2 2v12c0-1.1.9-2 2-2h4.5c.8 0 1.5-.7 1.5-1.5v-9z"/>
-                    </svg>
-                  </div>
-                  <div className="flex flex-col items-center gap-0.5 mt-1">
-                    <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] text-white/90">World's</span>
-                    <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] text-white/90">First</span>
-                  </div>
-                </div>
-                <div className="flex-1 min-w-0 px-4 sm:px-5 py-4 flex flex-col justify-center gap-2">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="inline-flex items-center gap-1 bg-orange-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full whitespace-nowrap tracking-wide">✨ Exclusive</span>
-                    <span className="inline-flex items-center gap-1 bg-green-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full whitespace-nowrap tracking-wide">🆕 New Launch</span>
-                  </div>
-                  <div>
-                    <p className="text-lg sm:text-xl font-black text-slate-900 leading-tight">AI Card</p>
-                    <p className="text-sm sm:text-base font-bold text-orange-600 leading-tight">Now Available at Gurukula</p>
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">Unlock <span className="font-bold text-slate-700">50+ AI tools</span>, exclusive benefits &amp; digital resources with every course enrollment.</p>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="text-xs font-bold text-orange-600 group-hover:underline underline-offset-2">Learn More</span>
-                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-orange-500 group-hover:translate-x-0.5 transition-transform duration-200" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
-                    <span className="text-xs text-slate-300 mx-1">|</span>
-                    <span className="text-xs font-semibold text-slate-500">Activate Today</span>
-                  </div>
-                </div>
-                <div className="flex-shrink-0 w-9 sm:w-10 flex items-center justify-center" style={{ background:"linear-gradient(180deg,#f59e0b 0%,#ea580c 100%)" }}>
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth="2.5" className="group-hover:translate-x-0.5 transition-transform duration-200"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
-                </div>
-              </a>
-            </div>
-
-            <div className="mt-6 flex flex-col sm:flex-row gap-3 anim-fadeInUp-6">
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 anim-fadeInUp-4">
               <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
-                className="group relative overflow-hidden rounded-xl bg-orange-500 px-7 py-3.5 font-bold text-white shadow-sm text-center transition-all duration-300 hover:shadow-orange-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
-                <span className="relative z-10">WhatsApp Enquiry</span>
-                <div className="absolute inset-0 bg-orange-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                className="group relative overflow-hidden rounded-full bg-blue-700 px-8 py-4 font-bold text-white shadow-lg text-center transition-all duration-300 hover:shadow-blue-300 hover:-translate-y-1">
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  Join Gurukula Today
+                  <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </span>
               </a>
               <a href="#courses"
-                className="group rounded-xl border border-slate-300 bg-white px-7 py-3.5 font-bold text-slate-800 hover:bg-slate-50 hover:border-blue-300 hover:text-blue-700 transition-all duration-300 text-center hover:-translate-y-0.5 active:translate-y-0">
+                className="group rounded-full border-2 border-slate-200 bg-white px-8 py-4 font-bold text-slate-800 hover:border-orange-500 hover:text-orange-600 transition-all duration-300 text-center hover:-translate-y-1 shadow-sm">
                 Explore Courses
-                <span className="inline-block ml-1 transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </a>
+            </div>
+
+            {/* AI Card Minimal Badge */}
+            <div className="mt-8 anim-fadeInUp-5">
+              <a href="https://www.yaticorp.com/ai-card" target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-white border border-orange-200 rounded-2xl p-3 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                <div className="bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl p-2.5 shadow-inner">
+                  <UiIcon name="monitor" className="w-6 h-6 text-white"/>
+                </div>
+                <div className="pr-4">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-black text-slate-900">World's First AI Card</p>
+                    <span className="bg-green-100 text-green-700 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">New</span>
+                  </div>
+                  <p className="text-xs font-semibold text-slate-500 mt-0.5 group-hover:text-orange-600 transition-colors">Unlock 50+ Tools & Benefits →</p>
+                </div>
               </a>
             </div>
 
             {/* STAT COUNTER */}
-            <div ref={statsRef}
-              className="mt-8 grid grid-cols-3 divide-x divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm anim-fadeInUp-75">
+            <div ref={statsRef} className="mt-10 grid grid-cols-3 gap-6 max-w-lg anim-fadeInUp-6">
               {[
                 { num: counts.courses,  suffix: "+", label: "Courses"    },
                 { num: counts.students, suffix: "+", label: "Students"   },
                 { num: counts.years,    suffix: "+", label: "Years Exp." },
               ].map((s) => (
-                <div key={s.label} className="py-4 text-center hover:bg-blue-50 transition-colors duration-300">
-                  <p className="text-2xl sm:text-3xl font-black text-blue-900 tabular-nums">{s.num}{s.suffix}</p>
-                  <p className="mt-1 text-xs text-slate-500 font-medium">{s.label}</p>
+                <div key={s.label} className="text-left">
+                  <p className="text-3xl font-black text-blue-900 tabular-nums">{s.num}{s.suffix}</p>
+                  <p className="mt-1 text-xs font-bold text-slate-500 uppercase tracking-widest">{s.label}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* RIGHT — 3D tilt image via DOM ref */}
-          <div className="relative mt-10 lg:mt-0 cursor-default perspective anim-fadeInRight"
-            onMouseMove={onHeroMove} onMouseLeave={onHeroLeave}>
-            <div ref={heroImgRef} style={{ transition:"transform 0.15s ease", transformStyle:"preserve-3d" }}>
-              <img src="/images/hero.jpg" alt="Computer Training at Gurukula"
-                className="w-full rounded-3xl shadow-2xl object-cover aspect-[4/3]"
-                loading="eager" fetchpriority="high" decoding="async" />
-              <div className="absolute bottom-0 left-0 sm:-left-4 translate-y-4 rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 shadow-xl anim-float">
-                <p className="text-xs sm:text-sm font-bold text-slate-900">AI • Design • Accounting • IT</p>
-                <div className="mt-2 flex gap-1.5">
-                  {["bg-blue-600","bg-orange-500","bg-green-600","bg-violet-600"].map((c) => (
-                    <span key={c} className={`h-2 w-2 rounded-full ${c}`} />
+          {/* RIGHT: Attractive Company Collage */}
+          <div className="relative mt-16 lg:mt-0 lg:ml-6 perspective anim-fadeInRight" onMouseMove={onHeroMove} onMouseLeave={onHeroLeave}>
+            <div ref={heroImgRef} style={{ transition:"transform 0.15s ease", transformStyle:"preserve-3d" }} className="relative w-full aspect-[4/4.5] max-w-xl mx-auto">
+              
+              {/* Main Large Image */}
+              <div className="absolute top-0 right-0 w-[65%] h-[60%] z-20 rounded-3xl overflow-hidden shadow-2xl border-[6px] border-white tilt-card group">
+                <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors duration-500 z-10"/>
+                <img src="/images/gallery1.jpg" alt="Gurukula Tech Lab" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              </div>
+
+              {/* Bottom Left Medium Image */}
+              <div className="absolute bottom-[5%] left-0 w-[55%] h-[50%] z-30 rounded-3xl overflow-hidden shadow-2xl border-[6px] border-white tilt-card group">
+                <div className="absolute inset-0 bg-orange-900/10 group-hover:bg-transparent transition-colors duration-500 z-10"/>
+                <img src="/images/gallery2.jpg" alt="Students Learning" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              </div>
+
+              {/* Bottom Right Small Image */}
+              <div className="absolute bottom-[0%] right-[5%] w-[40%] h-[35%] z-20 rounded-3xl overflow-hidden shadow-xl border-[4px] border-white tilt-card group">
+                <img src="/images/gallery4.jpg" alt="Hardware Setup" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              </div>
+
+              {/* Top Left Decorative Image */}
+              <div className="absolute top-[10%] left-[5%] w-[35%] h-[35%] z-10 rounded-3xl overflow-hidden shadow-lg border-[4px] border-white tilt-card group opacity-90 hover:opacity-100">
+                <img src="/images/gallery3.jpg" alt="Certifications" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              </div>
+
+              {/* Central Floating Badge */}
+              <div className="absolute top-[45%] left-[45%] -translate-x-1/2 -translate-y-1/2 z-40 bg-white/90 backdrop-blur-md p-4 rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.2)] border border-white anim-float">
+                <div className="bg-gradient-to-tr from-blue-600 to-blue-400 w-16 h-16 rounded-full flex items-center justify-center shadow-inner">
+                  <UiIcon name="monitor" className="w-8 h-8 text-white"/>
+                </div>
+              </div>
+
+              {/* Trust Badge */}
+              <div className="absolute bottom-[20%] -right-[5%] z-40 bg-white px-5 py-3 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3 anim-float-2">
+                <div className="flex -space-x-3">
+                  {[1,2,3].map(i => (
+                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden">
+                       <img src={`/images/gallery${i}.jpg`} className="w-full h-full object-cover" alt="Student" />
+                    </div>
                   ))}
                 </div>
-              </div>
-              <div className="absolute top-0 left-0 sm:-left-4 -translate-y-3 rounded-xl border border-slate-100 bg-white px-2.5 sm:px-3 py-1.5 sm:py-2 shadow-lg text-xs font-bold text-slate-700 anim-float-2">
-                <div className="flex items-center gap-1.5">
-                  <UiIcon name="users" className="w-4 h-4 text-slate-700"/>
-                  <span>1000+ Students Trained</span>
+                <div>
+                  <div className="flex text-orange-400 text-xs">★★★★★</div>
+                  <p className="text-[10px] font-bold text-slate-800 uppercase tracking-widest mt-0.5">Top Rated</p>
                 </div>
               </div>
-              <div className="absolute top-0 right-0 sm:-right-4 -translate-y-3 rounded-xl overflow-hidden shadow-xl anim-float"
-                style={{ animationDelay:"0.7s", background:"linear-gradient(135deg,#f59e0b 0%,#ea580c 100%)" }}>
-                <div className="px-3 sm:px-4 py-2 sm:py-3 text-white">
-                  <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest opacity-80 leading-tight">World's First</p>
-                  <div className="flex items-center gap-1.5">
-                    <UiIcon name="badge" className="w-4 h-4 text-white"/>
-                    <UiIcon name="monitor" className="w-4 h-4 text-white"/>
-                    <span className="text-sm sm:text-base font-black leading-tight">AI Card</span>
-                  </div>
-                  <p className="text-[9px] sm:text-[10px] text-white/75 font-semibold mt-0.5 leading-tight">Activate Now →</p>
-                </div>
-              </div>
+
             </div>
           </div>
+
+        </div>
+        
+        {/* Elegant Curved Wave Divider */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none transform translate-y-[1px]">
+          <svg className="relative block w-full h-[50px] sm:h-[80px] lg:h-[120px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path className="fill-blue-50" d="M0,60 C480,160 960,-40 1440,60 L1440,120 L0,120 Z"></path>
+          </svg>
         </div>
       </section>
 
-      {/* ════════════ ABOUT ════════════ */}
+{/* ════════════ ABOUT (MINIMAL) ════════════ */}
       <section
         id="about"
-        className="bg-gradient-to-b from-slate-50 to-blue-100/40 py-24 sm:py-28 px-4 sm:px-6 overflow-hidden"
+        className="bg-gradient-to-b from-blue-50 to-white py-24 sm:py-28 px-4 sm:px-6 overflow-hidden"
       >
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
-
-            {/* LEFT CONTENT */}
-            <div className="anim-fadeInUp">
-
-              {/* Badge */}
-              <div className="inline-flex items-center gap-3 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold px-5 py-2 rounded-full mb-6 uppercase tracking-widest shadow-sm">
-                <UiIcon name="monitor" className="w-5 h-5 text-blue-700"/> 
-                <span>Est. Belthangady</span>
-              </div>
-
-              {/* Heading */}
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 leading-tight tracking-tight">
-                About <span className="text-blue-700">Gurukula</span>
-              </h2>
-
-              {/* Accent Line */}
-              <div className="mt-5 w-16 h-[3px] bg-gradient-to-r from-blue-600 to-orange-400 rounded-full" />
-
-              {/* Paragraphs */}
-              <p className="mt-7 text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">
-                Gurukula Computer Training Centre is a professional computer education institute dedicated to delivering quality training in computer technology, digital skills, and modern software tools — empowering students for the digital age.
-              </p>
-
-              <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">
-                We combine theoretical knowledge with practical hands-on learning across Computer Applications, Office Automation, Tally, Graphic Design, Video Editing, AI and Data Analytics.
-              </p>
-
-              {/* STATS */}
-              <div className="mt-10 grid grid-cols-3 gap-5">
-                {[
-                  { icon:"users",   val:"1000+", lab:"Students" },
-                  { icon:"monitor", val:"30+",   lab:"Courses"  },
-                  { icon:"badge",   val:"5",     lab:"Rating"   },
-                ].map((s) => (
-                  <div
-                    key={s.lab}
-                    className="group rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-200 transition-all duration-300"
-                  >
-                    <div className="flex justify-center mb-3">
-                      <div className="p-3 rounded-xl bg-blue-50 group-hover:bg-blue-100 transition">
-                        {/* 🔥 Increased icon size */}
-                        <UiIcon name={s.icon} className="w-8 h-8 text-blue-600"/>
-                      </div>
-                    </div>
-
-                    <p className="text-2xl font-extrabold text-slate-900">{s.val}</p>
-                    <p className="text-xs text-slate-500 mt-1 tracking-wide">{s.lab}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* RIGHT IMAGE */}
+            
+            {/* LEFT IMAGE */}
             <div
-              className="relative perspective anim-fadeInRight"
+              className="relative perspective anim-fadeInRight order-2 lg:order-1"
               onMouseMove={onAboutMove}
               onMouseLeave={onAboutLeave}
             >
@@ -810,491 +860,106 @@ const GalleryGrid = ({ onOpen }) => {
                 className="relative"
               >
                 <img
-                  src="/images/about.jpg"
+                  src="/images/gallery4.jpg"
                   alt="Gurukula Computer Training Centre"
                   className="w-full rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] object-cover aspect-[4/3]"
                   loading="lazy"
                 />
-
-                {/* Glass overlay glow */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
-
-                {/* Bottom Badge */}
-                <div className="absolute -bottom-5 -left-5 bg-white/90 backdrop-blur-md border border-slate-200 rounded-2xl px-5 py-3 shadow-xl">
+                <div className="absolute -bottom-5 -right-5 bg-white/90 backdrop-blur-md border border-slate-200 rounded-2xl px-5 py-3 shadow-xl">
                   <p className="text-xs font-bold text-slate-900 leading-none mb-1">✅ Certified Institute</p>
                 </div>
-
-                {/* Top Badge */}
-                <div className="absolute -top-5 -right-5 bg-gradient-to-r from-orange-500 to-orange-400 rounded-2xl px-5 py-3 shadow-lg">
+                <div className="absolute -top-5 -left-5 bg-gradient-to-r from-orange-500 to-orange-400 rounded-2xl px-5 py-3 shadow-lg">
                   <p className="text-sm font-bold text-white">⭐ 4.8 Rating</p>
                 </div>
-
               </div>
             </div>
 
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════ FOUNDER ════════════ */}
-      <section id="founder" className="scroll-mt-24 bg-slate-50 py-20 sm:py-24 px-4 sm:px-8 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-80 h-80 bg-blue-100 rounded-full blur-3xl opacity-40" />
-        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-72 h-72 bg-orange-100 rounded-full blur-3xl opacity-35" />
-        <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-14" data-reveal data-reveal-delay="0ms">
-            <SectionHeader badge="👤 Meet the Founder" title="The Person" highlight="Behind Gurukula"
-              subtitle="Passionate about making quality digital education accessible to every student in Karnataka." />
-          </div>
-          <div data-reveal data-reveal-delay="100ms" className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl">
-            <div className="h-2 w-full" style={{ background:"linear-gradient(90deg,#1D4ED8 0%,#f97316 50%,#1D4ED8 100%)" }} />
-            <div className="grid lg:grid-cols-[380px_1fr] gap-0">
-              {/* LEFT — photo */}
-              <div className="relative flex flex-col items-center justify-start gap-6 px-8 py-10 lg:py-12"
-                style={{ background:"linear-gradient(160deg,#0F172A 0%,#1E3A8A 60%,#1D4ED8 100%)" }}>
-                <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-white/5 pointer-events-none" />
-                <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-white/[0.04] pointer-events-none" />
-                <div className="relative z-10 mt-2">
-                  <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-full p-1 bg-gradient-to-br from-amber-400 via-orange-500 to-blue-600 shadow-2xl">
-                    <div className="w-full h-full rounded-full overflow-hidden bg-slate-800 border-4 border-slate-900">
-                      <img src="/images/founder1.jpg" alt="Santhosh — Founder, Gurukula Computer"
-                        className="w-full h-full object-cover object-top" loading="lazy"
-                        onError={(e) => { e.target.style.display="none"; e.target.nextSibling.style.display="flex"; }} />
-                      <div className="w-full h-full hidden items-center justify-center bg-gradient-to-br from-blue-700 to-blue-900">
-                        <span className="text-5xl font-black text-white">S</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="absolute -bottom-1 -right-1 w-12 h-12 rounded-full bg-green-500 border-4 border-slate-900 flex items-center justify-center shadow-lg">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
-                  </div>
-                </div>
-                <div className="relative z-10 text-center">
-                  <h3 className="text-2xl sm:text-3xl font-black text-white">Santhosh</h3>
-                  <p className="text-orange-400 font-bold text-sm mt-1">Founder &amp; Director</p>
-                  <p className="text-blue-300 text-xs mt-0.5">Gurukula Computer, Belthangady</p>
-                </div>
-                <div className="relative z-10 w-full grid grid-cols-3 gap-2 mt-2">
-                  {[{val:"1000+",lab:"Students"},{val:"2",lab:"Locations"},{val:"30+",lab:"Courses"}].map((s) => (
-                    <div key={s.lab} className="rounded-xl bg-white/10 border border-white/15 py-3 text-center backdrop-blur-sm hover:bg-white/20 transition-colors duration-200">
-                      <p className="text-lg sm:text-xl font-black text-white">{s.val}</p>
-                      <p className="text-[10px] text-blue-300 font-semibold mt-0.5">{s.lab}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="relative z-10 inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-xs font-semibold text-blue-200">
-                  <span>📍</span> Dharmasthala, Karnataka
-                </div>
+            {/* RIGHT CONTENT */}
+            <div className="anim-fadeInUp order-1 lg:order-2">
+              <div className="inline-flex items-center gap-3 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold px-5 py-2 rounded-full mb-6 uppercase tracking-widest shadow-sm">
+                <UiIcon name="monitor" className="w-5 h-5 text-blue-700"/> 
+                <span>Est. Belthangady</span>
               </div>
-
-              {/* RIGHT — bio */}
-              <div className="flex flex-col justify-center px-6 sm:px-10 py-10 lg:py-12 gap-7">
-                <div>
-                  <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-black px-3 py-1.5 rounded-full uppercase tracking-widest mb-4">🎓 About Me</div>
-                  <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
-                    I'm <span className="font-black text-slate-900">Santhosh</span>, founder of{" "}
-                    <span className="font-bold text-blue-700">ICON – National Board of Computer Education</span> in Ujire and{" "}
-                    <span className="font-bold text-blue-700">Gurukula Computer</span> in Belthangady. Hailing from Dharmasthala, Karnataka, I began as a Computer Trainer with 2 years of hands-on experience before launching ICON at age <span className="font-black text-orange-500">23</span>.
-                  </p>
-                </div>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {[
-                    { icon:"🏆", color:"bg-amber-50 border-amber-200", titleColor:"text-amber-700", title:"Top 3 in Karnataka",       desc:"Ranked among Karnataka's Top 3 Computer Training Institutes by NBCE" },
-                    { icon:"🎓", color:"bg-blue-50 border-blue-200",   titleColor:"text-blue-700",  title:"1,000+ Students Trained",   desc:"Across two locations — Ujire and Belthangady" },
-                    { icon:"💡", color:"bg-green-50 border-green-200", titleColor:"text-green-700", title:"30+ Job-Ready Courses",      desc:"AI Tools, Graphic Design, Tally, GST and beyond" },
-                    { icon:"",  color:"bg-orange-50 border-orange-200",titleColor:"text-orange-700",title:"World's First AI Card",      desc:"Exclusive AI Foundation, 50+ Tools, Power BI, Tableau, internships & scholarships" },
-                  ].map((item) => (
-                    <div key={item.title} className={`flex items-start gap-3 rounded-2xl border ${item.color} p-4 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200`}>
-                      <span className="text-2xl flex-shrink-0">{item.icon}</span>
-                      <div className="min-w-0">
-                        <p className={`text-xs font-black uppercase tracking-wide ${item.titleColor}`}>{item.title}</p>
-                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="relative overflow-hidden rounded-2xl px-5 py-4 border border-blue-100 bg-blue-50">
-                  <div className="absolute -top-4 -right-4 text-6xl opacity-10 pointer-events-none select-none">"</div>
-                  <p className="text-xs font-bold text-blue-700 uppercase tracking-widest mb-2">My Mission</p>
-                  <p className="text-sm sm:text-base text-slate-700 leading-relaxed italic">"Equip every student with essential digital skills for success, making top-tier education accessible to all."</p>
-                  <p className="mt-2 text-xs font-bold text-slate-500">— Santhosh, Founder</p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
-                    className="group relative overflow-hidden flex items-center justify-center gap-2 rounded-xl bg-green-600 px-5 py-3 font-bold text-white text-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-200">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    Connect on WhatsApp
-                  </a>
-                  <a href="#courses"
-                    className="group flex items-center justify-center gap-2 rounded-xl border border-blue-200 bg-white px-5 py-3 font-bold text-blue-700 text-sm hover:bg-blue-700 hover:text-white hover:border-blue-700 transition-all duration-200 hover:-translate-y-0.5">
-                    Explore Our Courses<span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-                  </a>
-                </div>
-              </div>
+              <h2 className="text-4xl sm:text-5xl font-black text-slate-900 leading-tight tracking-tight">
+                About <span className="text-blue-700">Gurukula</span>
+              </h2>
+              <div className="mt-5 w-16 h-[3px] bg-gradient-to-r from-blue-600 to-orange-400 rounded-full" />
+              <p className="mt-7 text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mb-8">
+                Gurukula Computer Training Centre has been empowering students in Belthangady with world-class digital education. From foundational computer skills to advanced AI tools, our hands-on approach ensures you are fully prepared for the modern tech industry.
+              </p>
+              <Link to="/about" className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-7 py-3.5 font-bold text-white shadow-sm transition-all duration-300 hover:shadow-blue-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
+                More Info
+                <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Link>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ════════════ VISION & MISSION ════════════ */}
-      <section id="vision-mission" className="scroll-mt-24 py-20 sm:py-24 px-4 sm:px-8 bg-slate-50 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-80 h-80 bg-blue-100 rounded-full blur-3xl opacity-50" />
-        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-80 h-80 bg-orange-100 rounded-full blur-3xl opacity-40" />
-        <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-14 anim-fadeInUp">
-            <SectionHeader badge="🌟 Our Purpose" title="Vision &" highlight="Mission"
-              subtitle="Empowering students with digital skills, practical knowledge and career-oriented training for the modern world." />
-          </div>
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            <div {...cardTiltProps} className={`tilt-card group relative overflow-hidden rounded-3xl p-8 sm:p-11 text-white cursor-default hover:shadow-2xl`}
-              style={{ background:"linear-gradient(135deg,#0F172A 0%,#1E3A8A 55%,#1D4ED8 100%)" }}>
-              <div className="absolute -top-16 -right-16 w-52 h-52 rounded-full bg-white/5 pointer-events-none" />
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-white/[0.04] pointer-events-none" />
-              <div className="relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center text-2xl mb-5 border border-white/10">🎯</div>
-                <h3 className="text-2xl sm:text-3xl font-black mb-2">Our Vision</h3>
-                <div className="w-10 h-1 bg-orange-400 rounded-full mb-5" />
-                <p className="text-blue-100 leading-relaxed text-sm sm:text-base">
-                  To become a trusted and leading computer training institute that empowers students with digital knowledge, technical skills, and innovative thinking — creating skilled professionals ready for the modern technology-driven world.
-                </p>
-                <div className="mt-8 inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-2 text-xs font-semibold text-blue-100">
-                  <span className="w-1.5 h-1.5 rounded-full bg-orange-400" /> Leading Digital Education
-                </div>
-              </div>
-            </div>
-            <div {...cardTiltProps} className={`tilt-card group relative overflow-hidden bg-white border border-slate-200 rounded-3xl p-8 sm:p-11 cursor-default hover:shadow-2xl hover:border-blue-200`}>
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/60 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl pointer-events-none" />
-              <div className="relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center text-2xl mb-5">🚀</div>
-                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2">Our Mission</h3>
-                <div className="w-10 h-1 bg-blue-700 rounded-full mb-5" />
-                <ul className="space-y-3">
-                  {["Provide high-quality computer education with practical training.", "Help students develop industry-relevant digital skills.", "Introduce modern technologies such as Artificial Intelligence and Data Analytics.", "Support students with career guidance and job-oriented training.", "Create opportunities for students to build successful careers."].map((item) => (
-                    <li key={item} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-md bg-blue-50 border border-blue-200 flex items-center justify-center mt-0.5">
-                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1D4ED8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                      </div>
-                      <span className="text-slate-600 text-sm leading-relaxed">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              { icon:"💡", title:"Innovation", desc:"Embracing new technologies every day"      },
-              { icon:"🤝", title:"Integrity",  desc:"Honest and transparent education always"   },
-              { icon:"🏆", title:"Excellence", desc:"Striving for the highest quality training"  },
-            ].map((v) => (
-              <div key={v.title} className="group flex items-center gap-4 bg-white border border-slate-200 rounded-2xl px-5 sm:px-6 py-5 hover:border-blue-200 hover:bg-blue-50 hover:-translate-y-1 transition-all duration-300 cursor-default">
-                <div className="text-3xl flex-shrink-0">{v.icon}</div>
-                <div>
-                  <p className="font-bold text-slate-900 text-sm">{v.title}</p>
-                  <p className="text-xs text-slate-500 mt-0.5">{v.desc}</p>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
 
       {/* ════════════ WHY CHOOSE US ════════════ */}
-      <section id="why-choose-us" className="scroll-mt-24 py-20 sm:py-24 px-4 sm:px-8 bg-gradient-to-b from-white to-blue-50 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-80 h-80 bg-blue-200 rounded-full blur-3xl opacity-30" />
-        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-80 h-80 bg-orange-200 rounded-full blur-3xl opacity-30" />
+      <section id="why-choose-us" className="scroll-mt-24 pt-10 pb-0 sm:pt-15 sm:pb-0 px-4 sm:px-8 bg-slate-50 relative overflow-hidden">
+        <div className="pointer-events-none absolute -z-10 top-0 left-1/4 w-[500px] h-[500px] bg-blue-100 rounded-full blur-[100px] opacity-40" />
         <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-16" data-reveal data-reveal-delay="0ms">
-            <SectionHeader badge="⭐ Why Choose Us" title="Why Students Choose" highlight="Gurukula"
-              subtitle="We focus on real skills, not just theory — helping you become job-ready from day one." />
+          <div className="text-center mb-16 sm:mb-20" data-reveal>
+            <div className="inline-flex items-center gap-3 bg-blue-100 border border-blue-200 text-blue-700 text-xs font-bold px-5 py-2 rounded-full mb-6 uppercase tracking-widest shadow-sm">
+              <span className="text-lg">⭐</span> 
+              <span>Why Choose Us</span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 leading-tight tracking-tight mb-6">
+              Why Students Choose <span className="text-blue-700">Gurukula</span>
+            </h2>
+            <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 font-medium">
+              We focus on real skills, not just theory — helping you become job-ready from day one with hands-on training and expert mentorship.
+            </p>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {WHY_ITEMS.map((item, i) => (
-              <div key={item.title} data-reveal data-reveal-delay={`${i * 60}ms`}
-                {...cardTiltProps}
-                className="tilt-card group relative bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 hover:shadow-2xl hover:border-blue-300">
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-300 rounded-2xl bg-gradient-to-br from-blue-100/40 to-transparent pointer-events-none" />
-                <div className="absolute top-4 right-4 w-8 h-8 rounded-lg bg-slate-100 group-hover:bg-blue-600 flex items-center justify-center transition">
-                  <span className="text-xs font-bold text-slate-400 group-hover:text-white">{String(i+1).padStart(2,"0")}</span>
+              <div key={item.title} data-reveal data-reveal-delay={`${i * 50}ms`}
+                className="group relative bg-white rounded-3xl p-8 transition-all duration-500 border border-transparent shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.1)] hover:-translate-y-2 overflow-hidden">
+                <div className="absolute inset-0 border-2 border-transparent group-hover:border-blue-500/20 rounded-3xl transition-colors duration-500" />
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-blue-400/20 to-orange-400/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute right-6 top-6 text-6xl font-black text-slate-100 opacity-50 group-hover:text-blue-50 transition-colors duration-500 select-none pointer-events-none transform group-hover:scale-110">
+                  {String(i+1).padStart(2,"0")}
                 </div>
                 <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-xl bg-blue-100 group-hover:bg-white shadow-sm flex items-center justify-center mb-4 transition">
-                    <UiIcon className="w-7 h-7 text-blue-600" name={item.icon} />
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 group-hover:border-blue-300 group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-blue-800 flex items-center justify-center mb-6 shadow-sm group-hover:shadow-[0_10px_20px_rgba(37,99,235,0.3)] transition-all duration-500 transform group-hover:-translate-y-1 group-hover:rotate-3">
+                    <UiIcon className="w-7 h-7 text-slate-700 group-hover:text-white transition-colors duration-500" name={item.icon} />
                   </div>
-                  <h3 className="text-base font-semibold text-slate-900 mb-2">{item.title}</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
+                  <h3 className="text-xl font-black text-slate-900 mb-3 leading-snug group-hover:text-blue-800 transition-colors">{item.title}</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed font-medium group-hover:text-slate-700">{item.desc}</p>
                 </div>
+                {/* Decorative bottom line */}
+                <div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-blue-600 to-orange-500 group-hover:w-full transition-all duration-500 ease-out" />
               </div>
             ))}
           </div>
-          <div className="mt-14 relative overflow-hidden rounded-3xl px-6 sm:px-10 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-xl"
-            style={{ background:"linear-gradient(135deg,#020617 0%,#1E3A8A 60%,#2563EB 100%)" }}>
-            <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="relative z-10 max-w-lg">
-              <p className="text-2xl sm:text-3xl font-extrabold text-white">Start Your Digital Career Today 🚀</p>
-              <p className="text-blue-200 mt-2 text-sm sm:text-base">Join <span className="font-semibold text-white">1000+ students</span> who transformed their careers with Gurukula.</p>
+          {/*
+          <div data-reveal data-reveal-delay="200ms" className="mt-16 relative overflow-hidden rounded-[2.5rem] px-8 sm:px-12 py-12 flex flex-col sm:flex-row items-center justify-between gap-8 shadow-2xl"
+            style={{ background:"linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#2563eb 100%)" }}>
+            <div className="absolute -top-32 -right-32 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="relative z-10 text-center sm:text-left max-w-xl">
+              <h3 className="text-3xl sm:text-4xl font-black text-white mb-4 leading-tight">Ready to build your digital career? 🚀</h3>
+              <p className="text-blue-100 text-base sm:text-lg font-medium">Join <span className="font-bold text-white bg-white/20 px-2 py-0.5 rounded-lg">1000+ students</span> who transformed their futures at Gurukula.</p>
             </div>
             <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
-              className="relative z-10 bg-orange-500 hover:bg-orange-400 text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl text-sm sm:text-base">
-              Chat on WhatsApp →
+              className="relative z-10 flex-shrink-0 bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-400 hover:to-orange-300 text-white font-bold px-8 py-4 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(249,115,22,0.3)] text-lg border border-orange-300/50">
+              Start Today →
             </a>
           </div>
-        </div>
-      </section>
+        </div> */}
 
-      {/* ════════════ TESTIMONIALS ════════════ */}
-      <section id="testimonials" className="scroll-mt-24 bg-slate-50 py-20 sm:py-24 px-4 sm:px-8 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-72 h-72 bg-blue-50 rounded-full blur-3xl opacity-60" />
-        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-64 h-64 bg-orange-50 rounded-full blur-3xl opacity-50" />
-        <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-10 sm:mb-14" data-reveal>
-            <SectionHeader badge="⭐ Student Reviews" title="What Our" highlight="Students Say"
-              subtitle="Hear from students who trained at Gurukula and built successful careers in the digital world." />
-          </div>
-          <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-5">
-            {TESTIMONIALS.map((t, i) => (
-              <div key={t.name} data-reveal data-reveal-delay={`${i * 80}ms`}
-                {...cardTiltProps}
-                className="tilt-card group relative bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 hover:border-blue-200 hover:shadow-xl cursor-default w-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/40 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
-                <div className="relative z-10">
-                  <Stars n={t.rating} />
-                  <div className="mt-4 mb-5"><p className="text-slate-600 text-sm leading-relaxed">{t.text}</p></div>
-                  <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white text-xs font-black flex-shrink-0">
-                      {t.name.split(" ").map(n => n[0]).join("")}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-bold text-slate-900 truncate">{t.name}</p>
-                      <p className="text-xs text-slate-500 truncate">{t.course} · {t.location}</p>
-                    </div>
-                    <span className="flex-shrink-0 text-xs font-semibold bg-green-50 text-green-700 border border-green-100 px-2 py-1 rounded-full whitespace-nowrap">✓ Verified</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div data-reveal data-reveal-delay="200ms"
-            className="mt-8 sm:mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 bg-white border border-slate-200 rounded-2xl px-4 sm:px-8 py-6">
-            {[
-              { val:"4.9",  label:"Overall Rating",     extra:<Stars size={12}/> },
-              { val:"1000+",label:"Students Trained"   },
-              { val:"98%",  label:"Satisfaction Rate"  },
-              { val:"1+",   label:"Years of Excellence" },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <p className="text-2xl sm:text-4xl font-black text-slate-900">{s.val}</p>
-                {s.extra && <div className="flex justify-center mt-1">{s.extra}</div>}
-                <p className="text-xs text-slate-500 mt-1 leading-tight">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════ GALLERY ════════════ */}
-      <section id="gallery" className="scroll-mt-24 bg-white py-20 sm:py-24 px-4 sm:px-8 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-72 h-72 bg-blue-100 rounded-full blur-3xl opacity-35" />
-        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-64 h-64 bg-orange-100 rounded-full blur-3xl opacity-30" />
-
-        <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-14" data-reveal>
-            <SectionHeader
-              badge="📸 Our Campus"
-              title="Life at"
-              highlight="Gurukula"
-              subtitle="A glimpse into our modern labs, hands-on training sessions and student life at Gurukula Computer Training Centre."
-            />
-          </div>
-
-          <GalleryGrid onOpen={setLightbox} />
-        </div>
-      </section>
-
-      {/* ════════════ AI CARD SECTION (UPGRADED) ════════════ */}
-      <section id="aicard" className="relative isolate overflow-hidden px-4 sm:px-6 py-12 sm:py-16 lg:py-20">
-        {/* Background */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[#16306f] via-[#2649a4] to-[#4b6fd1]" />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.14),transparent_28%),radial-gradient(circle_at_80%_72%,rgba(255,255,255,0.10),transparent_30%)]" />
-        <div className="absolute inset-0 -z-10 opacity-15 [background-image:radial-gradient(circle_at_center,white_1.1px,transparent_1.1px)] [background-size:38px_38px]" />
-
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-10 lg:gap-12 items-start">
-          {/* LEFT */}
-          <div className="flex flex-col">
-            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-white">
-              <span className="h-2 w-2 rounded-full bg-emerald-300 animate-pulse" />
-              Authorized Training Center
-            </div>
-
-            <h2 className="mt-5 text-3xl sm:text-4xl lg:text-5xl font-black leading-tight text-white">
-              Official AI Card Training Center of{" "}
-              <span className="text-blue-100">Yaticorp India Pvt. Ltd.</span>
-            </h2>
-
-            <p className="mt-5 max-w-xl text-blue-50/95 text-base sm:text-lg leading-relaxed">
-              Gurukula Computer Training Centre is an officially authorized training partner of{" "}
-              <strong className="text-white">Yaticorp India Private Limited</strong>. We provide access to the{" "}
-              <strong className="text-white">World&apos;s First AI Learning Card</strong>, designed to make AI education
-              affordable, practical, and job-oriented.
-            </p>
-
-            <div className="mt-7 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                "Access to 50+ AI Tools",
-                "Lifetime Learning Access",
-                "Beginner to Advanced AI Training",
-                "Kannada & English Learning Support",
-                "Government & Industry Certification",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="group flex items-center gap-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur px-3 py-3 hover:bg-white/20 hover:-translate-y-0.5 transition-all"
-                >
-                  <div className="h-6 w-6 rounded-full bg-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                      <path d="M2 6l2.8 2.8L10 3.6" stroke="#1f3f93" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <span className="text-sm font-semibold text-white">{item}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <a
-                href="https://www.yaticorp.com/ai-card"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Explore AI Card on Yaticorp website"
-                className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-white px-6 py-3 text-[#1f3f93] font-bold hover:bg-blue-50 transition-all hover:-translate-y-0.5"
-              >
-                Explore AI Card
-              </a>
-              <a
-                href="https://wa.me/916366564639"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Get AI Card details on WhatsApp"
-                className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border border-white/35 bg-white/10 px-6 py-3 font-bold text-white hover:bg-white/20 transition-all hover:-translate-y-0.5"
-              >
-                Ask on WhatsApp
-              </a>
-            </div>
-          </div>
-
-          {/* RIGHT */}
-          <div className="relative w-full max-w-xl mx-auto lg:mx-0 lg:ml-auto">
-            <div className="absolute -top-4 -right-2 sm:-right-4 rounded-xl bg-white text-[#1f3f93] px-3 py-2 text-xs font-extrabold shadow-lg">
-              Authorized
-            </div>
-            <div className="group rounded-3xl border border-white/30 bg-white/95 overflow-hidden shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.22)]">
-              <div className="bg-gradient-to-r from-[#2d4fb2] to-[#5e7fda] text-white p-5 sm:p-6">
-                <p className="text-xs uppercase font-bold tracking-[0.16em] opacity-90">World&apos;s First</p>
-                <h3 className="text-2xl sm:text-3xl font-black mt-1">AI Learning Card</h3>
-                <p className="mt-2 text-sm text-blue-100">One-time investment. Lifetime AI learning access.</p>
-              </div>
-              <div className="p-5 sm:p-6">
-                <p className="text-sm text-slate-600">Includes high-demand skills:</p>
-                <div className="mt-4 grid grid-cols-2 gap-3 text-sm font-semibold">
-                  {["Foundation AI", "50+ AI Tools", "Power BI", "Tableau"].map((t) => (
-                    <span key={t} className="rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 text-slate-700 text-center">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mt-6 flex items-end justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Offer Price</p>
-                    <p className="text-3xl font-black text-[#2d4fb2] leading-none mt-1">₹499</p>
-                    <p className="mt-1 text-xs text-slate-500">Includes starter mentorship and support group access</p>
-                  </div>
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
-                    One-Time Payment
-                  </span>
-                </div>
-
-                <a
-                  href="https://www.yaticorp.com/ai-card"
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Activate AI Learning Card"
-                  className="mt-6 block w-full rounded-xl bg-[#2d4fb2] py-3 text-center font-bold text-white hover:bg-[#24439a] transition-colors"
-                >
-                  Activate Now →
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* ════════════ CERTIFICATE + FEATURES (ALIGNED) ════════════ */}
-<div className="lg:col-span-2 mt-12 w-full">
-  <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[minmax(280px,360px)_1fr] lg:items-start">
-    {/* LEFT — CERTIFICATE */}
-    <div className="flex flex-col items-center lg:items-start">
-      <p className="mb-3 text-center text-[11px] font-bold uppercase tracking-[0.18em] text-blue-100/80 lg:text-left">
-        Authorization Proof
-      </p>
-
-      <a
-        href={certificateImg}
-        target="_blank"
-        rel="noreferrer"
-        className="group w-full max-w-[340px] overflow-hidden rounded-2xl border border-white/20 bg-white/10 backdrop-blur transition-all hover:bg-white/15"
-      >
-        <div className="flex aspect-[4/5] items-center justify-center bg-white p-2">
-          <img
-            src={certificateImg}
-            alt="Yaticorp authorization certificate"
-            className="h-full w-full rounded-md object-contain transition-transform duration-300 group-hover:scale-[1.03]"
-          />
-        </div>
-
-        <div className="flex items-center justify-between px-4 py-3">
-          <div>
-            <p className="text-xs font-semibold text-white">Authorized by Yaticorp</p>
-            <p className="text-[10px] text-blue-100/80">Issued: 23 Feb 2026</p>
-          </div>
-
-          <span className="rounded-full bg-white px-2 py-1 text-[10px] font-bold text-[#1f3f93]">
-            View
-          </span>
-        </div>
-      </a>
-
-      <p className="mt-2 text-center text-[11px] text-blue-100/80 lg:text-left">
-        Tap to verify authorization
-      </p>
-    </div>
-
-    {/* RIGHT — FEATURES */}
-    <div className="grid content-start gap-5 sm:grid-cols-2 lg:pt-24">
-      {[
-        { title: "Theory & Practical Learning", desc: "Real-world focused sessions" },
-        { title: "Expert Instructors", desc: "Learn from industry experts" },
-        { title: "Certification Program", desc: "Structured learning path" },
-        { title: "Proven Systems", desc: "Trusted by institutes" },
-        { title: "Industry-Ready Skills", desc: "Tools used by companies" },
-        { title: "Career Advancement", desc: "Stand out in job market" },
-      ].map((item) => (
-        <div
-          key={item.title}
-          className="group flex h-full gap-4 rounded-xl border border-white/20 bg-white/90 p-4 shadow-sm transition-all hover:-translate-y-[2px] hover:shadow-lg"
-        >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-600 font-bold text-white">
-            ✓
-          </div>
-
-          <div className="min-w-0">
-            <h4 className="text-sm font-semibold text-slate-800">{item.title}</h4>
-            <p className="mt-1 text-xs text-slate-500">{item.desc}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
-
-        </div>
+        {/* Wave to Testimonials 
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none transform translate-y-[1px]">
+          <svg className="relative block w-full h-[40px] sm:h-[60px] lg:h-[100px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path className="fill-white" d="M0,60 C480,160 960,-40 1440,60 L1440,120 L0,120 Z"></path>
+          </svg>*/}
+        </div> 
       </section>
 
       {/* ════════════ COURSES ════════════ */}
@@ -1333,7 +998,7 @@ const GalleryGrid = ({ onOpen }) => {
           <div className="mb-10 -mx-4 sm:mx-0 overflow-x-auto pb-2">
             <div className="flex min-w-max gap-2.5 px-4 sm:px-0">
               {courseCategories.map((cat) => (
-                <button key={cat} onClick={() => setActiveCategory(cat)}
+                <button key={cat} onClick={() => { setActiveCategory(cat); setShowAllCourses(false); }}
                   className={`whitespace-nowrap rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all duration-200 ${
                     activeCategory === cat
                       ? "bg-blue-700 text-white shadow-lg shadow-blue-200 scale-105"
@@ -1347,138 +1012,112 @@ const GalleryGrid = ({ onOpen }) => {
 
 
         {/* FIXED CATEGORY SWITCH */}
-        <div key={activeCategory}>
+        <div key={activeCategory} className="anim-fadeInUp">
           
-
           {/* ================= NORMAL COURSES ================= */}
-          {activeCategory !== "Individual Courses" &&
-            visibleCategories.map((category) => {
-              const catCourses = COURSES.filter(
-                (c) => c.category?.toLowerCase().trim() === category.toLowerCase().trim()
-              );
-
-              return (
-                <div key={category} className="mb-14">
-                  {/* HEADER */}
-                  <div className="flex items-center gap-4 mb-8">
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 whitespace-nowrap">
-                      {category}
-                    </h3>
-                    <div className="flex-1 h-px bg-slate-200" />
-                    <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
-                      {catCourses.length} courses
-                    </span>
+          {activeCategory !== "Individual Courses" && displayedCourses.length > 0 && (
+            <>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {(activeCategory === "All" && !showAllCourses ? displayedCourses.slice(0, 8) : displayedCourses).map((course, i) => (
+                <article
+                  key={course.id}
+                  className="group flex flex-col rounded-[2rem] bg-white border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.08)] hover:border-blue-100 transition-all duration-300 overflow-hidden cursor-pointer"
+                  onClick={() => setSelectedCourse(course)}
+                  style={{ animation: `fadeInUp 0.4s ease ${i * 0.05}s both` }}
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden bg-slate-100 p-4">
+                    <img
+                      src={course.image || "/images/hero.jpg"}
+                      alt={course.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                    <div className="absolute bottom-6 left-6 flex gap-2">
+                      <span className="bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20">
+                        ⏱ {course.duration}
+                      </span>
+                    </div>
                   </div>
-
-                  {/* GRID */}
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {catCourses.map((course, i) => (
-                      <article
-                        key={course.id}
-                        className="course-card group relative rounded-2xl border border-slate-200 bg-white overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-blue-200"
-                        style={{ animation: `fadeInUp 0.4s ease ${i * 0.06}s both` }}
-                        {...cardTiltProps}
-                      >
-                        {/* IMAGE */}
-                        <div className="relative overflow-hidden">
-                          <img
-                            src={course.image || "/images/hero.jpg"}
-                            alt={course.title}
-                            loading="lazy"
-                            className="course-img w-full object-contain"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                        </div>
-
-                        {/* BODY */}
-                        <div className="p-4 sm:p-5">
-                          <h4 className="text-sm font-bold text-slate-900 mb-3 line-clamp-2">
-                            {course.title}
-                          </h4>
-
-                          <div className="grid grid-cols-2 gap-2">
-                            <a
-                              href="https://wa.me/916366564639"
-                              target="_blank"
-                              rel="noreferrer"
-                              className="rounded-xl bg-orange-500 py-2.5 text-xs font-bold text-white text-center"
-                            >
-                              Apply Now
-                            </a>
-
-                            <button
-                              onClick={() => setSelectedCourse(course)}
-                              className="rounded-xl border border-blue-600 py-2.5 text-xs font-bold text-blue-700 hover:bg-blue-700 hover:text-white"
-                            >
-                              Know More
-                            </button>
-                          </div>
-                        </div>
-                      </article>
-                    ))}
+                  
+                  <div className="flex flex-col flex-1 p-6">
+                    <p className="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-2 line-clamp-1">{course.category}</p>
+                    <h4 className="text-base font-black text-slate-900 leading-snug mb-4 line-clamp-2 group-hover:text-blue-700 transition-colors">
+                      {course.title}
+                    </h4>
                     
+                    <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+                      <span className="text-xs font-semibold text-slate-500 group-hover:text-slate-700 transition-colors">View Details</span>
+                      <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center transition-all duration-300 transform group-hover:translate-x-1">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-            {(activeCategory === "Individual Courses" || activeCategory === "All") && (
-            /* ================= INDIVIDUAL COURSES ================= */
-            <div
-              className="relative overflow-hidden rounded-2xl border border-slate-200 p-6 sm:p-10 mb-14"
-              style={{ background: "linear-gradient(135deg,#F8FAFC 0%,#EFF6FF 100%)" }}
-            >
-              <div className="absolute -top-10 -right-10 w-48 h-48 bg-blue-100 rounded-full blur-3xl opacity-50 pointer-events-none" />
+                </article>
+              ))}
+            </div>
 
+            {activeCategory === "All" && !showAllCourses && displayedCourses.length > 8 && (
+              <div className="mt-10 flex justify-center mb-14">
+                <button 
+                  onClick={() => setShowAllCourses(true)}
+                  className="group flex items-center gap-2 rounded-full bg-white border border-slate-200 text-slate-700 px-8 py-3.5 text-sm font-bold hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-all shadow-sm hover:shadow-md"
+                >
+                  View More Courses
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-y-0.5 transition-transform"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+              </div>
+            )}
+            {!(activeCategory === "All" && !showAllCourses && displayedCourses.length > 8) && <div className="mb-14" />}
+            </>
+          )}
+
+          {/* ================= INDIVIDUAL COURSES ================= */}
+          {(activeCategory === "Individual Courses" || activeCategory === "All") && (
+            <div className="relative overflow-hidden rounded-[2.5rem] bg-white border border-slate-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] p-6 sm:p-10 mb-14" style={{ animation: `fadeInUp 0.6s ease both` }}>
+              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-blue-50/50 to-orange-50/50 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/4" />
+              
               <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-xl">🛠️</div>
-                  <h3 className="text-xl sm:text-2xl font-black text-slate-900">Individual Courses</h3>
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
+                  <div>
+                    <div className="inline-flex items-center gap-2 bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold px-3 py-1.5 rounded-full mb-4 shadow-sm">
+                      <span className="w-2 h-2 rounded-full bg-blue-500"></span> Focused Training
+                    </div>
+                    <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Individual <span className="text-blue-700">Courses</span></h3>
+                    <p className="text-slate-500 text-sm sm:text-base mt-2 max-w-lg">
+                      Learn specific software skills quickly. Flexible, fast-paced, and highly focused practical training.
+                    </p>
+                  </div>
+                  <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer" className="flex-shrink-0 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-3.5 text-sm font-bold text-white hover:bg-blue-700 hover:shadow-lg transition-all hover:-translate-y-0.5">
+                    💬 Enquire Now
+                  </a>
                 </div>
 
-                <p className="text-slate-500 text-sm mb-8">
-                  Learn specific software quickly — flexible, focused and affordable.
-                </p>
-
-                <div className="grid sm:grid-cols-2 gap-8">
-                  {/* LEFT */}
-                  <div>
-                    <p className="text-xs font-bold text-blue-700 uppercase tracking-widest mb-4">
-                      Courses Available
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-slate-50/50 rounded-3xl p-6 sm:p-8 border border-slate-100/50">
+                    <p className="text-xs font-black text-slate-900 uppercase tracking-widest mb-5 flex items-center gap-2">
+                      <span className="w-7 h-7 rounded-lg bg-white shadow-sm flex items-center justify-center text-blue-600 text-lg">💻</span> Software Taught
                     </p>
-
-                    <div className="grid gap-2">
+                    <div className="flex flex-wrap gap-2.5">
                       {INDIVIDUAL_COURSES.map((c) => (
-                        <div key={c} className="flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-2.5">
-                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                          <span className="text-sm text-slate-700 font-medium">{c}</span>
-                        </div>
+                        <span key={c} className="bg-white border border-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-xl shadow-sm hover:border-blue-300 hover:text-blue-700 transition-colors cursor-default">
+                          {c}
+                        </span>
                       ))}
                     </div>
                   </div>
 
-                  {/* RIGHT */}
-                  <div>
-                    <p className="text-xs font-bold text-orange-600 uppercase tracking-widest mb-4">
-                      Career Opportunities
+                  <div className="bg-slate-50/50 rounded-3xl p-6 sm:p-8 border border-slate-100/50">
+                    <p className="text-xs font-black text-slate-900 uppercase tracking-widest mb-5 flex items-center gap-2">
+                      <span className="w-7 h-7 rounded-lg bg-white shadow-sm flex items-center justify-center text-orange-500 text-lg">🎯</span> Career Outcomes
                     </p>
-
-                    <div className="grid gap-2">
+                    <div className="flex flex-wrap gap-2.5">
                       {INDIVIDUAL_CAREERS.map((c) => (
-                        <div key={c} className="flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-2.5">
-                          <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                          <span className="text-sm text-slate-700 font-medium">{c}</span>
-                        </div>
+                        <span key={c} className="bg-white border border-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-xl shadow-sm hover:border-orange-300 hover:text-orange-600 transition-colors cursor-default">
+                          {c}
+                        </span>
                       ))}
                     </div>
-
-                    <a
-                      href="https://wa.me/916366564639"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-6 flex items-center justify-center gap-2 w-full rounded-xl bg-green-600 py-3 font-bold text-white text-sm hover:bg-green-700 transition-all hover:-translate-y-0.5"
-                    >
-                      💬 Enquire on WhatsApp
-                    </a>
                   </div>
                 </div>
               </div>
@@ -1488,204 +1127,411 @@ const GalleryGrid = ({ onOpen }) => {
         </div>
       </section>
 
-      {/* ════════════ FAQ ════════════ */}
-      <section
-        id="faq"
-        className="scroll-mt-24 px-4 py-20 sm:py-24 sm:px-8 bg-white relative overflow-hidden"
-      >
-        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-72 h-72 bg-blue-50 rounded-full blur-3xl opacity-60" />
-        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-64 h-64 bg-orange-50 rounded-full blur-3xl opacity-50" />
+      {/* ════════════ GALLERY ════════════ */}
+     <section id="gallery" className="scroll-mt-24 bg-white py-24 sm:py-32 px-4 sm:px-8 relative overflow-hidden">
+  {/* Modern Decorative Accents */}
+  <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-40">
+    <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-50 rounded-full blur-[120px]" />
+    <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-orange-50 rounded-full blur-[120px]" />
+  </div>
+  
+  <div className="mx-auto max-w-7xl relative">
+    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20" data-reveal>
+      <div className="max-w-3xl">
+        <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-slate-900 text-white text-[11px] font-black uppercase tracking-[0.2em] mb-6 shadow-xl">
+          <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping" /> Corporate Showcase
+        </div>
+        <h2 className="text-5xl sm:text-6xl font-black text-slate-900 leading-[1.1] tracking-tighter">
+          The Heart of <br/>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-blue-500">Gurukula Excellence</span>
+        </h2>
+        <p className="mt-6 text-xl text-slate-500 font-medium leading-relaxed">
+          Witness the professional environment where future technology leaders are forged.
+        </p>
+      </div>
+      
+      <div className="flex items-center gap-10 border-l-4 border-blue-600 pl-8 py-2">
+        <div>
+          <p className="text-4xl font-black text-slate-900">1000+</p>
+          <p className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mt-1">Students Trained</p>
+        </div>
+        <div>
+          <p className="text-4xl font-black text-slate-900">100%</p>
+          <p className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mt-1">Practical Focus</p>
+        </div>
+      </div>
+    </div>
 
-        <div className="mx-auto max-w-4xl">
-          <div className="grid md:grid-cols-2 gap-8 sm:gap-10 items-start mb-12">
-            <div data-reveal>
-              <SectionHeader
-                badge="❓ FAQ"
-                title="Frequently Asked"
-                highlight="Questions"
-                subtitle="Everything you need to know about our courses, certificates and training. Can't find an answer? Chat with us directly."
-                center={false}
-              />
+    <GalleryGrid onOpen={setLightbox} />
+  </div>
+</section>
+
+      {/* ════════════ AI CARD SECTION (UPGRADED) ════════════ */}
+<section id="aicard" className="relative isolate overflow-hidden py-24 sm:py-32">
+  {/* Modern Mesh Gradient Background */}
+  <div className="absolute inset-0 -z-10 bg-[#020617]" />
+  <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_30%,#1e3a8a_0%,transparent_50%),radial-gradient(circle_at_80%_70%,#1e40af_0%,transparent_50%),radial-gradient(circle_at_50%_50%,#0f172a_0%,#020617_100%)]" />
+  <div className="absolute inset-0 -z-10 opacity-20 [background-image:linear-gradient(#ffffff_1px,transparent_1px),linear-gradient(90deg,#ffffff_1px,transparent_1px)] [background-size:60px_60px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]" />
+
+  <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      
+      {/* Content Left */}
+      <div data-reveal>
+        <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">
+          <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+          Yaticorp Authorized Partner
+        </div>
+        
+        <h2 className="mt-8 text-4xl sm:text-6xl font-black text-white leading-[1.1] tracking-tight">
+          Next-Gen AI <br/>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Learning Card</span>
+        </h2>
+        
+        <p className="mt-6 max-w-lg text-slate-400 text-lg leading-relaxed">
+          Unlock the future with the World&apos;s first AI Learning Card. One-time access to 50+ tools, professional certificates, and a global tech community.
+        </p>
+
+        <div className="mt-10 flex flex-wrap gap-4">
+          <a href="https://www.yaticorp.com/ai-card" target="_blank" className="rounded-2xl bg-blue-600 px-8 py-4 font-bold text-white shadow-2xl shadow-blue-500/20 hover:bg-blue-500 hover:-translate-y-1 transition-all">
+            Get Started Now
+          </a>
+          <a href="https://wa.me/916366564639" target="_blank" className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md px-8 py-4 font-bold text-white hover:bg-white/10 transition-all">
+            Ask for Details
+          </a>
+        </div>
+      </div>
+
+      {/* Interactive Card Right */}
+      <div className="relative group" data-reveal data-reveal-delay="200ms">
+        <div className="absolute -inset-1 rounded-[2.5rem] bg-gradient-to-r from-blue-500 to-emerald-500 opacity-20 blur-2xl transition duration-1000 group-hover:opacity-40 group-hover:duration-200" />
+        
+        <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-slate-900/50 backdrop-blur-3xl p-8 sm:p-12 shadow-2xl">
+          <div className="flex justify-between items-start mb-12">
+            <div>
+              <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Official Issue</p>
+              <h3 className="text-3xl font-black text-white">AI CARD</h3>
+            </div>
+            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center text-white shadow-lg">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="flex flex-wrap gap-3">
+              {["50+ AI Tools", "Power BI", "Tableau", "Foundation AI"].map(tool => (
+                <span key={tool} className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-xs font-bold text-slate-300">
+                  {tool}
+                </span>
+              ))}
             </div>
 
-            <div
-              className="rounded-2xl p-6 sm:p-7 text-white relative overflow-hidden"
-              style={{
-                background:
-                  "linear-gradient(135deg,#0F172A 0%,#1E3A8A 55%,#1D4ED8 100%)",
-              }}
-            >
-              <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/5 pointer-events-none" />
-              <div className="relative z-10">
-                <p className="text-xs font-semibold text-blue-300 uppercase tracking-widest mb-3">
-                  Still have questions?
-                </p>
-                <h3 className="text-lg sm:text-xl font-black text-white mb-2">
-                  Talk to our team
-                </h3>
-                <p className="text-xs sm:text-sm text-blue-200 leading-relaxed mb-6">
-                  We're happy to answer any questions about admissions, courses, fees
-                  and schedules.
-                </p>
-                <a
-                  href="https://wa.me/916366564639"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-lg"
-                >
-                  💬 WhatsApp Us
+            <div className="pt-8 border-t border-white/5 flex items-end justify-between">
+              <div>
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Lifetime Access</p>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <p className="text-4xl font-black text-white">₹499</p>
+                  <p className="text-sm font-bold text-slate-500 line-through">₹2999</p>
+                </div>
+              </div>
+              <span className="bg-emerald-500/10 text-emerald-400 text-[10px] font-black px-3 py-1 rounded-full border border-emerald-500/20">
+                80% OFF
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Floating Trust Badge */}
+        <div className="absolute -bottom-6 -right-6 rounded-2xl bg-white p-4 shadow-2xl anim-float hidden sm:block">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-black text-lg">✓</div>
+            <div>
+              <p className="text-xs font-black text-slate-900 leading-none">Verified Partner</p>
+              <p className="text-[10px] text-slate-500 mt-1">Yaticorp India Pvt Ltd</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Bento Feature Section */}
+    <div className="mt-32 grid grid-cols-1 md:grid-cols-3 gap-6" data-reveal>
+      {/* Feature 1 */}
+      <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 hover:bg-white/10 transition-all group">
+        <div className="h-12 w-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+        </div>
+        <h4 className="text-lg font-black text-white">Hybrid Learning</h4>
+        <p className="mt-2 text-sm text-slate-400 leading-relaxed">Structured theory combined with intensive hands-on practical sessions.</p>
+      </div>
+
+      {/* Authorization Block */}
+      <div className="md:col-span-2 relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-r from-blue-900/40 to-slate-900/40 p-8 flex flex-col sm:flex-row items-center gap-8 group">
+        <div className="relative flex-shrink-0 w-32 aspect-[4/5] bg-white rounded-lg p-1.5 rotate-[-5deg] group-hover:rotate-0 transition-transform duration-500 shadow-2xl">
+          <img src={certificateImg} alt="Certificate" className="w-full h-full object-contain rounded" />
+        </div>
+        <div>
+          <h4 className="text-xl font-black text-white">Authorized by Yaticorp</h4>
+          <p className="mt-2 text-sm text-slate-400 leading-relaxed">Gurukula is the official training partner for the Belthangady region, providing verified AI Card distribution and support.</p>
+          <div className="mt-6 flex items-center gap-4">
+            <span className="text-xs font-bold text-blue-400">Issued: 23 Feb 2026</span>
+            <div className="h-1 w-1 rounded-full bg-slate-600" />
+            <a href={certificateImg} target="_blank" className="text-xs font-bold text-white hover:underline">View Document →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+      {/* ════════════ TESTIMONIALS ════════════ */}
+      <section id="testimonials" className="scroll-mt-24 bg-slate-50 py-20 sm:py-24 px-4 sm:px-8 relative overflow-hidden">
+        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-72 h-72 bg-blue-50 rounded-full blur-3xl opacity-60" />
+        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-64 h-64 bg-orange-50 rounded-full blur-3xl opacity-50" />
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center mb-10 sm:mb-14" data-reveal>
+            <SectionHeader badge="⭐ Student Reviews" title="What Our" highlight="Students Say"
+              subtitle="Hear from students who trained at Gurukula and built successful careers in the digital world." />
+          </div>
+          <div data-reveal data-reveal-delay="100ms">
+            <TestimonialSlider testimonials={TESTIMONIALS} />
+          </div>
+          <div data-reveal data-reveal-delay="200ms"
+            className="mt-8 sm:mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 bg-white border border-slate-200 rounded-2xl px-4 sm:px-8 py-6">
+            {[
+              { val:"4.9",  label:"Overall Rating",     extra:<Stars size={12}/> },
+              { val:"1000+",label:"Students Trained"   },
+              { val:"98%",  label:"Satisfaction Rate"  },
+              { val:"1+",   label:"Years of Excellence" },
+            ].map((s) => (
+              <div key={s.label} className="text-center">
+                <p className="text-2xl sm:text-4xl font-black text-slate-900">{s.val}</p>
+                {s.extra && <div className="flex justify-center mt-1">{s.extra}</div>}
+                <p className="text-xs text-slate-500 mt-1 leading-tight">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════ FAQ SECTION (REDESIGNED) ════════════ */}
+<section id="faq" className="scroll-mt-24 px-4 py-24 sm:px-8 bg-white relative overflow-hidden">
+  {/* Decorative Background Accents */}
+  <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50/50 -skew-x-12 translate-x-1/2 pointer-events-none" />
+  
+  <div className="mx-auto max-w-4xl relative">
+    <div className="grid md:grid-cols-2 gap-12 items-start mb-16">
+      <div data-reveal>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-black uppercase tracking-widest mb-6">
+          <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" /> Knowledge Base
+        </div>
+        <h2 className="text-4xl sm:text-5xl font-black text-slate-900 leading-tight tracking-tight">
+          Common <span className="text-blue-700">Questions</span>
+        </h2>
+        <p className="mt-6 text-lg text-slate-500 font-medium leading-relaxed">
+          Everything you need to know about our certifications, training methodology, and career support.
+        </p>
+      </div>
+
+      {/* Support Card */}
+      <div className="rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-blue-900/20"
+        style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)" }}>
+        <div className="relative z-10">
+          <p className="text-xs font-bold text-blue-300 uppercase tracking-widest mb-2">Need more help?</p>
+          <h3 className="text-xl font-black mb-4">Contact Admissions</h3>
+          <p className="text-sm text-blue-100/80 leading-relaxed mb-8">
+            Our counselors are available Mon-Sat to help you choose the right course.
+          </p>
+          <a href="https://wa.me/916366564639" target="_blank" 
+            className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm px-6 py-3 rounded-2xl transition-all hover:-translate-y-1">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Ask on WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {/* Accordion List */}
+    <div className="space-y-4">
+      {FAQS.map((item, i) => {
+        const isOpen = openFaq === i;
+        return (
+          <div key={i} data-reveal data-reveal-delay={`${i * 100}ms`}
+            className={`group rounded-[2rem] border transition-all duration-500 overflow-hidden ${
+              isOpen ? "border-blue-200 bg-blue-50/30 shadow-xl shadow-blue-900/5" : "border-slate-100 bg-white hover:border-blue-200 hover:shadow-lg"
+            }`}>
+            <button className="flex w-full items-center justify-between px-8 py-6 text-left"
+              onClick={() => setOpenFaq(isOpen ? -1 : i)}>
+              <span className={`text-lg font-black tracking-tight transition-colors duration-300 ${isOpen ? "text-blue-700" : "text-slate-900"}`}>
+                {item.q}
+              </span>
+              <div className={`flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-500 ${
+                isOpen ? "bg-blue-600 text-white rotate-180" : "bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600"
+              }`}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </button>
+            
+            <div className={`grid transition-all duration-500 ease-in-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+              <div className="overflow-hidden">
+                <div className="px-8 pb-8">
+                  <div className="w-full h-px bg-slate-200/50 mb-6" />
+                  <p className="text-slate-500 text-lg font-medium leading-relaxed max-w-3xl">
+                    {item.a}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+      {/* ════════════ REDESIGNED CONTACT ════════════ */}
+      <section id="contact" className="scroll-mt-24 bg-slate-50 px-4 py-24 sm:px-8 relative overflow-hidden">
+        {/* Decorative Background */}
+  <div className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 bg-blue-100/50 rounded-full blur-3xl opacity-60" />
+  <div className="pointer-events-none absolute -bottom-24 -right-24 w-96 h-96 bg-orange-100/40 rounded-full blur-3xl opacity-60" />
+
+  <div className="mx-auto max-w-7xl relative z-10">
+    <div className="mb-16" data-reveal>
+      <SectionHeader 
+        badge="Connect With Us" 
+        title="Professional" 
+        highlight="Support" 
+        subtitle="Our team is here to help you choose the right path for your digital career."
+        center={true} 
+      />
+    </div>
+
+    <div className="grid lg:grid-cols-[1fr_420px] gap-8 lg:gap-12">
+      
+      {/* LEFT COLUMN: INFO CARDS */}
+      <div className="space-y-8">
+        
+        {/* Primary Contact Cards */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          {[
+            { 
+              icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>, 
+              label: "Phone Support", 
+              val: "+91 6366564639", 
+              link: "tel:916366564639", 
+              bg: "bg-indigo-600" 
+            },
+            { 
+              icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>, 
+              label: "WhatsApp Business", 
+              val: "Chat with us", 
+              link: "https://wa.me/916366564639", 
+              bg: "bg-emerald-500" 
+            },
+            { 
+              icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>, 
+              label: "Visit Campus", 
+              val: "Belthangady, KA", 
+              link: "https://maps.google.com", 
+              bg: "bg-amber-500" 
+            },
+            { 
+              icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>, 
+              label: "Email Enquiries", 
+              val: "Contact via Web", 
+              link: "https://wa.me/916366564639", 
+              bg: "bg-slate-800" 
+            },
+          ].map((item) => (
+            <a key={item.label} href={item.link} target={item.link.startsWith("http") ? "_blank" : "_self"} rel="noreferrer"
+              className="group bg-white border border-slate-200 rounded-3xl p-6 flex items-center gap-5 transition-all duration-300 hover:shadow-xl hover:border-blue-100 hover:-translate-y-1">
+              <div className={`w-12 h-12 rounded-2xl ${item.bg} flex items-center justify-center text-white shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6`}>
+                {item.icon}
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">{item.label}</p>
+                <p className="text-sm font-black text-slate-900 group-hover:text-blue-700 transition-colors">{item.val}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        {/* Detailed Location */}
+        <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 sm:p-10 shadow-sm relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-blue-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-100 transition-colors duration-500" />
+          <div className="relative z-10">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+              </div>
+              <h3 className="text-xl font-black text-slate-900">Institute Location</h3>
+            </div>
+            <p className="text-lg text-slate-700 font-medium leading-relaxed mb-8">
+              Shri Gurusanidhya Building, Near Bharat Petrol Pump, <br className="hidden sm:block" />
+              Belthangady – 574214, Karnataka
+            </p>
+            
+            <div className="grid sm:grid-cols-2 gap-6 pt-8 border-t border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                </div>
+                <p className="text-sm font-bold text-slate-700">+91 63665 64639</p>
+              </div>
+              <div className="flex items-end justify-end">
+                <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-3 text-sm font-bold text-white hover:bg-blue-700 transition-all hover:shadow-lg">
+                  Send Message
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </a>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="space-y-3">
-            {FAQS.map((item, i) => {
-              const isOpen = openFaq === i;
-
-              return (
-                <div
-                  key={`${item.q}-${i}`}
-                  data-reveal
-                  data-reveal-delay={`${i * 60}ms`}
-                  className={`rounded-2xl border overflow-hidden transition-all duration-300 ${
-                    isOpen
-                      ? "border-blue-200 shadow-lg shadow-blue-50 bg-white"
-                      : "border-slate-200 bg-white hover:border-blue-200 hover:shadow-md"
-                  }`}
-                >
-                  <button
-                    className="flex w-full items-center gap-3 sm:gap-4 px-4 sm:px-6 py-4 sm:py-5 text-left"
-                    onClick={() => setOpenFaq((prev) => (prev === i ? -1 : i))}
-                    aria-expanded={isOpen}
-                    aria-controls={`faq-panel-${i}`}
-                    id={`faq-trigger-${i}`}
-                  >
-                    <div
-                      className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                        isOpen
-                          ? "bg-blue-700 text-white"
-                          : "bg-slate-100 text-slate-400"
-                      }`}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </div>
-
-                    <span className="flex-1 font-bold text-slate-900 text-sm sm:text-base leading-snug">
-                      {item.q}
-                    </span>
-
-                    <div
-                      className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-xl font-light transition-all duration-300 ${
-                        isOpen
-                          ? "bg-blue-50 text-blue-700 rotate-45"
-                          : "bg-slate-100 text-slate-400"
-                      }`}
-                    >
-                      +
-                    </div>
-                  </button>
-
-                  <div
-                    id={`faq-panel-${i}`}
-                    role="region"
-                    aria-labelledby={`faq-trigger-${i}`}
-                    className={`grid transition-all duration-300 ${
-                      isOpen
-                        ? "grid-rows-[1fr] opacity-100"
-                        : "grid-rows-[0fr] opacity-0"
-                    }`}
-                  >
-                    <div className="overflow-hidden">
-                      <div className="px-4 sm:px-6 pb-5 pl-16 sm:pl-[4.5rem]">
-                        <p className="text-slate-500 text-sm leading-relaxed">
-                          {item.a}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+      {/* RIGHT COLUMN: MAP & HOURS */}
+      <div className="space-y-6">
+        
+        {/* Working Hours Card */}
+        <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl" />
+          <h3 className="text-lg font-black mb-6 flex items-center justify-between">
+            Operation Hours
+            <span className="bg-emerald-500/20 text-emerald-400 text-[10px] uppercase font-bold px-3 py-1 rounded-full border border-emerald-500/30">
+              ● Active
+            </span>
+          </h3>
+          <div className="space-y-4">
+            {[
+              { day: "Mon – Sat", time: "9:00 AM – 5:30 PM", active: true },
+              { day: "Sunday", time: "Closed", active: false },
+            ].map((h) => (
+              <div key={h.day} className={`flex items-center justify-between p-4 rounded-2xl border ${h.active ? "bg-white/5 border-white/10" : "border-white/5 opacity-40"}`}>
+                <span className="text-sm font-bold">{h.day}</span>
+                <span className={`text-sm font-medium ${h.active ? "text-indigo-300" : "text-red-400"}`}>{h.time}</span>
+              </div>
+            ))}
           </div>
         </div>
-      </section>
 
-      {/* ════════════ CONTACT ════════════ */}
-      <section id="contact" className="scroll-mt-24 bg-slate-50 px-4 py-20 sm:py-24 sm:px-8 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-72 h-72 bg-blue-100 rounded-full blur-3xl opacity-50" />
-        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-64 h-64 bg-orange-100 rounded-full blur-3xl opacity-40" />
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-12" data-reveal>
-            <SectionHeader badge="📍 Find Us" title="Contact" highlight="Us"
-              subtitle="Visit us at our Belthangady campus or reach out via WhatsApp — we're always happy to help with admissions and course queries."
-              center={false} />
-          </div>
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="flex flex-col gap-4">
-              {[
-                { icon:"🏫", label:"Institute", value:"Gurukula Computer Training Centre" },
-
-                // existing office number
-                { icon:"☎️", label:"Office Phone", value:"6366564639" },
-
-                // add these two
-                { icon:"📱", label:"Contact Number 1", value:"YOUR_SECOND_NUMBER" },
-                { icon:"📱", label:"Contact Number 2", value:"YOUR_THIRD_NUMBER" },
-
-                { icon:"📍", label:"Address", value:"Shri Gurusanidhya Building, Near Bharat Petrol Pump, Belthangady – 574214" },
-              ].map((info) => (
-
-                <div key={info.label}
-                  className="group flex items-start gap-4 bg-white border border-slate-200 rounded-2xl px-4 sm:px-5 py-4 hover:border-blue-200 hover:bg-blue-50 hover:translate-x-1 transition-all duration-300 cursor-default">
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 group-hover:bg-blue-700 flex items-center justify-center text-lg flex-shrink-0 transition-colors duration-300">{info.icon}</div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">{info.label}</p>
-                    <p className="text-sm font-bold text-slate-900 leading-snug break-words">{info.value}</p>
-                  </div>
-                </div>
-              ))}
-              <div className="relative overflow-hidden rounded-2xl p-5 sm:p-6 text-white"
-                style={{ background:"linear-gradient(135deg,#0F172A 0%,#1E3A8A 55%,#1D4ED8 100%)" }}>
-                <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
-                <div className="relative z-10">
-                  <p className="text-xs font-semibold text-blue-300 uppercase tracking-widest mb-4">🕐 Working Hours</p>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-blue-200">Monday – Saturday</span>
-                      <span className="text-sm font-bold text-white">9:00 AM – 5:30 PM</span>
-                    </div>
-                    <div className="h-px bg-white/10" />
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-blue-200">Sunday</span>
-                      <span className="text-sm font-bold text-red-300">Closed</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
-                className="flex items-center justify-center gap-3 w-full rounded-2xl bg-[#25D366] hover:bg-[#1ebe5d] py-4 font-bold text-white transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-200">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                Chat on WhatsApp
-              </a>
-            </div>
-            <div className="relative rounded-3xl overflow-hidden border border-slate-200 shadow-lg min-h-[380px] sm:min-h-[420px]">
-              <iframe className="w-full h-full min-h-[380px] sm:min-h-[420px] border-0" title="Gurukula Computer Training Centre location"
-                src="https://maps.google.com/maps?q=belthangady&t=&z=14&ie=UTF8&iwloc=&output=embed" loading="lazy" />
-              <div className="absolute top-4 left-4 bg-white border border-slate-200 rounded-xl px-3 py-2.5 shadow-md flex items-center gap-3">
-                <div className="relative flex-shrink-0">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                  <div className="absolute inset-0 rounded-full bg-red-400 anim-ping opacity-75" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-900 leading-none mb-0.5">Gurukula Computer</p>
-                  <p className="text-xs text-slate-500">Belthangady, 574214</p>
-                </div>
-              </div>
-            </div>
+        {/* Map Container */}
+        <div className="relative group h-[400px] lg:h-[450px]">
+          <div className="absolute inset-0 bg-indigo-600 rounded-[2.5rem] blur-2xl opacity-10 group-hover:opacity-20 transition-opacity" />
+          <div className="relative h-full w-full rounded-[2.5rem] overflow-hidden border-4 border-white shadow-2xl">
+            <iframe className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-700" title="Location"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.3756852431713!2d75.29749597587844!3d12.883584816812836!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba4bb2d244458f3%3A0x67825d19760737a3!2sGurukula%20Computer%20Training%20Centre!5e0!3m2!1sen!2sin!4v1714467000000!5m2!1sen!2sin" loading="lazy" />
           </div>
         </div>
-      </section>
+
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* ════════════ FLOATING UI ════════════ */}
       {/* WhatsApp FAB */}
