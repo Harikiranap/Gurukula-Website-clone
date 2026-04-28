@@ -689,152 +689,94 @@ const GalleryGrid = ({ onOpen }) => {
       {/* GPU-composited progress bar — no React state, moved by useScrollProgress */}
       <div id="scroll-progress" style={{ width:"100%", transform:"scaleX(0)" }} />
 
-           {/* ════════════ HERO ════════════ */}
-<section id="home" className="scroll-mt-24 relative overflow-hidden bg-slate-50 px-4 pt-32 sm:pt-40 pb-24 md:px-8">
+      {/* ════════════ HERO ════════════ */}
+      <section id="home" className="scroll-mt-24 relative overflow-hidden bg-slate-50 px-4 pt-28 pb-0 md:px-8 md:pt-40 md:pb-32 min-h-[70vh] flex items-center">
         
-        {/* Decorative Background Elements */}
-        <div className="pointer-events-none absolute -top-40 -left-40 h-[400px] w-[400px] sm:h-[600px] sm:w-[600px] rounded-full bg-blue-100 opacity-50 blur-3xl" style={{ animation:"floatY 12s ease-in-out infinite" }} />
-        <div className="pointer-events-none absolute -bottom-40 -right-40 h-[300px] w-[300px] sm:h-[500px] sm:w-[500px] rounded-full bg-orange-100 opacity-40 blur-3xl" style={{ animation:"floatY 15s ease-in-out 2s infinite" }} />
+        {/* Decorative Background Elements - Re-centered for balance */}
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-full max-w-[800px] rounded-full bg-blue-100/50 opacity-50 blur-[120px]" />
+        <div className="pointer-events-none absolute -bottom-40 -left-20 h-[400px] w-[400px] rounded-full bg-orange-100 opacity-40 blur-3xl" style={{ animation:"floatY 12s ease-in-out infinite" }} />
+        <div className="pointer-events-none absolute top-20 -right-20 h-[300px] w-[300px] rounded-full bg-blue-100 opacity-40 blur-3xl" style={{ animation:"floatY 15s ease-in-out 2s infinite" }} />
 
-        <div className="relative mx-auto max-w-7xl grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          
-          {/* LEFT: Minimal Content */}
-          <div className="w-full min-w-0 pr-0 lg:pr-8">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-xs font-bold text-blue-700 shadow-sm anim-fadeInUp">
-              <span className="h-2 w-2 flex-shrink-0 rounded-full bg-orange-500 anim-pulse" />
-              <span>Belthangady's Premier Institute</span>
-            </div>
+        <div className="relative mx-auto max-w-4xl w-full text-center">
 
-            <h1 className="text-5xl sm:text-6xl lg:text-[4.5rem] font-black leading-[1.1] text-slate-900 anim-fadeInUp-1">
-              Shape Your <br className="hidden sm:block" /> Future in <br className="hidden sm:block" />
-              <span className="text-blue-700 relative inline-block mt-2">
-                Technology
-                <svg 
-                  className="absolute -bottom-2 left-0 w-full hero-underline-svg" 
-                  height="12" 
-                  viewBox="0 0 400 12" 
-                  preserveAspectRatio="none"
-                >
-                  <path 
-                    d="M4 9c40-2 80-4 120-4s80 2 120 4c40 2 80 1 150-3" 
-                    stroke="#f97316" 
-                    strokeWidth="6" 
-                    fill="none" 
-                    style={{ 
-                      strokeDasharray: 600, 
-                      strokeDashoffset: 600, 
-                      animation: "drawLine 1.5s cubic-bezier(0.4, 0, 0.2, 1) 1s forwards" 
-                    }} 
-                  />
-                </svg>
+          {/* Heading - Increased scale for single column impact */}
+          <h4 className="text-3xl sm:text-5xl lg:text-[5.0rem] font-black leading-[1.05] text-slate-900 tracking-tight anim-fadeInUp-1">
+            Shape Your Future in 
+            <span className="text-blue-700 relative inline-block ml-3 lg:ml-4">
+              Technology
+              <svg 
+                className="absolute -bottom-2 left-0 w-full hero-underline-svg" 
+                height="14" 
+                viewBox="0 0 400 12" 
+                preserveAspectRatio="none"
+              >
+                <path 
+                  d="M4 9c40-2 80-4 120-4s80 2 120 4c40 2 80 1 150-3" 
+                  stroke="#f97316" 
+                  strokeWidth="6" 
+                  fill="none" 
+                  style={{ 
+                    strokeDasharray: 600, 
+                    strokeDashoffset: 600, 
+                    animation: "drawLine 1.5s cubic-bezier(0.4, 0, 0.2, 1) 1s forwards" 
+                  }} 
+                />
+              </svg>
+            </span>
+          </h4>
+
+          {/* Description - Centered and widened */}
+          <p className="mt-8 text-lg sm:text-xl md:text-2xl text-slate-600 leading-relaxed max-w-2xl mx-auto font-medium anim-fadeInUp-3">
+            Expert, job-oriented training in Artificial Intelligence, Graphic Design, Data Analytics, and IT. Join the next generation of tech leaders.
+          </p>
+
+          {/* Buttons - Centered */}
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 anim-fadeInUp-4">
+            <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
+              className="group relative overflow-hidden rounded-2xl bg-blue-700 px-10 py-4 text-base font-bold text-white shadow-xl shadow-blue-200 transition-all duration-300 hover:shadow-blue-300 hover:-translate-y-1 w-full sm:w-auto">
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Join Gurukula Today
+                <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
               </span>
-            </h1>
-
-            <p className="mt-8 text-lg sm:text-xl text-slate-600 leading-relaxed max-w-lg anim-fadeInUp-3">
-              Expert, job-oriented training in Artificial Intelligence, Graphic Design, Data Analytics, and IT.
-            </p>
-
-            <div className="mt-8 flex flex-col sm:flex-row gap-4 anim-fadeInUp-4">
-              <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
-                className="group relative overflow-hidden rounded-full bg-blue-700 px-8 py-4 font-bold text-white shadow-lg text-center transition-all duration-300 hover:shadow-blue-300 hover:-translate-y-1">
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  Join Gurukula Today
-                  <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                </span>
-              </a>
-              <a href="#courses"
-                className="group rounded-full border-2 border-slate-200 bg-white px-8 py-4 font-bold text-slate-800 hover:border-orange-500 hover:text-orange-600 transition-all duration-300 text-center hover:-translate-y-1 shadow-sm">
-                Explore Courses
-              </a>
-            </div>
-
-            {/* AI Card Minimal Badge */}
-            <div className="mt-8 anim-fadeInUp-5">
-              <a href="https://www.yaticorp.com/ai-card" target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-white border border-orange-200 rounded-2xl p-3 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div className="bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl p-2.5 shadow-inner">
-                  <UiIcon name="monitor" className="w-6 h-6 text-white"/>
-                </div>
-                <div className="pr-4">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-black text-slate-900">World's First AI Card</p>
-                    <span className="bg-green-100 text-green-700 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">New</span>
-                  </div>
-                  <p className="text-xs font-semibold text-slate-500 mt-0.5 group-hover:text-orange-600 transition-colors">Unlock 50+ Tools & Benefits →</p>
-                </div>
-              </a>
-            </div>
-
-            {/* STAT COUNTER */}
-            <div ref={statsRef} className="mt-10 grid grid-cols-3 gap-6 max-w-lg anim-fadeInUp-6">
-              {[
-                { num: counts.courses,  suffix: "+", label: "Courses"    },
-                { num: counts.students, suffix: "+", label: "Students"   },
-                { num: counts.years,    suffix: "+", label: "Years Exp." },
-              ].map((s) => (
-                <div key={s.label} className="text-left">
-                  <p className="text-3xl font-black text-blue-900 tabular-nums">{s.num}{s.suffix}</p>
-                  <p className="mt-1 text-xs font-bold text-slate-500 uppercase tracking-widest">{s.label}</p>
-                </div>
-              ))}
-            </div>
+            </a>
+            <a href="#courses"
+              className="group rounded-2xl border-2 border-slate-200 bg-white px-10 py-4 text-base font-bold text-slate-800 hover:border-orange-500 hover:text-orange-600 transition-all duration-300 shadow-sm w-full sm:w-auto">
+              Explore Courses
+            </a>
           </div>
 
-          {/* RIGHT: Attractive Company Collage */}
-          <div className="relative mt-16 lg:mt-0 lg:ml-6 perspective anim-fadeInRight" onMouseMove={onHeroMove} onMouseLeave={onHeroLeave}>
-            <div ref={heroImgRef} style={{ transition:"transform 0.15s ease", transformStyle:"preserve-3d" }} className="relative w-full aspect-[4/4.5] max-w-xl mx-auto">
-              
-              {/* Main Large Image */}
-              <div className="absolute top-0 right-0 w-[65%] h-[60%] z-20 rounded-3xl overflow-hidden shadow-2xl border-[6px] border-white tilt-card group">
-                <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors duration-500 z-10"/>
-                <img src="/images/gallery1.jpg" alt="Gurukula Tech Lab" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+          {/* AI Card Badge - Centered 
+          <div className="mt-12 anim-fadeInUp-5 flex justify-center">
+            <a href="https://www.yaticorp.com/ai-card" target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-white border border-orange-100 rounded-2xl p-2.5 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+              <div className="bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl p-2">
+                <UiIcon name="monitor" className="w-5 h-5 text-white"/>
               </div>
-
-              {/* Bottom Left Medium Image */}
-              <div className="absolute bottom-[5%] left-0 w-[55%] h-[50%] z-30 rounded-3xl overflow-hidden shadow-2xl border-[6px] border-white tilt-card group">
-                <div className="absolute inset-0 bg-orange-900/10 group-hover:bg-transparent transition-colors duration-500 z-10"/>
-                <img src="/images/gallery2.jpg" alt="Students Learning" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <div className="pr-3 text-left">
+                <p className="text-xs font-black text-slate-900">World's First AI Card <span className="ml-1 text-green-600">New</span></p>
+                <p className="text-[11px] font-semibold text-slate-500 group-hover:text-orange-600 transition-colors">Unlock 50+ Tools & Benefits →</p>
               </div>
+            </a>
+          </div>*/}
 
-              {/* Bottom Right Small Image */}
-              <div className="absolute bottom-[0%] right-[5%] w-[40%] h-[35%] z-20 rounded-3xl overflow-hidden shadow-xl border-[4px] border-white tilt-card group">
-                <img src="/images/gallery4.jpg" alt="Hardware Setup" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+          {/* STAT COUNTER - Horizontal Centered Layout */}
+          <div ref={statsRef} className="mt-16 flex flex-wrap justify-center gap-8 sm:gap-16 anim-fadeInUp-6 border-t border-slate-100 pt-0">
+            {[
+              { num: counts.courses,  suffix: "+", label: "Professional Courses" },
+              { num: counts.students, suffix: "+", label: "Happy Students" },
+              { num: counts.years,    suffix: "+", label: "Years Experience" },
+            ].map((s) => (
+              <div key={s.label} className="text-center">
+                <p className="text-4xl font-black text-blue-900 tabular-nums">{s.num}{s.suffix}</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-2">{s.label}</p>
               </div>
-
-              {/* Top Left Decorative Image */}
-              <div className="absolute top-[10%] left-[5%] w-[35%] h-[35%] z-10 rounded-3xl overflow-hidden shadow-lg border-[4px] border-white tilt-card group opacity-90 hover:opacity-100">
-                <img src="/images/gallery3.jpg" alt="Certifications" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              </div>
-
-              {/* Central Floating Badge */}
-              <div className="absolute top-[45%] left-[45%] -translate-x-1/2 -translate-y-1/2 z-40 bg-white/90 backdrop-blur-md p-4 rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.2)] border border-white anim-float">
-                <div className="bg-gradient-to-tr from-blue-600 to-blue-400 w-16 h-16 rounded-full flex items-center justify-center shadow-inner">
-                  <UiIcon name="monitor" className="w-8 h-8 text-white"/>
-                </div>
-              </div>
-
-              {/* Trust Badge */}
-              <div className="absolute bottom-[20%] -right-[5%] z-40 bg-white px-5 py-3 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3 anim-float-2">
-                <div className="flex -space-x-3">
-                  {[1,2,3].map(i => (
-                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden">
-                       <img src={`/images/gallery${i}.jpg`} className="w-full h-full object-cover" alt="Student" />
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <div className="flex text-orange-400 text-xs">★★★★★</div>
-                  <p className="text-[10px] font-bold text-slate-800 uppercase tracking-widest mt-0.5">Top Rated</p>
-                </div>
-              </div>
-
-            </div>
+            ))}
           </div>
 
         </div>
         
-        {/* Elegant Curved Wave Divider */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none transform translate-y-[1px]">
-          <svg className="relative block w-full h-[50px] sm:h-[80px] lg:h-[120px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
+        {/* Elegant Wave Divider */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none">
+          <svg className="relative block w-full h-[60px] lg:h-[100px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
             <path className="fill-blue-50" d="M0,60 C480,160 960,-40 1440,60 L1440,120 L0,120 Z"></path>
           </svg>
         </div>
