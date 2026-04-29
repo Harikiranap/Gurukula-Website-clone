@@ -879,11 +879,6 @@ const GalleryGrid = ({ onOpen }) => {
           </div>
         </div> */}
 
-        {/* Wave to Testimonials 
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none transform translate-y-[1px]">
-          <svg className="relative block w-full h-[40px] sm:h-[60px] lg:h-[100px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path className="fill-white" d="M0,60 C480,160 960,-40 1440,60 L1440,120 L0,120 Z"></path>
-          </svg>*/}
         </div> 
       </section>
 
