@@ -575,6 +575,16 @@ export default function Home() {
   const [lightbox,        setLightbox]        = useState(null);
   const location = useLocation();
 
+  const [currentTimeObj, setCurrentTimeObj] = useState(new Date());
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTimeObj(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const currentDay = currentTimeObj.getDay();
+  const currentHrs = currentTimeObj.getHours() + currentTimeObj.getMinutes() / 60;
+  const isInstituteOpen = currentDay >= 1 && currentDay <= 6 && currentHrs >= 9.0 && currentHrs < 17.5;
+
   useEffect(() => {
     if (location.hash) {
       const element = document.getElementById(location.hash.slice(1));
@@ -1422,18 +1432,24 @@ const GalleryGrid = ({ onOpen }) => {
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl" />
           <h3 className="text-lg font-black mb-6 flex items-center justify-between">
             Operation Hours
-            <span className="bg-emerald-500/20 text-emerald-400 text-[10px] uppercase font-bold px-3 py-1 rounded-full border border-emerald-500/30">
-              ● Active
-            </span>
+            {isInstituteOpen ? (
+              <span className="bg-emerald-500/20 text-emerald-400 text-[10px] uppercase font-bold px-3 py-1 rounded-full border border-emerald-500/30">
+                ● Active
+              </span>
+            ) : (
+              <span className="bg-red-500/20 text-red-400 text-[10px] uppercase font-bold px-3 py-1 rounded-full border border-red-500/30">
+                ● Closed
+              </span>
+            )}
           </h3>
           <div className="space-y-4">
             {[
-              { day: "Mon – Sat", time: "9:00 AM – 5:30 PM", active: true },
-              { day: "Sunday", time: "Closed", active: false },
+              { day: "Mon – Sat", time: "9:00 AM – 5:30 PM", active: currentDay >= 1 && currentDay <= 6 },
+              { day: "Sunday", time: "Closed", active: currentDay === 0 },
             ].map((h) => (
               <div key={h.day} className={`flex items-center justify-between p-4 rounded-2xl border ${h.active ? "bg-white/5 border-white/10" : "border-white/5 opacity-40"}`}>
                 <span className="text-sm font-bold">{h.day}</span>
-                <span className={`text-sm font-medium ${h.active ? "text-indigo-300" : "text-red-400"}`}>{h.time}</span>
+                <span className={`text-sm font-medium ${h.active && h.time !== "Closed" ? "text-indigo-300" : "text-red-400"}`}>{h.time}</span>
               </div>
             ))}
           </div>
