@@ -938,7 +938,7 @@ const GalleryGrid = ({ onOpen }) => {
           {activeCategory !== "Individual Courses" && displayedCourses.length > 0 && (
             <>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {(activeCategory === "All" && !showAllCourses ? displayedCourses.slice(0, 8) : displayedCourses).map((course, i) => (
+              {(activeCategory === "All" && !showAllCourses ? displayedCourses.slice(0, 4) : displayedCourses).map((course, i) => (
                 <article
                   key={course.id}
                   className="group flex flex-col rounded-[2rem] bg-white border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.08)] hover:border-blue-100 transition-all duration-300 overflow-hidden cursor-pointer"
