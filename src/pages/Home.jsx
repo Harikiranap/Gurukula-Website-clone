@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import certificateImg from "../images/certificate.jpg";
+import logoImg from "../images/logo.png";
 
 // ── CONSTANTS ──────────────────────────────────────────────────────────────
 const PHOTOS = [
@@ -850,28 +851,21 @@ const GalleryGrid = ({ onOpen }) => {
             
             {/* LEFT IMAGE */}
             <div
-              className="relative perspective anim-fadeInRight order-2 lg:order-1"
+              className="relative perspective anim-fadeInRight order-2 lg:order-1 flex items-center justify-center"
               onMouseMove={onAboutMove}
               onMouseLeave={onAboutLeave}
             >
               <div
                 ref={aboutTiltRef}
                 style={{ transition:"transform 0.15s ease", transformStyle:"preserve-3d" }}
-                className="relative"
+                className="relative w-full max-w-sm mx-auto"
               >
                 <img
-                  src="/images/gallery4.jpg"
-                  alt="Gurukula Computer Training Centre"
-                  className="w-full rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] object-cover aspect-[4/3]"
+                  src={logoImg}
+                  alt="Gurukula Logo"
+                  className="w-full object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
-                <div className="absolute -bottom-5 -right-5 bg-white/90 backdrop-blur-md border border-slate-200 rounded-2xl px-5 py-3 shadow-xl">
-                  <p className="text-xs font-bold text-slate-900 leading-none mb-1">✅ Certified Institute</p>
-                </div>
-                <div className="absolute -top-5 -left-5 bg-gradient-to-r from-orange-500 to-orange-400 rounded-2xl px-5 py-3 shadow-lg">
-                  <p className="text-sm font-bold text-white">⭐ 4.8 Rating</p>
-                </div>
               </div>
             </div>
 
