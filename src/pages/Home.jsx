@@ -690,97 +690,76 @@ const GalleryGrid = ({ onOpen }) => {
       <div id="scroll-progress" style={{ width:"100%", transform:"scaleX(0)" }} />
 
       {/* ════════════ HERO ════════════ */}
-      <section id="home" className="scroll-mt-24 relative overflow-hidden bg-slate-50 px-4 pt-28 pb-0 md:px-8 md:pt-40 md:pb-32 min-h-[70vh] flex items-center">
-        
-        {/* Decorative Background Elements - Re-centered for balance */}
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-full max-w-[800px] rounded-full bg-blue-100/50 opacity-50 blur-[120px]" />
-        <div className="pointer-events-none absolute -bottom-40 -left-20 h-[400px] w-[400px] rounded-full bg-orange-100 opacity-40 blur-3xl" style={{ animation:"floatY 12s ease-in-out infinite" }} />
-        <div className="pointer-events-none absolute top-20 -right-20 h-[300px] w-[300px] rounded-full bg-blue-100 opacity-40 blur-3xl" style={{ animation:"floatY 15s ease-in-out 2s infinite" }} />
+    <section id="home" className="scroll-mt-24 relative overflow-hidden bg-black px-4 pt-28 pb-0 md:px-8 md:pt-40 md:pb-32 min-h-[70vh] flex items-center">
+      
+      {/* Background Image Layer */}
+      <div 
+        className="absolute inset-0 z-0 opacity-50 bg-cover bg-center bg-no-repeat scale-100"
+        style={{ 
+          backgroundImage: "url('/images/background.png')",
+        }}
+      />
 
-        <div className="relative mx-auto max-w-4xl w-full text-center">
+      {/* Radial Black Shadow Overlay - Darkens all edges (vignette) */}
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle,_transparent_90%,_rgba(0,0,0,0.4)_95%,_rgba(0,0,0,0.9)_100%)]" />
 
-          {/* Heading - Increased scale for single column impact */}
-          <h4 className="text-3xl sm:text-5xl lg:text-[5.0rem] font-black leading-[1.05] text-slate-900 tracking-tight anim-fadeInUp-1">
-            Shape Your Future in 
-            <span className="text-blue-700 relative inline-block ml-3 lg:ml-4">
-              Technology
-              <svg 
-                className="absolute -bottom-2 left-0 w-full hero-underline-svg" 
-                height="14" 
-                viewBox="0 0 400 12" 
-                preserveAspectRatio="none"
-              >
-                <path 
-                  d="M4 9c40-2 80-4 120-4s80 2 120 4c40 2 80 1 150-3" 
-                  stroke="#f97316" 
-                  strokeWidth="6" 
-                  fill="none" 
-                  style={{ 
-                    strokeDasharray: 600, 
-                    strokeDashoffset: 600, 
-                    animation: "drawLine 1.5s cubic-bezier(0.4, 0, 0.2, 1) 1s forwards" 
-                  }} 
-                />
-              </svg>
+      {/* Optional: Extra Top & Bottom Linear Overlay for maximum text pop */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-t from-black via-transparent to-black/60" />
+
+      {/* Decorative Background Elements */}
+      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-full max-w-[800px] rounded-full bg-blue-500/10 opacity-20 blur-[120px]" />
+
+      <div className="relative z-10 mx-auto max-w-4xl w-full text-center">
+
+        {/* Heading */}
+        <h1 className="text-3xl sm:text-5xl lg:text-[5.0rem] font-black leading-[1.05] text-white tracking-tight anim-fadeInUp-1">
+          Shape Your Future in 
+          <span className="text-blue-400 relative inline-block ml-3 lg:ml-4">
+            Technology
+            
+          </span>
+        </h1>
+
+
+
+        {/* Buttons */}
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 anim-fadeInUp-4">
+          <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
+            className="group relative overflow-hidden rounded-2xl bg-blue-600 px-10 py-4 text-base font-bold text-white shadow-xl shadow-blue-900/40 transition-all duration-300 hover:shadow-blue-500/40 hover:-translate-y-1 w-full sm:w-auto">
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              Join Gurukula Today
+              <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </span>
-          </h4>
-
-          {/* Description - Centered and widened */}
-          <p className="mt-8 text-lg sm:text-xl md:text-2xl text-slate-600 leading-relaxed max-w-2xl mx-auto font-medium anim-fadeInUp-3">
-            Expert, job-oriented training in Artificial Intelligence, Graphic Design, Data Analytics, and IT. Join the next generation of tech leaders.
-          </p>
-
-          {/* Buttons - Centered */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 anim-fadeInUp-4">
-            <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
-              className="group relative overflow-hidden rounded-2xl bg-blue-700 px-10 py-4 text-base font-bold text-white shadow-xl shadow-blue-200 transition-all duration-300 hover:shadow-blue-300 hover:-translate-y-1 w-full sm:w-auto">
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                Join Gurukula Today
-                <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-              </span>
-            </a>
-            <a href="#courses"
-              className="group rounded-2xl border-2 border-slate-200 bg-white px-10 py-4 text-base font-bold text-slate-800 hover:border-orange-500 hover:text-orange-600 transition-all duration-300 shadow-sm w-full sm:w-auto">
-              Explore Courses
-            </a>
-          </div>
-
-          {/* AI Card Badge - Centered 
-          <div className="mt-12 anim-fadeInUp-5 flex justify-center">
-            <a href="https://www.yaticorp.com/ai-card" target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-white border border-orange-100 rounded-2xl p-2.5 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-              <div className="bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl p-2">
-                <UiIcon name="monitor" className="w-5 h-5 text-white"/>
-              </div>
-              <div className="pr-3 text-left">
-                <p className="text-xs font-black text-slate-900">World's First AI Card <span className="ml-1 text-green-600">New</span></p>
-                <p className="text-[11px] font-semibold text-slate-500 group-hover:text-orange-600 transition-colors">Unlock 50+ Tools & Benefits →</p>
-              </div>
-            </a>
-          </div>*/}
-
-          {/* STAT COUNTER - Horizontal Centered Layout */}
-          <div ref={statsRef} className="mt-16 flex flex-wrap justify-center gap-8 sm:gap-16 anim-fadeInUp-6 border-t border-slate-100 pt-0">
-            {[
-              { num: counts.courses,  suffix: "+", label: "Professional Courses" },
-              { num: counts.students, suffix: "+", label: "Happy Students" },
-              { num: counts.years,    suffix: "+", label: "Years Experience" },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <p className="text-4xl font-black text-blue-900 tabular-nums">{s.num}{s.suffix}</p>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-2">{s.label}</p>
-              </div>
-            ))}
-          </div>
-
+          </a>
+          <a href="#courses"
+            className="group rounded-2xl border-2 border-white/20 bg-white/5 backdrop-blur-md px-10 py-4 text-base font-bold text-white hover:border-orange-500 hover:bg-white/10 transition-all duration-300 w-full sm:w-auto">
+            Explore Courses
+          </a>
         </div>
-        
-        {/* Elegant Wave Divider */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none">
-          <svg className="relative block w-full h-[60px] lg:h-[100px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path className="fill-blue-50" d="M0,60 C480,160 960,-40 1440,60 L1440,120 L0,120 Z"></path>
-          </svg>
+
+        {/* Stat Counter */}
+        <div className="mt-16 flex flex-wrap justify-center gap-8 sm:gap-16 anim-fadeInUp-6 border-t border-white/10 pt-8">
+          {[
+            { num: counts.courses, suffix: "+", label: "Professional Courses" },
+            { num: counts.students, suffix: "+", label: "Happy Students" },
+            { num: counts.years, suffix: "+", label: "Years Experience" },
+          ].map((s) => (
+            <div key={s.label} className="text-center">
+              <p className="text-4xl font-black text-white tabular-nums">{s.num}{s.suffix}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-2">{s.label}</p>
+            </div>
+          ))}
         </div>
-      </section>
+
+      </div>
+
+      {/* Wave Divider */}
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none">
+        <svg className="relative block w-full h-[60px] lg:h-[100px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path className="fill-slate-50" d="M0,60 C480,160 960,-40 1440,60 L1440,120 L0,120 Z"></path>
+        </svg>
+      </div>
+    </section>
 
 {/* ════════════ ABOUT (MINIMAL) ════════════ */}
       <section
@@ -1015,7 +994,7 @@ const GalleryGrid = ({ onOpen }) => {
           )}
 
           {/* ================= INDIVIDUAL COURSES ================= */}
-          {(activeCategory === "Individual Courses" || activeCategory === "All") && (
+          {activeCategory === "Individual Courses" && (
             <div className="relative overflow-hidden rounded-[2.5rem] bg-white border border-slate-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] p-6 sm:p-10 mb-14" style={{ animation: `fadeInUp 0.6s ease both` }}>
               <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-blue-50/50 to-orange-50/50 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/4" />
               
