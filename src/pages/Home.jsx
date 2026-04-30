@@ -730,12 +730,14 @@ export default function Home() {
             </span>
           </h1>
 
-
-
           {/* Buttons */}
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 anim-fadeInUp-4 top-50">
             <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
+<<<<<<< HEAD
               className="group rounded-2xl border-2 border-white/70 bg-black/50 backdrop-blur-md px-12 py-5 text-base font-bold text-white hover:border-red-500 hover:bg-blue-500/70 transition-all duration-300 w-full sm:w-auto">
+=======
+              className="group rounded-2xl border-2 border-white/20 bg-white/5 backdrop-blur-md px-10 py-4 text-base font-bold text-white hover:border-blue-500 hover:bg-white/10 transition-all duration-300 w-full sm:w-auto">
+>>>>>>> f70205dace0386544875e6dbd4431911f53a74fb
               <span className="relative z-10 flex items-center justify-center gap-2">
                 Join Gurukula Today
                 <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
