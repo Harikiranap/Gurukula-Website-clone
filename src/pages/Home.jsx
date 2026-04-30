@@ -885,16 +885,17 @@ export default function Home() {
         <div className="pointer-events-none absolute -z-10 bottom-0 left-0 w-64 h-64 bg-orange-50 rounded-full blur-3xl opacity-50" />
         <div className="mx-auto max-w-7xl">
           <div className="text-center mb-12" data-reveal>
-            <SectionHeader badge="📚 Our Programs" title="Explore Our" highlight="Professional Courses"
+            <SectionHeader badge={<><svg className="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg> Our Programs</>} title="Explore Our" highlight="Professional Courses"
               subtitle="Diploma, certificate, design, AI and software training programs built for real career growth." />
           </div>
-
+            {/*
           <div className="mb-8 flex items-center justify-center">
-            <div className="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-xs sm:text-sm font-bold text-blue-800">
-              🎉 Special Offer: <span className="text-blue-900">10% OFF on all courses</span> • Limited <span className="text-blue-900">Time Offer</span>
+            <div className="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-xs sm:text-sm font-bold text-blue-800 flex items-center gap-2">
+              <svg className="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+              <span>Special Offer: <span className="text-blue-900">10% OFF on all courses</span> • Limited <span className="text-blue-900">Time Offer</span></span>
             </div>
           </div>
-          {/* AI CARD BANNER */}
+           AI CARD BANNER 
           <div className="mb-10 relative overflow-hidden rounded-2xl p-6 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5"
             style={{ background: "linear-gradient(135deg,#042C53 0%,#185FA5 60%,#378ADD 100%)" }}>
             <div className="absolute -top-12 -right-12 w-52 h-52 rounded-full bg-white/5 pointer-events-none" />
@@ -909,21 +910,19 @@ export default function Home() {
               <a href="https://www.yaticorp.com/AI-Card" target="_blank" rel="noreferrer"
                 className="rounded-xl border border-white/30 bg-white/10 px-5 py-2.5 font-bold text-white text-sm whitespace-nowrap transition-all hover:bg-white/20 hover:-translate-y-0.5">Know More →</a>
             </div>
-          </div>
+          </div> */}
 
           {/* CATEGORY FILTER */}
-          <div className="mb-10 -mx-4 sm:mx-0 overflow-x-auto pb-2">
-            <div className="flex min-w-max gap-2.5 px-4 sm:px-0">
-              {courseCategories.map((cat) => (
-                <button key={cat} onClick={() => { setActiveCategory(cat); setShowAllCourses(false); }}
-                  className={`whitespace-nowrap rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all duration-200 ${activeCategory === cat
-                    ? "bg-blue-700 text-white shadow-lg shadow-blue-200 scale-105"
-                    : "bg-white border border-slate-200 text-slate-600 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700"
-                    }`}>
-                  {cat}
-                </button>
-              ))}
-            </div>
+          <div className="mb-10 flex flex-wrap justify-center gap-2.5 px-2 sm:px-0">
+            {courseCategories.map((cat) => (
+              <button key={cat} onClick={() => { setActiveCategory(cat); setShowAllCourses(false); }}
+                className={`whitespace-nowrap rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all duration-200 ${activeCategory === cat
+                  ? "bg-blue-700 text-white shadow-lg shadow-blue-200 scale-105"
+                  : "bg-white border border-slate-200 text-slate-600 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700"
+                  }`}>
+                {cat}
+              </button>
+            ))}
           </div>
 
 
