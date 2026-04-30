@@ -23,3 +23,9 @@ html {
   opacity: 1 !important;
   transform: none !important;
 }
+
+/* Premium Selection Color */
+::selection {
+  background-color: #3b82f6;
+  color: #ffffff;
+}

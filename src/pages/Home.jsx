@@ -1049,7 +1049,7 @@ export default function Home() {
       </section>
 
       {/* ════════════ GALLERY ════════════ */}
-      <section id="gallery" className="scroll-mt-24 bg-white py-24 sm:py-32 px-4 sm:px-8 relative overflow-hidden">
+      <section id="gallery" className="scroll-mt-24 bg-white py-24 sm:py-32 px-4 sm:px-8 relative overflow-hidden ...">
         {/* Modern Decorative Accents */}
         <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-40">
           <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-50 rounded-full blur-[120px]" />
