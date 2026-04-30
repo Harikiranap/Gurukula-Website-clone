@@ -748,7 +748,7 @@ export default function Home() {
           </div>
 
           {/* Stat Counter */}
-          <div className="mt-16 flex flex-wrap justify-center gap-8 sm:gap-16 anim-fadeInUp-6 border-t border-white/10 pt-8">
+          <div ref={statsRef} className="mt-16 flex flex-wrap justify-center gap-8 sm:gap-16 anim-fadeInUp-6 border-t border-white/10 pt-8">
             {[
               { num: counts.courses, suffix: "+", label: "Professional Courses" },
               { num: counts.students, suffix: "+", label: "Happy Students" },
