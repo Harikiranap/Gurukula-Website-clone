@@ -704,12 +704,18 @@ export default function Home() {
       <section id="home" className="scroll-mt-24 relative overflow-hidden bg-black px-4 pt-28 pb-0 md:px-8 md:pt-40 md:pb-32 min-h-screen flex items-center">
 
         {/* Background Image Layer */}
-        <div
-          className="absolute inset-0 z-0 opacity-70 bg-cover bg-center bg-no-repeat scale-100"
-          style={{
-            backgroundImage: "url('/images/background.png')",
-          }}
-        />
+        <div className="absolute inset-0 z-0 opacity-70 scale-100">
+          {/* Mobile Background */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center sm:hidden"
+            style={{ backgroundImage: "url('/images/mbl-background.png')" }}
+          />
+          {/* Desktop Background */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center hidden sm:block"
+            style={{ backgroundImage: "url('/images/background.png')" }}
+          />
+        </div>
 
         {/* Radial Black Shadow Overlay - Darkens all edges (vignette) */}
         <div className="absolute inset-0 z-0 bg-[radial-gradient(circle,_transparent_80%,_rgba(0,0,0,0.6)_100%)]" />
@@ -746,15 +752,15 @@ export default function Home() {
           </div>
 
           {/* Stat Counter */}
-          <div ref={statsRef} className="mt-16 flex flex-wrap justify-center gap-8 sm:gap-16 anim-fadeInUp-6 border-t border-white/10 pt-8">
+          <div ref={statsRef} className="mt-12 sm:mt-16 flex justify-between sm:justify-center gap-2 sm:gap-16 anim-fadeInUp-6 border-t border-white/10 pt-6 sm:pt-8 w-full max-w-3xl mx-auto">
             {[
               { num: counts.courses, suffix: "+", label: "Professional Courses" },
               { num: counts.students, suffix: "+", label: "Happy Students" },
               { num: counts.years, suffix: "+", label: "Years Experience" },
             ].map((s) => (
-              <div key={s.label} className="text-center">
-                <p className="text-4xl font-black text-white tabular-nums">{s.num}{s.suffix}</p>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-2">{s.label}</p>
+              <div key={s.label} className="text-center flex-1">
+                <p className="text-3xl sm:text-4xl font-black text-white tabular-nums leading-none">{s.num}{s.suffix}</p>
+                <p className="text-[8px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-[0.05em] sm:tracking-[0.2em] mt-2 sm:mt-2 leading-tight">{s.label}</p>
               </div>
             ))}
           </div>

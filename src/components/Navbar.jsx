@@ -117,14 +117,14 @@ function Navbar() {
           className={`absolute top-full left-1/2 -translate-x-1/2 w-[92%] sm:w-[85%] max-w-sm mt-4 lg:hidden transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] origin-top ${mobileMenuOpen ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-y-95 -translate-y-4 pointer-events-none"
             }`}
         >
-          <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/60 shadow-2xl rounded-3xl overflow-hidden flex flex-col">
-            <div className="px-6 py-6 space-y-1 overflow-y-auto max-h-[60vh]">
+          <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/60 shadow-2xl rounded-3xl overflow-hidden flex flex-col max-h-[calc(100dvh-6rem)]">
+            <div className="px-5 py-4 space-y-1 overflow-y-auto flex-1">
               {links.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
                   onClick={closeMenu}
-                  className="block px-4 py-3 text-[17px] font-bold text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 rounded-2xl transition-colors"
+                  className="block px-4 py-2.5 text-[16px] sm:text-[17px] font-bold text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 rounded-xl transition-colors"
                 >
                   {link.label}
                 </a>
@@ -132,22 +132,21 @@ function Navbar() {
               <a
                 href="/#aicard"
                 onClick={closeMenu}
-                className="flex items-center justify-between px-4 py-3 text-[17px] font-bold text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 rounded-2xl transition-colors"
+                className="flex items-center justify-between px-4 py-2.5 text-[16px] sm:text-[17px] font-bold text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 rounded-xl transition-colors"
               >
                 <span>AI Card</span>
-                <span className="bg-gradient-to-r from-orange-400 to-orange-500 text-white text-[10px] uppercase tracking-wider font-black px-2.5 py-1 rounded-full shadow-sm">
+                <span className="bg-gradient-to-r from-orange-400 to-orange-500 text-white text-[10px] uppercase tracking-wider font-black px-2 py-0.5 rounded-full shadow-sm">
                   New
                 </span>
               </a>
             </div>
-
-            <div className="p-6 bg-slate-50/80 border-t border-slate-100 space-y-3">
+            <div className="p-4 sm:p-5 pb-8 sm:pb-8 bg-slate-50/80 border-t border-slate-100 space-y-2.5 flex-shrink-0">
               <a
                 href="https://www.yaticorp.com/activate-ai-card"
                 target="_blank"
                 rel="noreferrer"
                 onClick={closeMenu}
-                className="flex items-center justify-center w-full bg-white border-2 border-blue-100 text-blue-700 font-bold py-3.5 rounded-2xl hover:bg-blue-50 hover:border-blue-300 transition-colors shadow-sm text-[15px]"
+                className="flex items-center justify-center w-full bg-white border-2 border-blue-100 text-blue-700 font-bold py-2.5 rounded-xl hover:bg-blue-50 hover:border-blue-300 transition-colors shadow-sm text-[14px] sm:text-[15px]"
               >
                 Activate AI Card
               </a>
@@ -156,7 +155,7 @@ function Navbar() {
                 target="_blank"
                 rel="noreferrer"
                 onClick={closeMenu}
-                className="flex items-center justify-center w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3.5 rounded-2xl shadow-md text-[15px]"
+                className="flex items-center justify-center w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-2.5 rounded-xl shadow-md text-[14px] sm:text-[15px]"
               >
                 WhatsApp Enquiry
               </a>

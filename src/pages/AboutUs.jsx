@@ -61,6 +61,17 @@ export default function AboutUs() {
 
   return (
     <div className="bg-slate-50 text-slate-900 min-h-screen">
+      {/* Sticky Back Button */}
+      <div className="fixed sm:absolute top-4 sm:top-6 left-4 sm:left-6 z-50">
+        <Link to="/#about" className="inline-flex items-center gap-2 text-white transition-all duration-300 font-semibold bg-blue-600/90 sm:bg-white/10 hover:bg-blue-700 sm:hover:bg-white/20 hover:-translate-x-1 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full backdrop-blur-md border border-blue-500/30 sm:border-white/10 shadow-lg">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span className="hidden sm:inline">Back to Home</span>
+          <span className="sm:hidden">Back</span>
+        </Link>
+      </div>
+
       {/* Page Header */}
       <div className="pt-36 pb-32 bg-blue-900 text-center relative overflow-hidden">
         <div
@@ -68,17 +79,6 @@ export default function AboutUs() {
           style={{ backgroundImage: "url('/images/gallery7.jpg')" }}
         ></div>
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/40 to-blue-900/90"></div>
-
-        {/* Back Button */}
-        <div className="absolute top-6 left-4 sm:left-6 z-20">
-          <Link to="/#about" className="inline-flex items-center gap-2 text-blue-200 hover:text-white transition-all duration-300 font-semibold bg-white/10 hover:bg-white/20 hover:-translate-x-1 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full backdrop-blur-sm border border-white/10 shadow-sm">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            <span className="hidden sm:inline">Back to Home</span>
-            <span className="sm:hidden">Back</span>
-          </Link>
-        </div>
 
         <div className="relative z-10 px-4 max-w-7xl mx-auto">
           <h1 className="text-4xl sm:text-5xl font-black text-white mb-4">About <span className="text-white-500">Us</span></h1>
