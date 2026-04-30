@@ -27,7 +27,7 @@ function Navbar() {
 
   const links = [
     { label: "Home", href: "/#home" },
-    { label: "About Us", href: "/#about" },
+    { label: "About Us", href: "/about" },
     { label: "Courses", href: "/#courses" },
     { label: "Gallery", href: "/#gallery" },
     { label: "Contact", href: "/#contact" },
