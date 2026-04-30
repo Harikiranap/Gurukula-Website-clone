@@ -27,7 +27,7 @@ function Navbar() {
 
   const links = [
     { label: "Home", href: "/#home" },
-    { label: "About Us", href: "/about" },
+    { label: "About Us", href: "/#about" },
     { label: "Courses", href: "/#courses" },
     { label: "Gallery", href: "/#gallery" },
     { label: "Contact", href: "/#contact" },
@@ -36,18 +36,17 @@ function Navbar() {
   return (
     <>
       {/* Overlay for mobile menu */}
-      <div 
+      <div
         className={`fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={closeMenu}
       ></div>
 
       <div className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-in-out ${scrolled ? "pt-2 sm:pt-4" : "pt-4 sm:pt-6"}`}>
-        <header 
-          className={`mx-auto flex items-center justify-between transition-all duration-500 ease-in-out ${
-            scrolled 
-              ? "w-[95%] sm:w-[90%] max-w-6xl bg-white/80 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/60 rounded-full px-4 sm:px-6 py-2" 
+        <header
+          className={`mx-auto flex items-center justify-between transition-all duration-500 ease-in-out ${scrolled
+              ? "w-[95%] sm:w-[90%] max-w-6xl bg-white/80 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/60 rounded-full px-4 sm:px-6 py-2"
               : "w-[95%] sm:w-[92%] max-w-7xl bg-white/95 backdrop-blur-md shadow-xl border border-white/50 rounded-[2.5rem] px-5 sm:px-8 py-3"
-          }`}
+            }`}
         >
           {/* Logo */}
           <a href="/#home" className="flex items-center flex-shrink-0 group relative z-50" onClick={closeMenu}>
@@ -114,10 +113,9 @@ function Navbar() {
         </header>
 
         {/* Mobile Menu Dropdown */}
-        <div 
-          className={`absolute top-full left-1/2 -translate-x-1/2 w-[92%] sm:w-[85%] max-w-sm mt-4 lg:hidden transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] origin-top ${
-            mobileMenuOpen ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-y-95 -translate-y-4 pointer-events-none"
-          }`}
+        <div
+          className={`absolute top-full left-1/2 -translate-x-1/2 w-[92%] sm:w-[85%] max-w-sm mt-4 lg:hidden transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] origin-top ${mobileMenuOpen ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-y-95 -translate-y-4 pointer-events-none"
+            }`}
         >
           <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/60 shadow-2xl rounded-3xl overflow-hidden flex flex-col">
             <div className="px-6 py-6 space-y-1 overflow-y-auto max-h-[60vh]">
@@ -142,7 +140,7 @@ function Navbar() {
                 </span>
               </a>
             </div>
-            
+
             <div className="p-6 bg-slate-50/80 border-t border-slate-100 space-y-3">
               <a
                 href="https://www.yaticorp.com/activate-ai-card"
