@@ -768,9 +768,9 @@ export default function Home() {
         </div>
 
         {/* Wave Divider */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none">
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none translate-y-[1px]">
           <svg className="relative block w-full h-[60px] lg:h-[100px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path className="fill-slate-50" d="M0,60 C480,160 960,-40 1440,60 L1440,120 L0,120 Z"></path>
+            <path className="fill-blue-50" d="M0,60 C480,160 960,-40 1440,60 L1440,120 L0,120 Z"></path>
           </svg>
         </div>
       </section>
