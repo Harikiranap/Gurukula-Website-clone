@@ -9,11 +9,10 @@ const Preloader = ({ onFinish }) => {
     // Show preloader for a guaranteed minimum time to allow animations
     const timer = setTimeout(() => {
       setFadeOut(true);
-      // Wait for the fade-out CSS transition to complete before unmounting
       setTimeout(() => {
         setIsMounted(false);
         if (onFinish) onFinish();
-      }, 1000); 
+      }, 800); 
     }, 2800);
 
     return () => clearTimeout(timer);
@@ -23,41 +22,29 @@ const Preloader = ({ onFinish }) => {
 
   return (
     <div className={`preloader-wrapper ${fadeOut ? 'fade-out' : ''}`}>
-      {/* Animated Background Blobs */}
-      <div className="blobs-container">
-        <div className="blob blob-1"></div>
-        <div className="blob blob-2"></div>
-        <div className="blob blob-3"></div>
-      </div>
-      
-      {/* Glassmorphism Main Panel */}
-      <div className="glass-panel">
-        <div className="ring-container">
-          <div className="ring ring-outer"></div>
-          <div className="ring ring-middle"></div>
-          <div className="ring ring-inner"></div>
+      {/* Soft Ambient Glows matching Gurukula's light theme (Blue and Orange) */}
+      <div className="ambient-glow glow-blue"></div>
+      <div className="ambient-glow glow-orange"></div>
+
+      <div className="preloader-content">
+        <div className="logo-container">
+          {/* Energy beam under logo */}
+          <div className="energy-beam"></div>
           
-          <div className="logo-wrapper">
-            <img 
-              src="/images/logo.png"
-              alt="Loading..." 
-              className="pulse-logo"
-              onError={(e) => {
-                // Fallback to logo1.png if logo.png fails
-                e.target.onerror = null;
-                e.target.src = '/images/logo.png';
-              }} 
-            />
-          </div>
+          <img 
+            src="/public/images/logo1.png" 
+            alt="Loading..." 
+            className="preloader-logo"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = '/public/images/logo1.png';
+            }} 
+          />
         </div>
         
         <div className="loading-text-container">
-          <div className="loading-text">
-            <span>G</span><span>U</span><span>R</span><span>U</span><span>K</span><span>U</span><span>L</span><span>A</span>
-          </div>
-          <div className="loading-bar-bg">
-            <div className="loading-bar-fill"></div>
-          </div>
+          <span className="loading-text">Loading</span>
+          <div className="loading-line"></div>
         </div>
       </div>
     </div>
