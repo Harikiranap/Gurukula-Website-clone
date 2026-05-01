@@ -329,12 +329,18 @@ const CourseModal = ({ course, onClose }) => {
         </button>
 
         {/* LEFT/TOP: IMAGE SECTION */}
-        <div className="relative h-56 md:h-auto md:w-[45%] flex-shrink-0 bg-slate-100 overflow-hidden">
-          <img src={course.image || "/images/hero.jpg"} alt={course.title} className="w-full h-full object-cover" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent md:bg-gradient-to-r md:from-transparent md:to-slate-900/50" />
+        <div className="relative h-64 md:h-auto md:w-[40%] flex-shrink-0 bg-slate-900 overflow-hidden flex items-center justify-center">
+          {/* Blurred Background to prevent letterboxing */}
+          <img src={course.image || "/images/hero.jpg"} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-50 scale-110 pointer-events-none" aria-hidden="true" />
+          
+          {/* Main Image - Always fully visible */}
+          <img src={course.image || "/images/hero.jpg"} alt={course.title} className="relative z-10 w-full h-full object-contain p-4 md:p-8 drop-shadow-2xl" loading="lazy" />
+          
+          {/* Gradient Overlay to blend with right content */}
+          <div className="absolute inset-0 z-20 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent md:bg-gradient-to-r md:from-transparent md:to-slate-900/50 pointer-events-none" />
 
           {/* BADGES ON IMAGE */}
-          <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8 flex flex-wrap gap-2">
+          <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8 flex flex-wrap gap-2 z-30">
             <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-lg flex items-center gap-1.5">
               ⏱ {course.duration}
             </span>
