@@ -19,9 +19,9 @@ const PHOTOS = [
 const COURSES = [
   { id: 1, title: "Diploma in Computer Application (DCA) + AI", category: "Diploma Courses", duration: "6 Months", image: "/images/course/dca.png", popular: false, description: "DCA is a foundational computer course designed for beginners who want to build strong computer skills. Students learn computer fundamentals, MS Office applications, internet usage, and typing skills along with basic AI tools to improve productivity.", learn: ["Computer Fundamentals & Windows", "MS Word, Excel, PowerPoint", "MS Access", "Internet & Email usage", "English Typing", "Introduction to AI tools"], careers: ["Data Entry Operator", "Computer Operator", "Office Assistant", "Back Office Executive", "Documentation Assistant"] },
   { id: 2, title: "Advance Diploma in Computer Application (ADCA) + AI", category: "Diploma Courses", duration: "6 Months", image: "/images/course/adca.png", popular: false, description: "ADCA is an advanced computer course that covers office applications, basic programming, accounting software, and web fundamentals.", learn: ["Computer Fundamentals", "MS Office (Word, Excel, PowerPoint, Access)", "HTML (Basic Web Development)", "C Programming (Basics)", "Tally with GST", "Internet Applications", "AI Tools for productivity"], careers: ["Computer Operator", "Office Administrator", "Junior Web Assistant", "Accounts Assistant", "MIS Executive"] },
-  { id: 3, title: "Diploma in Office Management & Accounting (DOMA) + AI", category: "Diploma Courses", duration: "6 Months", image: "/images/doma.png", popular: false, description: "This course focuses on office management and financial accounting.", learn: ["Computer Fundamentals", "MS Office Applications", "Business Documentation", "Financial Accounting Basics", "Tally Accounting Software", "AI tools for business productivity"], careers: ["Accounts Assistant", "Office Administrator", "Billing Executive", "Back Office Executive", "Junior Accountant"] },
+  { id: 3, title: "Diploma in Office Management & Accounting (DOMA) + AI", category: "Diploma Courses", duration: "6 Months", image: "/images/course/doma.png", popular: false, description: "This course focuses on office management and financial accounting.", learn: ["Computer Fundamentals", "MS Office Applications", "Business Documentation", "Financial Accounting Basics", "Tally Accounting Software", "AI tools for business productivity"], careers: ["Accounts Assistant", "Office Administrator", "Billing Executive", "Back Office Executive", "Junior Accountant"] },
   { id: 4, title: "Desktop Publishing (DTP) + AI", category: "Diploma Courses", duration: "6 Months", image: "/images/course/dtp.png", popular: false, description: "DTP is designed for students interested in graphic design and publishing.", learn: ["Adobe InDesign", "CorelDraw", "Photoshop", "English Typing", "Kannada Typing", "AI tools for design"], careers: ["Graphic Designer", "DTP Operator", "Printing Press Designer", "Publishing Assistant", "Social Media Designer"] },
-  { id: 5, title: "Advanced Excel + Tally ERP9", category: "Diploma Courses", duration: "2 Months", image: "/images/aet.jpg", popular: false, description: "This course focuses on advanced spreadsheet skills and accounting software.", learn: ["Advanced Excel Functions", "Data Analysis", "Financial Reports", "Tally ERP9 Accounting", "GST Entries"], careers: ["Accounts Assistant", "MIS Executive", "Billing Executive", "Data Analyst (Entry Level)", "Office Accountant"] },
+  { id: 5, title: "Advanced Excel + Tally ERP9", category: "Diploma Courses", duration: "2 Months", image: "/images/course/aet.png", popular: false, description: "This course focuses on advanced spreadsheet skills and accounting software.", learn: ["Advanced Excel Functions", "Data Analysis", "Financial Reports", "Tally ERP9 Accounting", "GST Entries"], careers: ["Accounts Assistant", "MIS Executive", "Billing Executive", "Data Analyst (Entry Level)", "Office Accountant"] },
   { id: 6, title: "Certificate in Office Automation (COA) + AI", category: "Certificate Courses", duration: "3 Months", image: "/images/coa.jpg", popular: false, description: "COA is a beginner-friendly course designed to teach essential computer and office skills.", learn: ["Computer Basics", "Windows Operating System", "MS Word", "MS Excel", "MS PowerPoint", "AI productivity tools"], careers: ["Office Assistant", "Computer Operator", "Data Entry Operator", "Receptionist"] },
   { id: 7, title: "Certificate in Financial Accounting (CFA) + AI", category: "Certificate Courses", duration: "3 Months", image: "/images/cfa.jpg", popular: false, description: "This course introduces students to financial accounting concepts and Tally software.", learn: ["Accounting Basics", "Business Transactions", "Tally Software", "GST Basics", "AI tools for accounting"], careers: ["Accounts Assistant", "Billing Executive", "Tally Operator", "Junior Accountant"] },
   { id: 8, title: "Certificate in Information Technology (CIT) + AI", category: "Certificate Courses", duration: "3 Months", image: "/images/cit.jpg", popular: false, description: "CIT provides basic IT knowledge including computer operations and office software.", learn: ["Computer Fundamentals", "MS Office Applications", "Internet & Email", "AI tools for productivity"], careers: ["Computer Operator", "Data Entry Operator", "Office Staff"] },
@@ -947,15 +947,21 @@ export default function Home() {
                       onClick={() => setSelectedCourse(course)}
                       style={{ animation: `fadeInUp 0.4s ease ${i * 0.05}s both` }}
                     >
-                      <div className="relative aspect-[16/10] overflow-hidden bg-slate-100 p-4">
+                      <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
+                        <img
+                          src={course.image || "/images/hero.jpg"}
+                          alt=""
+                          className="absolute inset-0 w-full h-full object-cover blur-xl opacity-60 scale-110 pointer-events-none"
+                          aria-hidden="true"
+                        />
                         <img
                           src={course.image || "/images/hero.jpg"}
                           alt={course.title}
                           loading="lazy"
-                          className="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover:scale-105"
+                          className="relative z-10 w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
-                        <div className="absolute bottom-6 left-6 flex gap-2">
+                        <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                        <div className="absolute bottom-4 left-4 z-30 flex gap-2">
                           <span className="bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20">
                             ⏱ {course.duration}
                           </span>
