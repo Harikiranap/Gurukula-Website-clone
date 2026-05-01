@@ -64,15 +64,10 @@ const TESTIMONIALS = [
 ];
 
 const WHY_ITEMS = [
-  { icon: "clock", title: "Industry-Experienced Trainers", desc: "Learn directly from professionals who bring real industry knowledge, practical insights, and job-ready skills to every class." },
-  { icon: "bolt", title: "Hands-On Practical Training", desc: "Work on real tools, live projects, and practical exercises — not just theory or slides." },
-  { icon: "target", title: "Industry-Relevant Curriculum", desc: "Courses are designed based on current market demand to ensure you learn exactly what companies are hiring for." },
-  { icon: "monitor", title: "Modern Lab & Learning Setup", desc: "Train in a fully equipped computer lab with the latest software and a distraction-free environment." },
-  { icon: "briefcase", title: "Job-Focused Programs", desc: "Every course is structured to make you job-ready with practical skills from day one." },
-  { icon: "badge", title: "Government-Recognized Certification", desc: "Earn a trusted certificate that adds real value to your resume and improves your job opportunities." },
-  { icon: "users", title: "Personalized Mentorship", desc: "Small batch sizes ensure one-on-one guidance, doubt clearing, and continuous support." },
-  { icon: "coin", title: "Affordable & Accessible Fees", desc: "High-quality digital education at a price that is affordable for every student." },
-  { icon: "growth", title: "Career & Skill Development Focus", desc: "We focus on building real-world skills that help you perform confidently in jobs and internships." },
+  { icon: "bolt", title: "100% Practical Training", desc: "Learn by doing. Work on live projects and real tools instead of just reading theory." },
+  { icon: "users", title: "Expert Mentorship", desc: "Get trained by industry professionals in small batches for personalized guidance." },
+  { icon: "briefcase", title: "Job-Ready Skills", desc: "Our curriculum is designed to teach exactly what modern tech companies are hiring for." },
+  { icon: "badge", title: "Recognized Certificate", desc: "Earn a Govt. recognized certificate that adds real value to your professional resume." },
 ];
 
 // ── GLOBAL STYLES (injected once via a static <style> tag in index.html ideally,
@@ -845,7 +840,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {WHY_ITEMS.map((item, i) => (
               <div key={item.title} data-reveal data-reveal-delay={`${i * 50}ms`}
                 className="group relative bg-white rounded-3xl p-8 transition-all duration-500 border border-transparent shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.1)] hover:-translate-y-2 overflow-hidden">
@@ -978,18 +973,31 @@ export default function Home() {
                   ))}
                 </div>
 
-                {activeCategory === "All" && !showAllCourses && displayedCourses.length > 8 && (
+                {activeCategory === "All" && displayedCourses.length > 4 && (
                   <div className="mt-10 flex justify-center mb-14">
-                    <button
-                      onClick={() => setShowAllCourses(true)}
-                      className="group flex items-center gap-2 rounded-full bg-white border border-slate-200 text-slate-700 px-8 py-3.5 text-sm font-bold hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-all shadow-sm hover:shadow-md"
-                    >
-                      View More Courses
-                      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-y-0.5 transition-transform"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-                    </button>
+                    {!showAllCourses ? (
+                      <button
+                        onClick={() => setShowAllCourses(true)}
+                        className="group flex items-center gap-2 rounded-full bg-white border border-slate-200 text-slate-700 px-8 py-3.5 text-sm font-bold hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-all shadow-sm hover:shadow-md"
+                      >
+                        View All Courses
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-y-0.5 transition-transform"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setShowAllCourses(false);
+                          document.getElementById('courses')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className="group flex items-center gap-2 rounded-full bg-white border border-slate-200 text-slate-700 px-8 py-3.5 text-sm font-bold hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-all shadow-sm hover:shadow-md"
+                      >
+                        Show Less
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5" className="group-hover:-translate-y-0.5 transition-transform"><path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" /></svg>
+                      </button>
+                    )}
                   </div>
                 )}
-                {!(activeCategory === "All" && !showAllCourses && displayedCourses.length > 8) && <div className="mb-14" />}
+                {!(activeCategory === "All" && displayedCourses.length > 4) && <div className="mb-14" />}
               </>
             )}
 
