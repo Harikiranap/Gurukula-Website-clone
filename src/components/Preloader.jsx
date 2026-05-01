@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Preloader.css';
+import logoImg from '../images/logo1.png';
 
 const Preloader = ({ onFinish }) => {
   const [fadeOut, setFadeOut] = useState(false);
@@ -32,12 +33,12 @@ const Preloader = ({ onFinish }) => {
           <div className="energy-beam"></div>
           
           <img 
-            src="/public/images/logo1.png" 
+            src={logoImg} 
             alt="Loading..." 
             className="preloader-logo"
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = '/public/images/logo1.png';
+              e.target.src = logoImg;
             }} 
           />
         </div>
