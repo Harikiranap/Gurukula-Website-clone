@@ -599,15 +599,37 @@ function StatsCounter() {
   const counts = useCountUp(statsRef);
   
   return (
-    <div ref={statsRef} className="mt-12 sm:mt-16 flex justify-between sm:justify-center gap-2 sm:gap-16 anim-fadeInUp-6 border-t border-white/10 pt-6 sm:pt-8 w-full max-w-3xl mx-auto">
+    <div ref={statsRef} className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8 lg:gap-10 w-full lg:w-auto relative">
+      <div className="hidden lg:block absolute -left-6 top-1/2 -translate-y-1/2 w-px h-16 bg-white/20" />
       {[
-        { num: counts.courses, suffix: "+", label: "Professional Courses" },
-        { num: counts.students, suffix: "+", label: "Happy Students" },
-        { num: counts.years, suffix: "+", label: "Years Experience" },
-      ].map((s) => (
-        <div key={s.label} className="text-center flex-1">
-          <p className="text-3xl sm:text-4xl font-black text-white tabular-nums leading-none">{s.num}{s.suffix}</p>
-          <p className="text-[8px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-[0.05em] sm:tracking-[0.2em] mt-2 sm:mt-2 leading-tight">{s.label}</p>
+        { num: counts.courses, suffix: "+", label: "Professional Courses", icon: "book" },
+        { num: counts.students, suffix: "+", label: "Happy Students", icon: "users" },
+        { num: counts.years, suffix: "+", label: "Years Experience", icon: "badge" },
+      ].map((s, i) => (
+        <div key={s.label} className="flex items-center gap-4 relative">
+          {i !== 0 && (
+            <div className="hidden sm:block absolute -left-4 lg:-left-5 top-1/2 -translate-y-1/2 w-px h-12 bg-white/20" />
+          )}
+          <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center text-white/90">
+            {s.icon === 'book' ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253V19.253" />
+              </svg>
+            ) : s.icon === 'users' ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+              </svg>
+            )}
+          </div>
+          <div className="text-left">
+            <p className="text-2xl sm:text-3xl font-black text-white tabular-nums leading-none">{s.num}{s.suffix}</p>
+            <p className="text-[9px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-1 leading-tight">{s.label}</p>
+          </div>
         </div>
       ))}
     </div>
@@ -634,6 +656,12 @@ export default function Home() {
   const currentDay = currentTimeObj.getDay();
   const currentHrs = currentTimeObj.getHours() + currentTimeObj.getMinutes() / 60;
   const isInstituteOpen = currentDay >= 1 && currentDay <= 6 && currentHrs >= 9.0 && currentHrs < 17.5;
+
+  const [aiFlip, setAiFlip] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => setAiFlip(p => p === 0 ? 1 : 0), 4000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (location.hash) {
@@ -747,66 +775,62 @@ export default function Home() {
       <div id="scroll-progress" style={{ width: "100%", transform: "scaleX(0)" }} />
 
       {/* ════════════ HERO ════════════ */}
-      <section id="home" className="scroll-mt-24 relative overflow-hidden bg-black px-4 pt-28 pb-0 md:px-8 md:pt-40 md:pb-32 min-h-screen flex items-center">
+      <section id="home" className="scroll-mt-24 relative overflow-hidden bg-black px-4 pt-32 pb-20 md:px-8 md:pt-40 md:pb-24 min-h-[90vh] sm:min-h-screen flex items-end">
 
         {/* Background Image Layer */}
-        <div className="absolute inset-0 z-0 opacity-70 scale-100">
+        <div className="absolute inset-0 z-0">
           {/* Mobile Background */}
-          <div 
-            className="absolute inset-0 bg-cover bg-center sm:hidden"
-            style={{ backgroundImage: "url('/images/mbl-background.png')" }}
+          <img 
+            src="/images/mbl-background.png"
+            alt="Gurukula Mobile Background"
+            className="absolute inset-0 w-full h-full object-cover object-center sm:hidden"
+            loading="eager"
           />
           {/* Desktop Background */}
-          <div 
-            className="absolute inset-0 bg-cover bg-center hidden sm:block"
-            style={{ backgroundImage: "url('/images/background.png')" }}
+          <img 
+            src="/images/background5.png"
+            alt="Gurukula Background"
+            className="absolute inset-0 w-full h-full object-cover object-center hidden sm:block"
+            loading="eager"
           />
         </div>
 
         {/* Radial Black Shadow Overlay - Darkens all edges (vignette) */}
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle,_transparent_80%,_rgba(0,0,0,0.6)_100%)]" />
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle,_transparent_60%,_rgba(0,0,0,0.8)_100%)] pointer-events-none" />
 
         {/* Optional: Extra Top & Bottom Linear Overlay for maximum text pop */}
-        <div className="absolute inset-0 z-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+        <div className="absolute inset-0 z-0 bg-gradient-to-t from-black/90 via-black/30 to-black/30 pointer-events-none" />
 
         {/* Decorative Background Elements */}
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-full max-w-[800px] rounded-full bg-blue-500/10 opacity-20 blur-[80px] transform-gpu" />
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-full max-w-[800px] rounded-full bg-blue-500/20 opacity-30 blur-[80px] transform-gpu" />
 
-        <div className="relative z-10 mx-auto max-w-4xl w-full text-center">
-
-          {/* Heading */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black leading-tight text-white drop-shadow-md tracking-tight anim-fadeInUp-1">
-            Shape Your Future in
-            <span className="text-white relative inline-block ml-3 lg:ml-4">
-              Technology
-            </span>
-          </h1>
-
-          {/* Buttons */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 anim-fadeInUp-4 top-50">
-            <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
-              className="group rounded-2xl border-2 border-white/70 bg-black/50 backdrop-blur-md px-12 py-5 text-base font-bold text-white hover:border-black-500 hover:bg-blue-500/70 transition-all duration-300 w-full sm:w-auto">
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                Join Gurukula Today
-                <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-              </span>
-            </a>
-            <a href="#courses"
-              className="group rounded-2xl border-2 border-white/70 bg-black/50 backdrop-blur-md px-12 py-5 text-base font-bold text-white hover:border-black-500 hover:bg-blue-500/70 transition-all duration-300 w-full sm:w-auto">
-              Explore Courses
-            </a>
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-10 flex flex-col justify-end h-full">
+          {/* Main Content Area */}
+          <div className="max-w-lg text-left mb-6 md:mb-10">
+            <p className="mt-4 text-sm sm:text-base text-slate-200 max-w-md font-medium leading-relaxed anim-fadeInUp-3">
+              Join Gurukula Computer and gain real-world skills with expert guidance and hands-on learning.
+            </p>
           </div>
 
-          {/* Stat Counter */}
-          <StatsCounter />
+          {/* Bottom Row: Buttons + Stats */}
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10 lg:gap-12 anim-fadeInUp-4 pt-4 lg:pt-6">
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto shrink-0">
+              <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
+                className="group rounded-xl border border-transparent bg-[#0D3B9E] px-8 py-3.5 text-sm font-bold text-white hover:bg-blue-700 transition-all duration-300 w-full sm:w-auto flex items-center justify-center gap-2 shadow-lg">
+                Join Gurukula Today
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+              </a>
+              <a href="#courses"
+                className="group rounded-xl border border-white/40 hover:border-white text-white bg-transparent px-8 py-3.5 text-sm font-bold transition-all duration-300 w-full sm:w-auto flex items-center justify-center gap-2">
+                Explore Courses
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+              </a>
+            </div>
 
-        </div>
-
-        {/* Wave Divider */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none translate-y-[1px]">
-          <svg className="relative block w-full h-[60px] lg:h-[100px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path className="fill-blue-50" d="M0,60 C480,160 960,-40 1440,60 L1440,120 L0,120 Z"></path>
-          </svg>
+            {/* Stat Counter */}
+            <StatsCounter />
+          </div>
         </div>
       </section>
 
@@ -1180,9 +1204,14 @@ export default function Home() {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Learning Card</span>
               </h2>
 
-              <p className="mt-6 max-w-lg text-slate-400 text-lg leading-relaxed">
-                Unlock the future with the World&apos;s first AI Learning Card. One-time access to 50+ tools, professional certificates, and a global tech community.
-              </p>
+              <div className="mt-6 max-w-lg h-[120px] sm:h-24 relative">
+                <p className={`absolute inset-0 text-slate-400 text-lg leading-relaxed transition-all duration-500 ${aiFlip === 0 ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}>
+                  Unlock the future with the World&apos;s first AI Learning Card. One-time access to 50+ tools, professional certificates, and a global tech community.
+                </p>
+                <p className={`absolute inset-0 text-slate-400 text-lg leading-relaxed transition-all duration-500 ${aiFlip === 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+                  <strong className="text-white">Hybrid Learning:</strong> Structured theory combined with intensive hands-on practical sessions.
+                </p>
+              </div>
 
               <div className="mt-10 flex flex-wrap gap-4">
                 <a href="https://www.yaticorp.com/ai-card" target="_blank" className="rounded-2xl bg-blue-600 px-8 py-4 font-bold text-white shadow-2xl shadow-blue-500/20 hover:bg-blue-500 hover:-translate-y-1 transition-all">
@@ -1247,28 +1276,19 @@ export default function Home() {
           </div>
 
           {/* Bento Feature Section */}
-          <div className="mt-32 grid grid-cols-1 md:grid-cols-3 gap-6" data-reveal>
-            {/* Feature 1 */}
-            <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 hover:bg-white/10 transition-all group">
-              <div className="h-12 w-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-              </div>
-              <h4 className="text-lg font-black text-white">Hybrid Learning</h4>
-              <p className="mt-2 text-sm text-slate-400 leading-relaxed">Structured theory combined with intensive hands-on practical sessions.</p>
-            </div>
-
+          <div className="mt-24 sm:mt-32 max-w-4xl mx-auto" data-reveal>
             {/* Authorization Block */}
-            <div className="md:col-span-2 relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-r from-blue-900/40 to-slate-900/40 p-8 flex flex-col sm:flex-row items-center gap-8 group">
-              <div className="relative flex-shrink-0 w-32 aspect-[4/5] bg-white rounded-lg p-1.5 rotate-[-5deg] group-hover:rotate-0 transition-transform duration-500 shadow-2xl">
-                <img src={certificateImg} alt="Certificate" className="w-full h-full object-contain rounded" />
+            <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-gradient-to-r from-blue-900/40 to-slate-900/40 p-8 sm:p-12 flex flex-col items-center text-center gap-8 group">
+              <div className="relative flex-shrink-0 w-48 sm:w-64 bg-white rounded-xl p-2 transition-transform duration-500 shadow-2xl">
+                <img src={certificateImg} alt="Certificate" className="w-full h-auto object-contain rounded-lg" />
               </div>
-              <div>
-                <h4 className="text-xl font-black text-white">Authorized by Yaticorp</h4>
-                <p className="mt-2 text-sm text-slate-400 leading-relaxed">Gurukula is the official training partner for the Belthangady region, providing verified AI Card distribution and support.</p>
-                <div className="mt-6 flex items-center gap-4">
-                  <span className="text-xs font-bold text-blue-400">Issued: 23 Feb 2026</span>
-                  <div className="h-1 w-1 rounded-full bg-slate-600" />
-                  <a href={certificateImg} target="_blank" className="text-xs font-bold text-white hover:underline">View Document →</a>
+              <div className="flex flex-col items-center">
+                <h4 className="text-2xl sm:text-3xl font-black text-white">Authorized by Yaticorp</h4>
+                <p className="mt-4 text-base sm:text-lg text-slate-400 leading-relaxed max-w-2xl">Gurukula is the official training partner for the Belthangady region, providing verified AI Card distribution and support.</p>
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                  <span className="px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-sm font-bold text-blue-400">Issued: 23 Feb 2026</span>
+                  <div className="hidden sm:block h-1 w-1 rounded-full bg-slate-600" />
+                  <a href={certificateImg} target="_blank" className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-bold text-white hover:bg-white/10 hover:text-white transition-all">View Document →</a>
                 </div>
               </div>
             </div>
@@ -1450,35 +1470,54 @@ export default function Home() {
               </div>
 
               {/* Detailed Location */}
-              <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 sm:p-10 shadow-sm relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-40 h-40 bg-blue-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-100 transition-colors duration-500 transform-gpu" />
+              <div className="bg-white border border-slate-200 rounded-[2rem] p-6 sm:p-8 shadow-sm relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-100 transition-colors duration-500 transform-gpu" />
                 <div className="relative z-10">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
                     </div>
-                    <h3 className="text-xl font-black text-slate-900">Institute Location</h3>
+                    <h3 className="text-lg font-black text-slate-900">Institute Location</h3>
                   </div>
-                  <p className="text-lg text-slate-700 font-medium leading-relaxed mb-8">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed mb-5">
                     Shri Gurusanidhya Building, Near Bharat Petrol Pump, <br className="hidden sm:block" />
                     Belthangady – 574214, Karnataka
                   </p>
 
-                  <div className="grid sm:grid-cols-2 gap-6 pt-8 border-t border-slate-100">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-                      </div>
-                      <p className="text-sm font-bold text-slate-700">+91 63665 64639</p>
+                  <div className="flex items-center gap-3 pt-5 border-t border-slate-100">
+                    <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                     </div>
-                    <div className="flex items-end justify-end">
-                      <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
-                        className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-3 text-sm font-bold text-white hover:bg-blue-700 transition-all hover:shadow-lg">
-                        Send Message
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                      </a>
-                    </div>
+                    <p className="text-sm font-bold text-slate-700">+91 63665 64639</p>
                   </div>
+                </div>
+              </div>
+
+              {/* Message Form */}
+              <div className="bg-white border border-slate-200 rounded-[2rem] p-6 sm:p-8 shadow-sm relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-emerald-100 transition-colors duration-500 transform-gpu" />
+                <div className="relative z-10">
+                  <h3 className="text-lg font-black text-slate-900 mb-5 flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                    </div>
+                    Send a Message
+                  </h3>
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    const fd = new FormData(e.target);
+                    const name = fd.get('name');
+                    const msg = fd.get('message');
+                    const text = encodeURIComponent(`Hello Gurukula, my name is ${name}.\n\n${msg}`);
+                    window.open(`https://wa.me/916366564639?text=${text}`, '_blank');
+                  }} className="space-y-4">
+                    <input required name="name" type="text" placeholder="Your Name" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all placeholder:text-slate-400" />
+                    <textarea required name="message" rows="3" placeholder="How can we help you?" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none placeholder:text-slate-400"></textarea>
+                    <button type="submit" className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-3.5 text-sm font-bold text-white hover:bg-emerald-600 transition-all hover:shadow-lg hover:-translate-y-0.5">
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                      Send via WhatsApp
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
