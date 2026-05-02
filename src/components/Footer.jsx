@@ -67,14 +67,8 @@ function Footer() {
             <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-2 bg-gray-800 rounded-full hover:bg-blue-500 hover:text-white transition-colors duration-300">
               <FacebookIcon size={20} />
             </a>
-            <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="p-2 bg-gray-800 rounded-full hover:bg-blue-400 hover:text-white transition-colors duration-300">
-              <TwitterIcon size={20} />
-            </a>
-            <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="p-2 bg-gray-800 rounded-full hover:bg-pink-500 hover:text-white transition-colors duration-300">
+            <a href="https://www.instagram.com/gurukulabelthangady/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="p-2 bg-gray-800 rounded-full hover:bg-pink-500 hover:text-white transition-colors duration-300">
               <InstagramIcon size={20} />
-            </a>
-            <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="p-2 bg-gray-800 rounded-full hover:bg-blue-600 hover:text-white transition-colors duration-300">
-              <LinkedinIcon size={20} />
             </a>
           </div>
         </div>
