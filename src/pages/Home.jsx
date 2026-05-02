@@ -170,17 +170,27 @@ function useScrollProgress() {
   useEffect(() => {
     const bar = document.getElementById("scroll-progress");
     if (!bar) return;
+    bar.style.width = "100%"; // set width once
+    
+    let docH = document.documentElement.scrollHeight - window.innerHeight;
+    const onResize = () => { docH = document.documentElement.scrollHeight - window.innerHeight; };
+    window.addEventListener("resize", onResize, { passive: true });
+
     let raf;
     const update = () => {
-      const docH = document.documentElement.scrollHeight - window.innerHeight;
       const pct = docH > 0 ? Math.min(window.scrollY / docH, 1) : 0;
       bar.style.transform = `scaleX(${pct})`;
-      bar.style.width = "100%";
     };
     const onScroll = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); };
+    
     window.addEventListener("scroll", onScroll, { passive: true });
     update();
-    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
+    
+    return () => { 
+      window.removeEventListener("scroll", onScroll); 
+      window.removeEventListener("resize", onResize);
+      cancelAnimationFrame(raf); 
+    };
   }, []);
 }
 
@@ -190,11 +200,21 @@ function useScrollTopBtn() {
     const btn = document.getElementById("scroll-top-btn");
     if (!btn) return;
     let raf;
+    let currentIsVisible = window.scrollY > 400;
+    
+    // Set initial state
+    btn.style.opacity = currentIsVisible ? "1" : "0";
+    btn.style.pointerEvents = currentIsVisible ? "auto" : "none";
+
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
-        btn.style.opacity = window.scrollY > 400 ? "1" : "0";
-        btn.style.pointerEvents = window.scrollY > 400 ? "auto" : "none";
+        const isVisible = window.scrollY > 400;
+        if (isVisible !== currentIsVisible) {
+          currentIsVisible = isVisible;
+          btn.style.opacity = isVisible ? "1" : "0";
+          btn.style.pointerEvents = isVisible ? "auto" : "none";
+        }
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -228,12 +248,11 @@ function useReveal() {
   }, []); // runs once only
 }
 
-// FIX: count-up with no perf issues — still uses setState but only 60 ticks
-function useCountUp(targetRef) {
-  const [counts, setCounts] = useState({ courses: 0, students: 0, years: 0 });
+// FIX: count-up without setState to avoid re-rendering the entire Home component
+function useCountUp(targetRef, courseRef, studentRef, yearRef) {
   const fired = useRef(false);
   useEffect(() => {
-    if (!targetRef.current) return;
+    if (!targetRef.current || !courseRef.current || !studentRef.current || !yearRef.current) return;
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting || fired.current) return;
       fired.current = true;
@@ -243,18 +262,16 @@ function useCountUp(targetRef) {
       const id = setInterval(() => {
         step++;
         const ease = 1 - Math.pow(1 - step / steps, 3);
-        setCounts({
-          courses: Math.round(targets.courses * ease),
-          students: Math.round(targets.students * ease),
-          years: Math.round(targets.years * ease),
-        });
+        if (courseRef.current) courseRef.current.innerText = Math.round(targets.courses * ease);
+        if (studentRef.current) studentRef.current.innerText = Math.round(targets.students * ease);
+        if (yearRef.current) yearRef.current.innerText = Math.round(targets.years * ease);
+        
         if (step >= steps) clearInterval(id);
       }, 1800 / steps);
     }, { threshold: 0.3 });
     io.observe(targetRef.current);
     return () => io.disconnect();
-  }, [targetRef]);
-  return counts;
+  }, [targetRef, courseRef, studentRef, yearRef]);
 }
 
 // ── STARS ─────────────────────────────────────────────────────────────────
@@ -601,7 +618,11 @@ export default function Home() {
   }, [location]);
 
   const statsRef = useRef(null);
-  const counts = useCountUp(statsRef);
+  const courseCountRef = useRef(null);
+  const studentCountRef = useRef(null);
+  const yearCountRef = useRef(null);
+  
+  useCountUp(statsRef, courseCountRef, studentCountRef, yearCountRef);
 
 
   // All hooks that used to cause re-renders now use DOM refs directly
@@ -725,7 +746,7 @@ export default function Home() {
         <div className="absolute inset-0 z-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
 
         {/* Decorative Background Elements */}
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-full max-w-[800px] rounded-full bg-blue-500/10 opacity-20 blur-[120px]" />
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-full max-w-[800px] rounded-full bg-blue-500/10 opacity-20 blur-[80px] transform-gpu" />
 
         <div className="relative z-10 mx-auto max-w-4xl w-full text-center">
 
@@ -754,16 +775,18 @@ export default function Home() {
 
           {/* Stat Counter */}
           <div ref={statsRef} className="mt-12 sm:mt-16 flex justify-between sm:justify-center gap-2 sm:gap-16 anim-fadeInUp-6 border-t border-white/10 pt-6 sm:pt-8 w-full max-w-3xl mx-auto">
-            {[
-              { num: counts.courses, suffix: "+", label: "Professional Courses" },
-              { num: counts.students, suffix: "+", label: "Happy Students" },
-              { num: counts.years, suffix: "+", label: "Years Experience" },
-            ].map((s) => (
-              <div key={s.label} className="text-center flex-1">
-                <p className="text-3xl sm:text-4xl font-black text-white tabular-nums leading-none">{s.num}{s.suffix}</p>
-                <p className="text-[8px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-[0.05em] sm:tracking-[0.2em] mt-2 sm:mt-2 leading-tight">{s.label}</p>
-              </div>
-            ))}
+            <div className="text-center flex-1">
+              <p className="text-3xl sm:text-4xl font-black text-white tabular-nums leading-none"><span ref={courseCountRef}>0</span>+</p>
+              <p className="text-[8px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-[0.05em] sm:tracking-[0.2em] mt-2 sm:mt-2 leading-tight">Professional Courses</p>
+            </div>
+            <div className="text-center flex-1">
+              <p className="text-3xl sm:text-4xl font-black text-white tabular-nums leading-none"><span ref={studentCountRef}>0</span>+</p>
+              <p className="text-[8px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-[0.05em] sm:tracking-[0.2em] mt-2 sm:mt-2 leading-tight">Happy Students</p>
+            </div>
+            <div className="text-center flex-1">
+              <p className="text-3xl sm:text-4xl font-black text-white tabular-nums leading-none"><span ref={yearCountRef}>0</span>+</p>
+              <p className="text-[8px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-[0.05em] sm:tracking-[0.2em] mt-2 sm:mt-2 leading-tight">Years Experience</p>
+            </div>
           </div>
 
         </div>
@@ -831,7 +854,7 @@ export default function Home() {
 
       {/* ════════════ WHY CHOOSE US ════════════ */}
       <section id="why-choose-us" className="scroll-mt-24 pt-10 pb-0 sm:pt-15 sm:pb-0 px-4 sm:px-8 bg-slate-50 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 top-0 left-1/4 w-[500px] h-[500px] bg-blue-100 rounded-full blur-[100px] opacity-40" />
+        <div className="pointer-events-none absolute -z-10 top-0 left-1/4 w-[500px] h-[500px] bg-blue-100 rounded-full blur-[80px] opacity-40 transform-gpu" />
         <div className="mx-auto max-w-7xl">
           <div className="text-center mb-16 sm:mb-20" data-reveal>
             <div className="inline-flex items-center gap-3 bg-blue-100 border border-blue-200 text-blue-700 text-xs font-bold px-5 py-2 rounded-full mb-6 uppercase tracking-widest shadow-sm">
@@ -888,8 +911,8 @@ export default function Home() {
 
       {/* ════════════ COURSES ════════════ */}
       <section id="courses" className="scroll-mt-24 bg-slate-50 py-20 sm:py-24 px-4 sm:px-8 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 -top-20 -right-20 w-80 h-80 bg-blue-50 rounded-full blur-3xl opacity-60" />
-        <div className="pointer-events-none absolute -z-10 bottom-0 left-0 w-64 h-64 bg-orange-50 rounded-full blur-3xl opacity-50" />
+        <div className="pointer-events-none absolute -z-10 -top-20 -right-20 w-80 h-80 bg-blue-50 rounded-full blur-2xl opacity-60 transform-gpu" />
+        <div className="pointer-events-none absolute -z-10 bottom-0 left-0 w-64 h-64 bg-orange-50 rounded-full blur-2xl opacity-50 transform-gpu" />
         <div className="mx-auto max-w-7xl">
           <div className="text-center mb-12" data-reveal>
             <SectionHeader badge={<><svg className="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg> Our Programs</>} title="Explore Our" highlight="Professional Courses"
@@ -951,7 +974,7 @@ export default function Home() {
                         <img
                           src={course.image || "/images/hero.jpg"}
                           alt=""
-                          className="absolute inset-0 w-full h-full object-cover blur-xl opacity-60 scale-110 pointer-events-none"
+                          className="absolute inset-0 w-full h-full object-cover blur-lg opacity-40 scale-110 pointer-events-none transform-gpu"
                           aria-hidden="true"
                         />
                         <img
@@ -1072,8 +1095,8 @@ export default function Home() {
       <section id="gallery" className="scroll-mt-24 bg-white py-24 sm:py-32 px-4 sm:px-8 relative overflow-hidden ...">
         {/* Modern Decorative Accents */}
         <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-40">
-          <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-50 rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-orange-50 rounded-full blur-[120px]" />
+          <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-50 rounded-full blur-[80px] transform-gpu" />
+          <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-orange-50 rounded-full blur-[80px] transform-gpu" />
         </div>
 
         <div className="mx-auto max-w-7xl relative">
@@ -1147,7 +1170,7 @@ export default function Home() {
             <div className="relative group" data-reveal data-reveal-delay="200ms">
               <div className="absolute -inset-1 rounded-[2.5rem] bg-gradient-to-r from-blue-500 to-emerald-500 opacity-20 blur-2xl transition duration-1000 group-hover:opacity-40 group-hover:duration-200" />
 
-              <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-slate-900/50 backdrop-blur-3xl p-8 sm:p-12 shadow-2xl">
+              <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-slate-900/50 backdrop-blur-lg p-8 sm:p-12 shadow-2xl transform-gpu">
                 <div className="flex justify-between items-start mb-12">
                   <div>
                     <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Official Issue</p>
@@ -1228,8 +1251,8 @@ export default function Home() {
 
       {/* ════════════ TESTIMONIALS ════════════ */}
       <section id="testimonials" className="scroll-mt-24 bg-slate-50 py-20 sm:py-24 px-4 sm:px-8 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-72 h-72 bg-blue-50 rounded-full blur-3xl opacity-60" />
-        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-64 h-64 bg-orange-50 rounded-full blur-3xl opacity-50" />
+        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-72 h-72 bg-blue-50 rounded-full blur-2xl opacity-60 transform-gpu" />
+        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-64 h-64 bg-orange-50 rounded-full blur-2xl opacity-50 transform-gpu" />
         <div className="mx-auto max-w-7xl">
           <div className="text-center mb-10 sm:mb-14" data-reveal>
             <SectionHeader badge="⭐ Student Reviews" title="What Our" highlight="Students Say"
@@ -1334,8 +1357,8 @@ export default function Home() {
       {/* ════════════ REDESIGNED CONTACT ════════════ */}
       <section id="contact" className="scroll-mt-24 bg-slate-50 px-4 py-24 sm:px-8 relative overflow-hidden">
         {/* Decorative Background */}
-        <div className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 bg-blue-100/50 rounded-full blur-3xl opacity-60" />
-        <div className="pointer-events-none absolute -bottom-24 -right-24 w-96 h-96 bg-orange-100/40 rounded-full blur-3xl opacity-60" />
+        <div className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 bg-blue-100/50 rounded-full blur-2xl opacity-60 transform-gpu" />
+        <div className="pointer-events-none absolute -bottom-24 -right-24 w-96 h-96 bg-orange-100/40 rounded-full blur-2xl opacity-60 transform-gpu" />
 
         <div className="mx-auto max-w-7xl relative z-10">
           <div className="mb-16" data-reveal>
@@ -1400,7 +1423,7 @@ export default function Home() {
 
               {/* Detailed Location */}
               <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 sm:p-10 shadow-sm relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-40 h-40 bg-blue-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-100 transition-colors duration-500" />
+                <div className="absolute top-0 right-0 w-40 h-40 bg-blue-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-100 transition-colors duration-500 transform-gpu" />
                 <div className="relative z-10">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
@@ -1437,7 +1460,7 @@ export default function Home() {
 
               {/* Working Hours Card */}
               <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-xl transform-gpu" />
                 <h3 className="text-lg font-black mb-6 flex items-center justify-between">
                   Operation Hours
                   {isInstituteOpen ? (
@@ -1465,7 +1488,7 @@ export default function Home() {
 
               {/* Map Container */}
               <div className="relative group h-[400px] lg:h-[450px]">
-                <div className="absolute inset-0 bg-indigo-600 rounded-[2.5rem] blur-2xl opacity-10 group-hover:opacity-20 transition-opacity" />
+                <div className="absolute inset-0 bg-indigo-600 rounded-[2.5rem] blur-xl opacity-10 group-hover:opacity-20 transition-opacity transform-gpu" />
                 <div className="relative h-full w-full rounded-[2.5rem] overflow-hidden border-4 border-white shadow-2xl">
                   <iframe className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-700" title="Location"
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.3756852431713!2d75.29749597587844!3d12.883584816812836!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba4bb2d244458f3%3A0x67825d19760737a3!2sGurukula%20Computer%20Training%20Centre!5e0!3m2!1sen!2sin!4v1714467000000!5m2!1sen!2sin" loading="lazy" />
