@@ -105,7 +105,7 @@ export default function AboutUs() {
             {/* Image Block */}
             <div className="w-full lg:w-1/2 relative anim-fadeInUp-1">
               <div className="relative rounded-[1.5rem] overflow-hidden shadow-2xl border-[6px] border-slate-50 group">
-                <img src="/images/about.jpg" alt="Gurukula" className="w-full aspect-[4/3] object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                <img src="/images/hero.jpg" alt="Gurukula" className="w-full aspect-[4/3] object-cover transform group-hover:scale-105 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-blue-900/20 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-xl border border-white/50 flex items-center justify-between transition-transform duration-300 hover:-translate-y-1">

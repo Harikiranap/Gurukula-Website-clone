@@ -805,11 +805,23 @@ export default function Home() {
         className="bg-gradient-to-b from-blue-50 to-white py-24 sm:py-28 px-4 sm:px-6 overflow-hidden"
       >
         <div className="max-w-7xl mx-auto">
+          {/* MOBILE HEADING */}
+          <div className="lg:hidden text-center mb-10 anim-fadeInUp">
+            <div className="inline-flex items-center gap-3 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold px-5 py-2 rounded-full mb-6 uppercase tracking-widest shadow-sm">
+              <UiIcon name="monitor" className="w-5 h-5 text-blue-700" />
+              <span>Est. Belthangady</span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-black text-slate-900 leading-tight tracking-tight">
+              About <span className="text-blue-700">Gurukula</span>
+            </h2>
+            <div className="mt-5 w-16 h-[3px] bg-gradient-to-r from-blue-600 to-orange-400 rounded-full mx-auto" />
+          </div>
+
           <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
 
             {/* LEFT IMAGE */}
             <div
-              className="relative perspective anim-fadeInRight order-2 lg:order-1 flex items-center justify-center"
+              className="relative perspective anim-fadeInRight flex items-center justify-center"
               onMouseMove={onAboutMove}
               onMouseLeave={onAboutLeave}
             >
@@ -828,24 +840,29 @@ export default function Home() {
             </div>
 
             {/* RIGHT CONTENT */}
-            <div className="anim-fadeInUp order-1 lg:order-2">
-              <div className="inline-flex items-center gap-3 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold px-5 py-2 rounded-full mb-6 uppercase tracking-widest shadow-sm">
-                <UiIcon name="monitor" className="w-5 h-5 text-blue-700" />
-                <span>Est. Belthangady</span>
+            <div className="anim-fadeInUp">
+              {/* DESKTOP HEADING */}
+              <div className="hidden lg:block">
+                <div className="inline-flex items-center gap-3 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold px-5 py-2 rounded-full mb-6 uppercase tracking-widest shadow-sm">
+                  <UiIcon name="monitor" className="w-5 h-5 text-blue-700" />
+                  <span>Est. Belthangady</span>
+                </div>
+                <h2 className="text-4xl sm:text-5xl font-black text-slate-900 leading-tight tracking-tight">
+                  About <span className="text-blue-700">Gurukula</span>
+                </h2>
+                <div className="mt-5 w-16 h-[3px] bg-gradient-to-r from-blue-600 to-orange-400 rounded-full" />
               </div>
-              <h2 className="text-4xl sm:text-5xl font-black text-slate-900 leading-tight tracking-tight">
-                About <span className="text-blue-700">Gurukula</span>
-              </h2>
-              <div className="mt-5 w-16 h-[3px] bg-gradient-to-r from-blue-600 to-orange-400 rounded-full" />
-              <p className="mt-7 text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mb-8">
+              <p className="mt-6 lg:mt-7 text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mb-8">
                 Gurukula Computer Training Centre has been empowering students in Belthangady with world-class digital education. From foundational computer skills to advanced AI tools, our hands-on approach ensures you are fully prepared for the modern tech industry.
               </p>
-              <Link to="/about" className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-7 py-3.5 font-bold text-white shadow-sm transition-all duration-300 hover:shadow-blue-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
-                More Info
-                <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </Link>
+              <div className="flex justify-center lg:justify-start">
+                <Link to="/about" className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-7 py-3.5 font-bold text-white shadow-sm transition-all duration-300 hover:shadow-blue-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
+                  More Info
+                  <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </Link>
+              </div>
             </div>
 
           </div>
