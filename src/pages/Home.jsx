@@ -248,30 +248,40 @@ function useReveal() {
   }, []); // runs once only
 }
 
-// FIX: count-up without setState to avoid re-rendering the entire Home component
-function useCountUp(targetRef, courseRef, studentRef, yearRef) {
+// FIX: count-up with setState, isolated in its own component to prevent full page re-renders
+function useCountUp(targetRef) {
+  const [counts, setCounts] = useState({ courses: 0, students: 0, years: 0 });
   const fired = useRef(false);
   useEffect(() => {
-    if (!targetRef.current || !courseRef.current || !studentRef.current || !yearRef.current) return;
+    if (!targetRef.current) return;
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting || fired.current) return;
       fired.current = true;
       const targets = { courses: 30, students: 1000, years: 1 };
       const steps = 60;
       let step = 0;
-      const id = setInterval(() => {
-        step++;
-        const ease = 1 - Math.pow(1 - step / steps, 3);
-        if (courseRef.current) courseRef.current.innerText = Math.round(targets.courses * ease);
-        if (studentRef.current) studentRef.current.innerText = Math.round(targets.students * ease);
-        if (yearRef.current) yearRef.current.innerText = Math.round(targets.years * ease);
-        
-        if (step >= steps) clearInterval(id);
-      }, 1800 / steps);
+      
+      // Delay longer on initial load to wait for preloader to finish
+      const preloader = document.querySelector('.preloader-wrapper');
+      const delay = preloader ? 2000 : 600;
+      
+      setTimeout(() => {
+        const id = setInterval(() => {
+          step++;
+          const ease = 1 - Math.pow(1 - step / steps, 3);
+          setCounts({
+            courses: Math.round(targets.courses * ease),
+            students: Math.round(targets.students * ease),
+            years: Math.round(targets.years * ease),
+          });
+          if (step >= steps) clearInterval(id);
+        }, 2000 / steps);
+      }, delay);
     }, { threshold: 0.3 });
     io.observe(targetRef.current);
     return () => io.disconnect();
-  }, [targetRef, courseRef, studentRef, yearRef]);
+  }, [targetRef]);
+  return counts;
 }
 
 // ── STARS ─────────────────────────────────────────────────────────────────
@@ -583,6 +593,27 @@ function TestimonialSlider({ testimonials }) {
   );
 }
 
+// ── STATS COUNTER COMPONENT ────────────────────────────────────────────────
+function StatsCounter() {
+  const statsRef = useRef(null);
+  const counts = useCountUp(statsRef);
+  
+  return (
+    <div ref={statsRef} className="mt-12 sm:mt-16 flex justify-between sm:justify-center gap-2 sm:gap-16 anim-fadeInUp-6 border-t border-white/10 pt-6 sm:pt-8 w-full max-w-3xl mx-auto">
+      {[
+        { num: counts.courses, suffix: "+", label: "Professional Courses" },
+        { num: counts.students, suffix: "+", label: "Happy Students" },
+        { num: counts.years, suffix: "+", label: "Years Experience" },
+      ].map((s) => (
+        <div key={s.label} className="text-center flex-1">
+          <p className="text-3xl sm:text-4xl font-black text-white tabular-nums leading-none">{s.num}{s.suffix}</p>
+          <p className="text-[8px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-[0.05em] sm:tracking-[0.2em] mt-2 sm:mt-2 leading-tight">{s.label}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ══════════════════════════════════════════════════════════════════════════
 // HOME COMPONENT
 // ══════════════════════════════════════════════════════════════════════════
@@ -616,13 +647,6 @@ export default function Home() {
       window.scrollTo(0, 0);
     }
   }, [location]);
-
-  const statsRef = useRef(null);
-  const courseCountRef = useRef(null);
-  const studentCountRef = useRef(null);
-  const yearCountRef = useRef(null);
-  
-  useCountUp(statsRef, courseCountRef, studentCountRef, yearCountRef);
 
 
   // All hooks that used to cause re-renders now use DOM refs directly
@@ -774,20 +798,7 @@ export default function Home() {
           </div>
 
           {/* Stat Counter */}
-          <div ref={statsRef} className="mt-12 sm:mt-16 flex justify-between sm:justify-center gap-2 sm:gap-16 anim-fadeInUp-6 border-t border-white/10 pt-6 sm:pt-8 w-full max-w-3xl mx-auto">
-            <div className="text-center flex-1">
-              <p className="text-3xl sm:text-4xl font-black text-white tabular-nums leading-none"><span ref={courseCountRef}>0</span>+</p>
-              <p className="text-[8px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-[0.05em] sm:tracking-[0.2em] mt-2 sm:mt-2 leading-tight">Professional Courses</p>
-            </div>
-            <div className="text-center flex-1">
-              <p className="text-3xl sm:text-4xl font-black text-white tabular-nums leading-none"><span ref={studentCountRef}>0</span>+</p>
-              <p className="text-[8px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-[0.05em] sm:tracking-[0.2em] mt-2 sm:mt-2 leading-tight">Happy Students</p>
-            </div>
-            <div className="text-center flex-1">
-              <p className="text-3xl sm:text-4xl font-black text-white tabular-nums leading-none"><span ref={yearCountRef}>0</span>+</p>
-              <p className="text-[8px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-[0.05em] sm:tracking-[0.2em] mt-2 sm:mt-2 leading-tight">Years Experience</p>
-            </div>
-          </div>
+          <StatsCounter />
 
         </div>
 
