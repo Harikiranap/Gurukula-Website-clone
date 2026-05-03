@@ -1254,6 +1254,8 @@ export default function Home() {
                 {/* Front Face */}
                 <div className="absolute inset-0 w-full h-full shadow-2xl rounded-2xl sm:rounded-3xl overflow-hidden border border-white/20 bg-slate-900" style={{ backfaceVisibility: 'hidden' }}>
                   <img src="/images/card/ai-card-front.jpg" alt="AI Card Front" className="w-full h-full object-cover" loading="lazy" />
+                  {/* Glare Effect */}
+                  <div className="absolute top-0 left-0 w-[50%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent animate-glare pointer-events-none" />
                 </div>
                 {/* Back Face */}
                 <div className="absolute inset-0 w-full h-full shadow-2xl rounded-2xl sm:rounded-3xl overflow-hidden border border-white/20 bg-slate-900" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
@@ -1299,11 +1301,11 @@ export default function Home() {
 
                 {/* Certificate Image */}
                 <div className="flex-shrink-0 w-full max-w-[280px] sm:max-w-[340px] lg:w-[380px] lg:max-w-none relative group/cert">
-                  {/* Glowing background behind certificate */}
-                  <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/30 to-emerald-500/30 blur-2xl opacity-50 group-hover/cert:opacity-80 transition-opacity duration-500 rounded-full" />
                   
                   <div className="relative bg-white rounded-[2rem] p-3 sm:p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover/cert:-translate-y-2 border border-slate-100 lg:rotate-2 group-hover/cert:rotate-0">
-                    <img src={certificateImg} alt="Certificate of Authorization" className="w-full h-auto object-contain rounded-xl border border-slate-100/50" loading="lazy" />
+                    <div className="relative overflow-hidden rounded-xl border border-slate-100/50">
+                      <img src={certificateImg} alt="Certificate of Authorization" className="w-full h-auto object-contain" loading="lazy" />
+                    </div>
                     
                     {/* Floating Badge on Certificate */}
                     <div className="absolute -bottom-5 -left-5 bg-slate-900 border border-slate-700 rounded-2xl p-4 shadow-xl flex items-center gap-3 anim-float hidden sm:flex">

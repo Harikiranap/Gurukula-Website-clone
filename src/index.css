@@ -38,3 +38,11 @@ html {
   animation: spin-3d 10s linear infinite;
   transform-style: preserve-3d;
 }
+
+@keyframes glare {
+  0% { transform: translateX(-250%) skewX(-30deg); }
+  60%, 100% { transform: translateX(350%) skewX(-30deg); }
+}
+.animate-glare {
+  animation: glare 5.5s linear infinite;
+}
