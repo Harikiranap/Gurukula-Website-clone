@@ -1245,52 +1245,18 @@ export default function Home() {
             </div>
 
             {/* Interactive Card Right */}
-            <div className="relative group" data-reveal data-reveal-delay="200ms">
-              <div className="absolute -inset-1 rounded-[2.5rem] bg-gradient-to-r from-blue-500 to-emerald-500 opacity-20 blur-2xl transition duration-1000 group-hover:opacity-40 group-hover:duration-200" />
+            <div className="relative group mx-auto w-full max-w-[280px] sm:max-w-sm lg:max-w-md perspective" style={{ perspective: "1000px" }} data-reveal data-reveal-delay="200ms">
+              <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-r from-blue-500 to-emerald-500 opacity-20 blur-2xl transition duration-1000 group-hover:opacity-40 group-hover:duration-200" />
 
-              <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-slate-900/50 backdrop-blur-lg p-8 sm:p-12 shadow-2xl transform-gpu">
-                <div className="flex justify-between items-start mb-12">
-                  <div>
-                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Official Issue</p>
-                    <h3 className="text-3xl font-black text-white">AI CARD</h3>
-                  </div>
-                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center text-white shadow-lg">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                  </div>
+              {/* 3D Spinning Container */}
+              <div className="relative w-full aspect-[1.586/1] animate-spin-3d" style={{ transformStyle: 'preserve-3d' }}>
+                {/* Front Face */}
+                <div className="absolute inset-0 w-full h-full shadow-2xl rounded-2xl sm:rounded-3xl overflow-hidden border border-white/20 bg-slate-900" style={{ backfaceVisibility: 'hidden' }}>
+                  <img src="/images/card/ai-card-front.jpg" alt="AI Card Front" className="w-full h-full object-cover" loading="lazy" />
                 </div>
-
-                <div className="space-y-6">
-                  <div className="flex flex-wrap gap-3">
-                    {["50+ AI Tools", "Power BI", "Tableau", "Foundation AI"].map(tool => (
-                      <span key={tool} className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-xs font-bold text-slate-300">
-                        {tool}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="pt-8 border-t border-white/5 flex items-end justify-between">
-                    <div>
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Lifetime Access</p>
-                      <div className="flex items-baseline gap-2 mt-1">
-                        <p className="text-4xl font-black text-white">₹499</p>
-                        <p className="text-sm font-bold text-slate-500 line-through">₹2999</p>
-                      </div>
-                    </div>
-                    <span className="bg-emerald-500/10 text-emerald-400 text-[10px] font-black px-3 py-1 rounded-full border border-emerald-500/20">
-                      80% OFF
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Trust Badge */}
-              <div className="absolute -bottom-6 -right-6 rounded-2xl bg-white p-4 shadow-2xl anim-float hidden sm:block">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-black text-lg">✓</div>
-                  <div>
-                    <p className="text-xs font-black text-slate-900 leading-none">Verified Partner</p>
-                    <p className="text-[10px] text-slate-500 mt-1">Yaticorp India Pvt Ltd</p>
-                  </div>
+                {/* Back Face */}
+                <div className="absolute inset-0 w-full h-full shadow-2xl rounded-2xl sm:rounded-3xl overflow-hidden border border-white/20 bg-slate-900" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                  <img src="/images/card/ai-card-back.png" alt="AI Card Back" className="w-full h-full object-cover" loading="lazy" />
                 </div>
               </div>
             </div>
