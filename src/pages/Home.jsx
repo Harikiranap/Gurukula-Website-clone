@@ -729,21 +729,22 @@ export default function Home() {
     if (aboutTiltRef.current) aboutTiltRef.current.style.transform = "";
   }, []);
 
-  // ── UPDATED GALLERY GRID COMPONENT (Fixed Loading Issue) ──────────────────
+  // ── UPDATED GALLERY GRID COMPONENT (Optimized for Scroll Performance) ──────────────────
   const GalleryGrid = ({ onOpen }) => {
     return (
       <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
         {PHOTOS.map((photo, i) => (
           <div
             key={i}
-            className="break-inside-avoid group relative overflow-hidden rounded-[2.5rem] border border-slate-200 bg-slate-200 p-2.5 transition-all duration-700 hover:shadow-[0_30px_60px_rgba(15,23,42,0.15)] hover:-translate-y-3 cursor-zoom-in"
+            className="break-inside-avoid group relative overflow-hidden rounded-[2.5rem] border border-slate-200 bg-slate-200 p-2.5 transition-[transform,box-shadow] duration-700 hover:shadow-[0_30px_60px_rgba(15,23,42,0.15)] hover:-translate-y-3 cursor-zoom-in transform-gpu"
             onClick={() => onOpen({ ...photo, index: i })}
           >
             <div className={`relative overflow-hidden rounded-[1.8rem] bg-slate-300 ${photo.tall ? "h-[480px]" : "h-[300px]"}`}>
               <img
                 src={photo.src}
                 alt={photo.caption}
-                loading="eager"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover block"
                 onError={(e) => {
                   e.target.style.display = 'none'; // Hides broken image icon
@@ -752,8 +753,8 @@ export default function Home() {
               />
 
               {/* Professional Glassmorphism Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8">
-                <div className="translate-y-8 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 pointer-events-none">
+                <div className="translate-y-8 group-hover:translate-y-0 transition-transform duration-500 ease-out transform-gpu">
                   <span className="inline-block px-4 py-1.5 bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-3 shadow-lg">
                     {photo.tag || "Gallery"}
                   </span>
@@ -1263,19 +1264,58 @@ export default function Home() {
           </div>
 
           {/* Bento Feature Section */}
-          <div className="mt-24 sm:mt-32 max-w-4xl mx-auto" data-reveal>
+          <div className="mt-24 sm:mt-32 max-w-5xl mx-auto px-4 sm:px-6" data-reveal>
             {/* Authorization Block */}
-            <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-gradient-to-r from-blue-900/40 to-slate-900/40 p-8 sm:p-12 flex flex-col items-center text-center gap-8 group">
-              <div className="relative flex-shrink-0 w-48 sm:w-64 bg-white rounded-xl p-2 transition-transform duration-500 shadow-2xl">
-                <img src={certificateImg} alt="Certificate" className="w-full h-auto object-contain rounded-lg" />
-              </div>
-              <div className="flex flex-col items-center">
-                <h4 className="text-2xl sm:text-3xl font-black text-white">Authorized by Yaticorp</h4>
-                <p className="mt-4 text-base sm:text-lg text-slate-400 leading-relaxed max-w-2xl">Gurukula is the official training partner for the Belthangady region, providing verified AI Card distribution and support.</p>
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                  <span className="px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-sm font-bold text-blue-400">Issued: 23 Feb 2026</span>
-                  <div className="hidden sm:block h-1 w-1 rounded-full bg-slate-600" />
-                  <a href={certificateImg} target="_blank" className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-bold text-white hover:bg-white/10 hover:text-white transition-all">View Document →</a>
+            <div className="relative overflow-hidden rounded-[2.5rem] border border-white/5 bg-gradient-to-br from-[#162142] to-[#0b1228] p-8 sm:p-12 lg:p-16 shadow-[0_30px_60px_rgba(0,0,0,0.4)] group">
+              {/* Grid Background */}
+              <div className="absolute inset-0 opacity-10 [background-image:linear-gradient(rgba(255,255,255,0.4)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.4)_1px,transparent_1px)] [background-size:40px_40px]" />
+              {/* Decorative Glow */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15)_0%,transparent_50%)] pointer-events-none blur-3xl" />
+              
+              <div className="relative z-10 flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                {/* Text Content */}
+                <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 mb-6 shadow-sm">
+                    <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" /> Official Partner
+                  </div>
+                  <h4 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.1]">
+                    Authorized by <br className="hidden lg:block" />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Yaticorp</span>
+                  </h4>
+                  <p className="mt-5 text-base sm:text-lg text-slate-300 leading-relaxed max-w-xl font-medium">
+                    Gurukula is the official training partner for the Belthangady region, providing verified AI Card distribution and dedicated career support.
+                  </p>
+                  
+                  <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                    <a href={certificateImg} target="_blank" rel="noreferrer" className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-sm font-bold text-white transition-all shadow-[0_10px_20px_rgba(37,99,235,0.3)] hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                      View Certificate
+                    </a>
+                    <span className="px-6 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-sm font-bold text-slate-300 backdrop-blur-md whitespace-nowrap">
+                      Issued: 23 Feb 2026
+                    </span>
+                  </div>
+                </div>
+
+                {/* Certificate Image */}
+                <div className="flex-shrink-0 w-full max-w-[280px] sm:max-w-[340px] lg:w-[380px] lg:max-w-none relative group/cert">
+                  {/* Glowing background behind certificate */}
+                  <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/30 to-emerald-500/30 blur-2xl opacity-50 group-hover/cert:opacity-80 transition-opacity duration-500 rounded-full" />
+                  
+                  <div className="relative bg-white rounded-[2rem] p-3 sm:p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover/cert:-translate-y-2 border border-slate-100 lg:rotate-2 group-hover/cert:rotate-0">
+                    <img src={certificateImg} alt="Certificate of Authorization" className="w-full h-auto object-contain rounded-xl border border-slate-100/50" loading="lazy" />
+                    
+                    {/* Floating Badge on Certificate */}
+                    <div className="absolute -bottom-5 -left-5 bg-slate-900 border border-slate-700 rounded-2xl p-4 shadow-xl flex items-center gap-3 anim-float hidden sm:flex">
+                      <div className="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      </div>
+                      <div className="text-left">
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Status</p>
+                        <p className="text-sm font-black text-white">Verified</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
