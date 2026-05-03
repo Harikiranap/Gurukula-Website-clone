@@ -599,36 +599,39 @@ function StatsCounter() {
   const counts = useCountUp(statsRef);
   
   return (
-    <div ref={statsRef} className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8 lg:gap-10 w-full lg:w-auto relative">
+    <div ref={statsRef} className="flex flex-row items-start sm:items-center justify-between sm:justify-start gap-2 sm:gap-8 lg:gap-10 w-full lg:w-auto relative mt-4 sm:mt-0">
       <div className="hidden lg:block absolute -left-6 top-1/2 -translate-y-1/2 w-px h-16 bg-white/20" />
       {[
         { num: counts.courses, suffix: "+", label: "Professional Courses", icon: "book" },
         { num: counts.students, suffix: "+", label: "Happy Students", icon: "users" },
         { num: counts.years, suffix: "+", label: "Years Experience", icon: "badge" },
       ].map((s, i) => (
-        <div key={s.label} className="flex items-center gap-4 relative">
+        <div key={s.label} className="flex flex-col sm:flex-row items-center gap-1 sm:gap-4 relative flex-1 sm:flex-none">
           {i !== 0 && (
             <div className="hidden sm:block absolute -left-4 lg:-left-5 top-1/2 -translate-y-1/2 w-px h-12 bg-white/20" />
           )}
-          <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center text-white/90">
+          {i !== 0 && (
+            <div className="block sm:hidden absolute -left-1 top-1/2 -translate-y-1/2 w-px h-8 bg-white/20" />
+          )}
+          <div className="w-6 h-6 sm:w-10 sm:h-10 flex-shrink-0 flex items-center justify-center text-white/90">
             {s.icon === 'book' ? (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6 sm:w-8 sm:h-8">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253V19.253" />
               </svg>
             ) : s.icon === 'users' ? (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6 sm:w-8 sm:h-8">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
               </svg>
             ) : (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6 sm:w-8 sm:h-8">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
               </svg>
             )}
           </div>
-          <div className="text-left">
-            <p className="text-2xl sm:text-3xl font-black text-white tabular-nums leading-none">{s.num}{s.suffix}</p>
-            <p className="text-[9px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-1 leading-tight">{s.label}</p>
+          <div className="text-center sm:text-left mt-1 sm:mt-0">
+            <p className="text-lg sm:text-3xl font-black text-white tabular-nums leading-none">{s.num}{s.suffix}</p>
+            <p className="text-[7px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-1 sm:mt-1 leading-tight max-w-[80px] sm:max-w-none mx-auto sm:mx-0">{s.label}</p>
           </div>
         </div>
       ))}
@@ -1204,13 +1207,31 @@ export default function Home() {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Learning Card</span>
               </h2>
 
-              <div className="mt-6 max-w-lg h-[120px] sm:h-24 relative">
-                <p className={`absolute inset-0 text-slate-400 text-lg leading-relaxed transition-all duration-500 ${aiFlip === 0 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"}`}>
-                  Unlock the future with the World&apos;s first AI Learning Card. One-time access to 50+ tools, professional certificates, and a global tech community.
-                </p>
-                <p className={`absolute inset-0 text-slate-400 text-lg leading-relaxed transition-all duration-500 ${aiFlip === 1 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4 pointer-events-none"}`}>
-                  <strong className="text-white">Hybrid Learning:</strong> Structured theory combined with intensive hands-on practical sessions.
-                </p>
+              <div className="mt-8 max-w-lg h-[180px] sm:h-[140px]" style={{ perspective: "1000px" }}>
+                <div 
+                  className="relative w-full h-full transition-transform duration-700 ease-out" 
+                  style={{ transformStyle: "preserve-3d", transform: aiFlip === 0 ? "rotateY(0deg)" : "rotateY(180deg)" }}
+                >
+                  {/* Front Face */}
+                  <div 
+                    className="absolute inset-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 sm:p-6 flex items-center shadow-2xl"
+                    style={{ backfaceVisibility: "hidden" }}
+                  >
+                    <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
+                      Unlock the future with the World&apos;s first AI Learning Card. One-time access to 50+ tools, professional certificates, and a global tech community.
+                    </p>
+                  </div>
+                  
+                  {/* Back Face */}
+                  <div 
+                    className="absolute inset-0 bg-blue-500/10 backdrop-blur-md border border-blue-500/20 rounded-2xl p-5 sm:p-6 flex items-center shadow-2xl"
+                    style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                  >
+                    <p className="text-blue-100 text-base sm:text-lg leading-relaxed">
+                      <strong className="text-white">Hybrid Learning:</strong> Structured theory combined with intensive hands-on practical sessions.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div className="mt-10 flex flex-wrap gap-4">
