@@ -1205,10 +1205,10 @@ export default function Home() {
               </h2>
 
               <div className="mt-6 max-w-lg h-[120px] sm:h-24 relative">
-                <p className={`absolute inset-0 text-slate-400 text-lg leading-relaxed transition-all duration-500 ${aiFlip === 0 ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}>
+                <p className={`absolute inset-0 text-slate-400 text-lg leading-relaxed transition-all duration-500 ${aiFlip === 0 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"}`}>
                   Unlock the future with the World&apos;s first AI Learning Card. One-time access to 50+ tools, professional certificates, and a global tech community.
                 </p>
-                <p className={`absolute inset-0 text-slate-400 text-lg leading-relaxed transition-all duration-500 ${aiFlip === 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+                <p className={`absolute inset-0 text-slate-400 text-lg leading-relaxed transition-all duration-500 ${aiFlip === 1 ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4 pointer-events-none"}`}>
                   <strong className="text-white">Hybrid Learning:</strong> Structured theory combined with intensive hands-on practical sessions.
                 </p>
               </div>
