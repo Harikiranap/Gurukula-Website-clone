@@ -319,9 +319,9 @@ function SectionHeader({ badge, title, highlight, subtitle, center = true, accen
       <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-5 uppercase tracking-widest">
         {badge}
       </div>
-      <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
+      <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight uppercase tracking-[0.1em]">
         {title}{" "}
-        {highlight && <span className="text-blue-700">{highlight}</span>}
+        {highlight && <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600">{highlight}</span>}
       </h2>
       <div className={`w-12 h-1 ${accent === "orange" ? "bg-orange-500" : "bg-blue-700"} rounded-full ${center ? "mx-auto" : ""} mt-4 mb-5`} />
       {subtitle && (
@@ -1506,7 +1506,7 @@ export default function Home() {
                     <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
                     </div>
-                    <h3 className="text-lg font-black text-slate-900">Institute Location</h3>
+                    <h3 className="text-sm font-extrabold uppercase tracking-widest text-slate-800">Institute Location</h3>
                   </div>
                   <p className="text-sm text-slate-600 font-medium leading-relaxed mb-5">
                     Shri Gurusanidhya Building, Near Bharat Petrol Pump, <br className="hidden sm:block" />
@@ -1523,15 +1523,18 @@ export default function Home() {
               </div>
 
               {/* Message Form */}
-              <div className="bg-white border border-slate-200 rounded-[2rem] p-6 sm:p-8 shadow-sm relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-emerald-100 transition-colors duration-500 transform-gpu" />
+              <div className="bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/80 border border-blue-100/50 rounded-[2rem] p-6 sm:p-8 shadow-[0_10px_40px_rgba(37,99,235,0.05)] relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-400/20 transition-colors duration-500 transform-gpu" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 group-hover:bg-indigo-400/20 transition-colors duration-500 transform-gpu" />
                 <div className="relative z-10">
-                  <h3 className="text-lg font-black text-slate-900 mb-5 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/20">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
                     </div>
-                    Send a Message
-                  </h3>
+                    <h3 className="text-sm font-extrabold uppercase tracking-widest text-slate-800">
+                      Send a Message
+                    </h3>
+                  </div>
                   <form onSubmit={(e) => {
                     e.preventDefault();
                     const fd = new FormData(e.target);
@@ -1540,11 +1543,11 @@ export default function Home() {
                     const text = encodeURIComponent(`Hello Gurukula, my name is ${name}.\n\n${msg}`);
                     window.open(`https://wa.me/916366564639?text=${text}`, '_blank');
                   }} className="space-y-4">
-                    <input required name="name" type="text" placeholder="Your Name" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all placeholder:text-slate-400" />
-                    <textarea required name="message" rows="3" placeholder="How can we help you?" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none placeholder:text-slate-400"></textarea>
-                    <button type="submit" className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-3.5 text-sm font-bold text-white hover:bg-emerald-600 transition-all hover:shadow-lg hover:-translate-y-0.5">
+                    <input required name="name" type="text" placeholder="Your Name" className="w-full bg-white border-0 rounded-xl px-5 py-3 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.03)]" />
+                    <textarea required name="message" rows="3" placeholder="How can we help you?" className="w-full bg-white border-0 rounded-xl px-5 py-3 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all resize-none shadow-[0_4px_20px_rgba(0,0,0,0.03)]"></textarea>
+                    <button type="submit" className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3.5 text-sm font-bold text-white hover:from-blue-500 hover:to-indigo-500 transition-all shadow-xl shadow-blue-500/20 hover:shadow-blue-500/40 hover:-translate-y-1 mt-1">
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                      Send via WhatsApp
+                      Send Message
                     </button>
                   </form>
                 </div>
@@ -1555,30 +1558,37 @@ export default function Home() {
             <div className="space-y-6">
 
               {/* Working Hours Card */}
-              <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-xl transform-gpu" />
-                <h3 className="text-lg font-black mb-6 flex items-center justify-between">
-                  Operation Hours
-                  {isInstituteOpen ? (
-                    <span className="bg-emerald-500/20 text-emerald-400 text-[10px] uppercase font-bold px-3 py-1 rounded-full border border-emerald-500/30">
-                      ● Opened
+              <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 text-slate-900 relative overflow-hidden shadow-sm group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-100 transition-colors duration-500 transform-gpu" />
+                <div className="relative z-10">
+                  <h3 className="text-sm font-extrabold uppercase tracking-widest text-slate-800 mb-6 flex items-center justify-between">
+                    <span className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      </div>
+                      Operation Hours
                     </span>
-                  ) : (
-                    <span className="bg-red-500/20 text-red-400 text-[10px] uppercase font-bold px-3 py-1 rounded-full border border-red-500/30">
-                      ● Closed
-                    </span>
-                  )}
-                </h3>
-                <div className="space-y-4">
-                  {[
-                    { day: "Mon – Sat", time: "9:00 AM – 5:30 PM", active: currentDay >= 1 && currentDay <= 6 },
-                    { day: "Sunday", time: "Closed", active: currentDay === 0 },
-                  ].map((h) => (
-                    <div key={h.day} className={`flex items-center justify-between p-4 rounded-2xl border ${h.active ? "bg-white/5 border-white/10" : "border-white/5 opacity-40"}`}>
-                      <span className="text-sm font-bold">{h.day}</span>
-                      <span className={`text-sm font-medium ${h.active && h.time !== "Closed" ? "text-indigo-300" : "text-red-400"}`}>{h.time}</span>
-                    </div>
-                  ))}
+                    {isInstituteOpen ? (
+                      <span className="bg-emerald-50 text-emerald-600 text-[10px] uppercase font-bold px-3 py-1 rounded-full border border-emerald-200">
+                        ● Opened
+                      </span>
+                    ) : (
+                      <span className="bg-red-50 text-red-600 text-[10px] uppercase font-bold px-3 py-1 rounded-full border border-red-200">
+                        ● Closed
+                      </span>
+                    )}
+                  </h3>
+                  <div className="space-y-4">
+                    {[
+                      { day: "Mon – Sat", time: "9:00 AM – 5:30 PM", active: currentDay >= 1 && currentDay <= 6 },
+                      { day: "Sunday", time: "Closed", active: currentDay === 0 },
+                    ].map((h) => (
+                      <div key={h.day} className={`flex items-center justify-between p-4 rounded-2xl border ${h.active ? "bg-slate-50 border-slate-100" : "border-slate-100 opacity-60"}`}>
+                        <span className="text-sm font-bold text-slate-700">{h.day}</span>
+                        <span className={`text-sm font-bold ${h.active && h.time !== "Closed" ? "text-blue-600" : "text-slate-400"}`}>{h.time}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
