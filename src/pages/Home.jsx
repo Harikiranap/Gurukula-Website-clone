@@ -792,9 +792,9 @@ export default function Home() {
           />
           {/* Desktop Background */}
           <img 
-            src="/images/background5.png"
+            src="/images/background3.png"
             alt="Gurukula Background"
-            className="absolute inset-0 w-full h-full object-cover object-center hidden sm:block"
+            className="absolute inset-0 w-full h-full object-fill object-center hidden sm:block"
             loading="eager"
           />
         </div>
@@ -1561,7 +1561,7 @@ export default function Home() {
                   Operation Hours
                   {isInstituteOpen ? (
                     <span className="bg-emerald-500/20 text-emerald-400 text-[10px] uppercase font-bold px-3 py-1 rounded-full border border-emerald-500/30">
-                      ● Active
+                      ● Opened
                     </span>
                   ) : (
                     <span className="bg-red-500/20 text-red-400 text-[10px] uppercase font-bold px-3 py-1 rounded-full border border-red-500/30">
