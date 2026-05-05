@@ -642,9 +642,9 @@ function StatsCounter() {
 
 const HERO_BACKGROUNDS = [
   { src: "/images/background.png", fitClass: "object-fill" },
-  { src: "/images/background1.png", fitClass: "object-fill" },
   { src: "/images/background3.png", fitClass: "object-cover" },
-  { src: "/images/background2.png", fitClass: "object-fill" }
+  { src: "/images/background1.png", fitClass: "object-fill" },
+  { src: "/images/background2.png", fitClass: "object-cover" }
 ];
 
 // ══════════════════════════════════════════════════════════════════════════
