@@ -361,7 +361,7 @@ const CourseModal = ({ course, onClose }) => {
           <img src={course.image || "/images/hero.jpg"} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-50 scale-110 pointer-events-none" aria-hidden="true" />
           
           {/* Main Image - Always fully visible */}
-          <img src={course.image || "/images/hero.jpg"} alt={course.title} className="relative z-10 w-full h-full object-contain p-4 md:p-8 drop-shadow-2xl" loading="lazy" />
+          <img src={course.image || "/images/hero.jpg"} alt={course.title} className="relative z-10 w-full h-full object-contain p-4 md:p-8 drop-shadow-2xl" loading="eager" />
           
           {/* Gradient Overlay to blend with right content */}
           <div className="absolute inset-0 z-20 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent md:bg-gradient-to-r md:from-transparent md:to-slate-900/50 pointer-events-none" />
@@ -479,7 +479,7 @@ const Lightbox = ({ photo, onClose, onPrev, onNext }) => {
         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
       </button>
       <div className="relative max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
-        <img src={photo.src} alt={photo.caption} className="w-full max-h-[80dvh] object-contain rounded-2xl shadow-2xl" style={{ animation: "fadeInUp 0.2s ease both" }} loading="lazy" />
+        <img src={photo.src} alt={photo.caption} className="w-full max-h-[80dvh] object-contain rounded-2xl shadow-2xl" style={{ animation: "fadeInUp 0.2s ease both" }} loading="eager" />
         <div className="mt-3 text-center">
           <p className="text-white font-semibold text-sm sm:text-base">{photo.caption}</p>
           <p className="text-white/40 text-xs sm:text-sm mt-1">{photo.index + 1} / {PHOTOS.length}</p>
@@ -639,6 +639,13 @@ function StatsCounter() {
   );
 }
 
+const HERO_BACKGROUNDS = [
+  { src: "/images/background.png", fitClass: "object-fill" },
+  { src: "/images/background1.png", fitClass: "object-fill" },
+  { src: "/images/background3.png", fitClass: "object-cover" },
+  { src: "/images/background2.png", fitClass: "object-fill" }
+];
+
 // ══════════════════════════════════════════════════════════════════════════
 // HOME COMPONENT
 // ══════════════════════════════════════════════════════════════════════════
@@ -649,6 +656,15 @@ export default function Home() {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [lightbox, setLightbox] = useState(null);
   const location = useLocation();
+
+  const [currentHeroBg, setCurrentHeroBg] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentHeroBg((prev) => (prev + 1) % HERO_BACKGROUNDS.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   const [currentTimeObj, setCurrentTimeObj] = useState(new Date());
   useEffect(() => {
@@ -743,7 +759,7 @@ export default function Home() {
               <img
                 src={photo.src}
                 alt={photo.caption}
-                loading="lazy"
+                loading="eager"
                 decoding="async"
                 className="w-full h-full object-cover block"
                 onError={(e) => {
@@ -779,24 +795,21 @@ export default function Home() {
       <div id="scroll-progress" style={{ width: "100%", transform: "scaleX(0)" }} />
 
       {/* ════════════ HERO ════════════ */}
-      <section id="home" className="scroll-mt-24 relative overflow-hidden bg-black px-4 pt-32 pb-20 md:px-8 md:pt-40 md:pb-24 min-h-[90vh] sm:min-h-screen flex items-end">
+      <section id="home" className="scroll-mt-24 relative overflow-hidden bg-black px-4 pt-32 pb-12 md:px-8 md:pt-40 md:pb-12 min-h-[90vh] sm:min-h-screen flex items-end">
 
         {/* Background Image Layer */}
-        <div className="absolute inset-0 z-0">
-          {/* Mobile Background */}
-          <img 
-            src="/images/mbl-background.png"
-            alt="Gurukula Mobile Background"
-            className="absolute inset-0 w-full h-full object-cover object-center sm:hidden"
-            loading="eager"
-          />
-          {/* Desktop Background */}
-          <img 
-            src="/images/background3.png"
-            alt="Gurukula Background"
-            className="absolute inset-0 w-full h-full object-fill object-center hidden sm:block"
-            loading="eager"
-          />
+        <div className="absolute inset-0 z-0 bg-black">
+          {HERO_BACKGROUNDS.map((bg, index) => (
+            <img 
+              key={bg.src}
+              src={bg.src}
+              alt={`Gurukula Background ${index + 1}`}
+              className={`absolute inset-0 w-full h-full ${bg.fitClass} object-center transition-opacity duration-1000 ease-in-out ${
+                index === currentHeroBg ? "opacity-100" : "opacity-0"
+              }`}
+              loading={index === 0 ? "eager" : "lazy"}
+            />
+          ))}
         </div>
 
         {/* Radial Black Shadow Overlay - Darkens all edges (vignette) */}
@@ -808,7 +821,7 @@ export default function Home() {
         {/* Decorative Background Elements */}
         <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-full max-w-[800px] rounded-full bg-blue-500/20 opacity-30 blur-[80px] transform-gpu" />
 
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-10 flex flex-col justify-end h-full">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-4 flex flex-col justify-end h-full">
           {/* Main Content Area */}
           <div className="max-w-lg text-left mb-6 md:mb-10">
             <p className="mt-4 text-sm sm:text-base text-slate-200 max-w-md font-medium leading-relaxed anim-fadeInUp-3">
@@ -817,7 +830,7 @@ export default function Home() {
           </div>
 
           {/* Bottom Row: Buttons + Stats */}
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10 lg:gap-12 anim-fadeInUp-4 pt-4 lg:pt-6">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10 lg:gap-12 anim-fadeInUp-4">
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto shrink-0">
               <a href="https://wa.me/916366564639" target="_blank" rel="noreferrer"
