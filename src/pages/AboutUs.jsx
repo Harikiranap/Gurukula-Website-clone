@@ -105,6 +105,8 @@ function FlippingAboutLogo() {
           muted 
           playsInline 
           onEnded={handleVideoEnded}
+          onContextMenu={(e) => e.preventDefault()}
+          style={{ WebkitTouchCallout: 'none' }}
           className="w-full h-full object-cover pointer-events-none" 
         />
       </div>

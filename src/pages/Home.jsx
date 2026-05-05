@@ -344,7 +344,7 @@ const CourseModal = ({ course, onClose }) => {
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-900/80 backdrop-blur-sm p-0 md:p-6" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] flex items-end md:items-center justify-center bg-slate-900/80 backdrop-blur-sm p-0 md:p-6" onClick={onClose}>
       <div
         className="bg-white w-full md:rounded-[2.5rem] md:max-w-5xl overflow-hidden shadow-2xl max-h-[95dvh] md:max-h-[85dvh] flex flex-col md:flex-row relative rounded-t-[2.5rem]"
         style={{ animation: "fadeInUp 0.3s ease both" }}
@@ -357,7 +357,7 @@ const CourseModal = ({ course, onClose }) => {
         </button>
 
         {/* LEFT/TOP: IMAGE SECTION */}
-        <div className="relative h-64 md:h-auto md:w-[40%] flex-shrink-0 bg-slate-900 overflow-hidden flex items-center justify-center">
+        <div className="relative h-48 sm:h-56 md:h-auto md:w-[40%] flex-shrink-0 bg-slate-900 overflow-hidden flex items-center justify-center">
           {/* Blurred Background to prevent letterboxing */}
           <img src={course.image || "/images/hero.jpg"} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-50 scale-110 pointer-events-none" aria-hidden="true" />
           
@@ -381,7 +381,7 @@ const CourseModal = ({ course, onClose }) => {
         </div>
 
         {/* RIGHT/BOTTOM: CONTENT SECTION */}
-        <div className="flex-1 flex flex-col bg-slate-50 overflow-hidden relative">
+        <div className="flex-1 min-h-0 flex flex-col bg-slate-50 overflow-hidden relative">
           {/* DESKTOP CLOSE BUTTON */}
           <button onClick={onClose}
             className="absolute top-6 right-6 z-10 w-10 h-10 hidden md:flex rounded-full bg-white shadow-sm border border-slate-200 hover:bg-slate-100 items-center justify-center text-slate-500 hover:text-slate-900 transition-all hover:scale-105">
@@ -701,6 +701,8 @@ function FlippingAboutLogo() {
           muted 
           playsInline 
           onEnded={handleVideoEnded}
+          onContextMenu={(e) => e.preventDefault()}
+          style={{ WebkitTouchCallout: 'none' }}
           className="w-full h-full object-cover pointer-events-none" 
         />
       </div>
@@ -1419,6 +1421,8 @@ export default function Home() {
                 disablePictureInPicture
                 disableRemotePlayback
                 preload="metadata"
+                onContextMenu={(e) => e.preventDefault()}
+                style={{ WebkitTouchCallout: 'none' }}
                 className="w-full h-auto block"
               ></video>
             </div>
@@ -1432,6 +1436,8 @@ export default function Home() {
                 disablePictureInPicture
                 disableRemotePlayback
                 preload="metadata"
+                onContextMenu={(e) => e.preventDefault()}
+                style={{ WebkitTouchCallout: 'none' }}
                 className="w-full h-auto block"
               ></video>
             </div>
