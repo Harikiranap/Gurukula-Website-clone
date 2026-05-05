@@ -180,16 +180,16 @@ export default function AboutUs() {
                 From Computer Applications and Office Automation to Tally, Graphic Design, Video Editing, AI, and Data Analytics — our comprehensive curriculum provides a complete foundation for the modern workplace.
               </p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
                 {[
                   { icon: "users", val: "1000+", lab: "Students" },
                   { icon: "monitor", val: "30+", lab: "Courses" },
                   { icon: "badge", val: "4.8", lab: "Rating" },
                 ].map((s) => (
-                  <div key={s.lab} className="bg-slate-50 border border-slate-100 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-blue-200 hover:-translate-y-1 transition-all duration-300">
-                    <UiIcon name={s.icon} className="w-6 h-6 text-orange-500 mb-2" />
-                    <p className="text-xl sm:text-2xl font-black text-slate-900 leading-none">{s.val}</p>
-                    <p className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1.5">{s.lab}</p>
+                  <div key={s.lab} className="bg-slate-50 border border-slate-100 rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col items-center sm:items-start text-center sm:text-left">
+                    <UiIcon name={s.icon} className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 mb-2" />
+                    <p className="text-lg sm:text-2xl font-black text-slate-900 leading-none">{s.val}</p>
+                    <p className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1.5">{s.lab}</p>
                   </div>
                 ))}
               </div>
