@@ -863,7 +863,7 @@ export default function Home() {
           <img 
             src="images/mbl-background.png"
             alt="Gurukula Background"
-            className={`absolute inset-0 w-full h-full ${HERO_BACKGROUNDS[0].fitClass} object-center md:hidden block`}
+            className={`absolute inset-0 w-full h-full object-center md:hidden block`}
             loading="eager"
           />
           {/* Desktop: Image Slider */}
