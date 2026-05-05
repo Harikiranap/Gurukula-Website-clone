@@ -664,6 +664,17 @@ export default function Home() {
 
   const [currentHeroBg, setCurrentHeroBg] = useState(0);
 
+  const reviewVideo1Ref = useRef(null);
+  const reviewVideo2Ref = useRef(null);
+
+  const handleReviewPlay = (videoId) => {
+    if (videoId === 1 && reviewVideo2Ref.current) {
+      reviewVideo2Ref.current.pause();
+    } else if (videoId === 2 && reviewVideo1Ref.current) {
+      reviewVideo1Ref.current.pause();
+    }
+  };
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentHeroBg((prev) => (prev + 1) % HERO_BACKGROUNDS.length);
@@ -1368,6 +1379,8 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-center items-center gap-6 sm:gap-10 mb-10 sm:mb-14 px-4" data-reveal data-reveal-delay="50ms">
             <div className="w-full max-w-[280px] sm:max-w-sm rounded-3xl overflow-hidden shadow-xl border-4 border-white hover:-translate-y-2 transition-all duration-300 bg-black">
               <video 
+                ref={reviewVideo1Ref}
+                onPlay={() => handleReviewPlay(1)}
                 src="/review/review1.mp4" 
                 controls 
                 controlsList="nodownload noplaybackrate"
@@ -1379,6 +1392,8 @@ export default function Home() {
             </div>
             <div className="w-full max-w-[280px] sm:max-w-sm rounded-3xl overflow-hidden shadow-xl border-4 border-white hover:-translate-y-2 transition-all duration-300 bg-black">
               <video 
+                ref={reviewVideo2Ref}
+                onPlay={() => handleReviewPlay(2)}
                 src="/review/review2.mp4" 
                 controls 
                 controlsList="nodownload noplaybackrate"
