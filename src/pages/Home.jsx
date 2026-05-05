@@ -651,6 +651,63 @@ const HERO_BACKGROUNDS = [
   { src: "/images/background2.png", fitClass: "object-cover" }
 ];
 
+// ── FLIPPING ABOUT LOGO COMPONENT ──────────────────────────────────────────
+function FlippingAboutLogo() {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    let timer;
+    if (!isFlipped) {
+      timer = setTimeout(() => setIsFlipped(true), 4000);
+    } else {
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play().catch(() => {});
+      }
+    }
+    return () => clearTimeout(timer);
+  }, [isFlipped]);
+
+  const handleVideoEnded = () => {
+    setIsFlipped(false);
+  };
+
+  return (
+    <div 
+      className="relative w-full aspect-video transition-transform duration-1000 ease-in-out perspective group" 
+      style={{ transformStyle: 'preserve-3d', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+    >
+      {/* Front Face (Logo) */}
+      <div 
+        className="absolute inset-0 w-full h-full flex items-center justify-center rounded-[1.5rem] bg-white border-[6px] border-slate-50 shadow-2xl" 
+        style={{ backfaceVisibility: 'hidden' }}
+      >
+        <img
+          src={logoImg}
+          alt="Gurukula Logo"
+          className="w-2/3 max-w-[200px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)]"
+          loading="lazy"
+        />
+      </div>
+      {/* Back Face (Video) */}
+      <div 
+        className="absolute inset-0 w-full h-full flex items-center justify-center rounded-[1.5rem] overflow-hidden shadow-2xl bg-black border-[6px] border-slate-50" 
+        style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+      >
+        <video 
+          ref={videoRef}
+          src="/review/about.mp4" 
+          muted 
+          playsInline 
+          onEnded={handleVideoEnded}
+          className="w-full h-full object-cover pointer-events-none" 
+        />
+      </div>
+    </div>
+  );
+}
+
 // ══════════════════════════════════════════════════════════════════════════
 // HOME COMPONENT
 // ══════════════════════════════════════════════════════════════════════════
@@ -746,19 +803,6 @@ export default function Home() {
   }, []);
   const onHeroLeave = useCallback(() => {
     if (heroImgRef.current) heroImgRef.current.style.transform = "";
-  }, []);
-
-  // FIX: About tilt via DOM ref
-  const aboutTiltRef = useRef(null);
-  const onAboutMove = useCallback((e) => {
-    if (!aboutTiltRef.current || window.innerWidth < 768) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width - 0.5) * 14;
-    const y = ((e.clientY - r.top) / r.height - 0.5) * -14;
-    aboutTiltRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg) scale(1.02)`;
-  }, []);
-  const onAboutLeave = useCallback(() => {
-    if (aboutTiltRef.current) aboutTiltRef.current.style.transform = "";
   }, []);
 
   // ── UPDATED GALLERY GRID COMPONENT (Optimized for Scroll Performance) ──────────────────
@@ -896,22 +940,10 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
 
             {/* LEFT IMAGE */}
-            <div
-              className="relative perspective anim-fadeInRight flex items-center justify-center"
-              onMouseMove={onAboutMove}
-              onMouseLeave={onAboutLeave}
-            >
-              <div
-                ref={aboutTiltRef}
-                style={{ transition: "transform 0.15s ease", transformStyle: "preserve-3d" }}
-                className="relative w-full max-w-sm mx-auto"
-              >
-                <img
-                  src={logoImg}
-                  alt="Gurukula Logo"
-                  className="w-full object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
-                  loading="lazy"
-                />
+            <div className="relative anim-fadeInRight flex items-center justify-center">
+              <div className="relative w-full max-w-lg mx-auto">
+                <FlippingAboutLogo />
+                <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-100 blur-3xl opacity-50 rounded-full"></div>
               </div>
             </div>
 
@@ -1501,7 +1533,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ════════════ REDESIGNED CONTACT ════════════ */}
+      {/* ════════════ CONTACT ════════════ */}
       <section id="contact" className="scroll-mt-24 bg-slate-50 px-4 py-24 sm:px-8 relative overflow-hidden">
         {/* Decorative Background */}
         <div className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 bg-blue-100/50 rounded-full blur-2xl opacity-60 transform-gpu" />
@@ -1679,6 +1711,7 @@ export default function Home() {
 
       {/* ════════════ FLOATING UI ════════════ */}
       {/* WhatsApp FAB */}
+      {/*
       <div className="fixed bottom-6 right-5 z-50 flex flex-col items-end gap-2 group">
         <div className="bg-slate-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0 whitespace-nowrap pointer-events-none select-none">
           Chat with us 👋
@@ -1690,7 +1723,7 @@ export default function Home() {
             <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
           </a>
         </div>
-      </div>
+      </div>*/}
 
       {/* FIX: Back-to-top — always in DOM, shown/hidden via opacity by useScrollTopBtn.
           No conditional render = no React reconciliation on scroll */}
