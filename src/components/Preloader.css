@@ -1,8 +1,6 @@
 .preloader-wrapper {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
   background: #f8fafc; /* slate-50 */
   display: flex;
   justify-content: center;
@@ -156,6 +154,6 @@
 
 @media (max-width: 640px) {
   .preloader-logo {
-    width: 140px;
+    width: 200px;
   }
 }
