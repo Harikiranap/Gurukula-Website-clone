@@ -1,6 +1,7 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
+import logoImg from "../images/logo.png";
 
 function UiIcon({ name, className = "w-6 h-6 text-blue-600" }) {
   const p = { fill: "none", stroke: "currentColor", strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round" };
@@ -54,6 +55,63 @@ const cardTiltProps = {
   },
 };
 
+// ── FLIPPING ABOUT LOGO COMPONENT ──────────────────────────────────────────
+function FlippingAboutLogo() {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    let timer;
+    if (!isFlipped) {
+      timer = setTimeout(() => setIsFlipped(true), 4000);
+    } else {
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play().catch(() => {});
+      }
+    }
+    return () => clearTimeout(timer);
+  }, [isFlipped]);
+
+  const handleVideoEnded = () => {
+    setIsFlipped(false);
+  };
+
+  return (
+    <div 
+      className="relative w-full aspect-video transition-transform duration-1000 ease-in-out perspective group" 
+      style={{ transformStyle: 'preserve-3d', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+    >
+      {/* Front Face (Logo) */}
+      <div 
+        className="absolute inset-0 w-full h-full flex items-center justify-center rounded-[1.5rem] bg-white border-[6px] border-slate-50 shadow-2xl" 
+        style={{ backfaceVisibility: 'hidden' }}
+      >
+        <img
+          src={logoImg}
+          alt="Gurukula Logo"
+          className="w-2/3 max-w-[200px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)]"
+          loading="lazy"
+        />
+      </div>
+      {/* Back Face (Video) */}
+      <div 
+        className="absolute inset-0 w-full h-full flex items-center justify-center rounded-[1.5rem] overflow-hidden shadow-2xl bg-black border-[6px] border-slate-50" 
+        style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+      >
+        <video 
+          ref={videoRef}
+          src="/review/about.mp4" 
+          muted 
+          playsInline 
+          onEnded={handleVideoEnded}
+          className="w-full h-full object-cover pointer-events-none" 
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function AboutUs() {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -104,21 +162,7 @@ export default function AboutUs() {
 
             {/* Image Block */}
             <div className="w-full lg:w-1/2 relative anim-fadeInUp-1">
-              <div className="relative rounded-[1.5rem] overflow-hidden shadow-2xl border-[6px] border-slate-50 group">
-                <img src="/images/hero.jpg" alt="Gurukula" className="w-full aspect-[4/3] object-cover transform group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-blue-900/20 to-transparent"></div>
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-xl border border-white/50 flex items-center justify-between transition-transform duration-300 hover:-translate-y-1">
-                    <div>
-                      <p className="text-lg sm:text-xl font-black text-blue-900 leading-none">Government</p>
-                      <p className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Certified Institute</p>
-                    </div>
-                    <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center shadow-inner border border-orange-200">
-                      <span className="text-xl">⭐</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <FlippingAboutLogo />
 
               {/* Decorative background blob */}
               <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-blue-100 blur-3xl opacity-50 rounded-full"></div>
