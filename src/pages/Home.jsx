@@ -77,6 +77,7 @@ const GLOBAL_CSS = `
   *, *::before, *::after { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+  h1, h2,h5 { text-transform: uppercase; }
   .font-display { font-family: 'DM Serif Display', Georgia, serif; }
 
   @keyframes fadeInUp   { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
@@ -313,13 +314,13 @@ const cardTiltProps = {
 };
 
 // ── SECTION HEADER ─────────────────────────────────────────────────────────
-function SectionHeader({ badge, title, highlight, subtitle, center = true, accent = "orange" }) {
+function SectionHeader({ badge, title, highlight, subtitle, center = true, accent = "orange", titleSize = "text-3xl md:text-5xl" }) {
   return (
     <div className={center ? "text-center" : ""}>
       <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-5 uppercase tracking-widest">
         {badge}
       </div>
-      <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight uppercase tracking-[0.1em]">
+      <h2 className={`${titleSize} font-extrabold text-slate-900 leading-tight uppercase tracking-[0.1em]`}>
         {title}{" "}
         {highlight && <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600">{highlight}</span>}
       </h2>
@@ -759,7 +760,7 @@ export default function Home() {
               <img
                 src={photo.src}
                 alt={photo.caption}
-                loading="eager"
+                loading="lazy"
                 decoding="async"
                 className="w-full h-full object-cover block"
                 onError={(e) => {
@@ -930,7 +931,7 @@ export default function Home() {
               <span className="text-lg">⭐</span>
               <span>Why Choose Us</span>
             </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 leading-tight tracking-tight mb-6">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight tracking-tight mb-6">
               Why Students Choose <span className="text-blue-700">Gurukula</span>
             </h2>
             <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 font-medium">
@@ -979,12 +980,14 @@ export default function Home() {
       </section>
 
       {/* ════════════ COURSES ════════════ */}
-      <section id="courses" className="scroll-mt-24 bg-slate-50 py-20 sm:py-24 px-4 sm:px-8 relative overflow-hidden">
+      <section id="courses" className="scroll-mt-24 bg-slate-50 pt-20 sm:pt-24 pb-0 px-4 sm:px-8 relative overflow-hidden">
         <div className="pointer-events-none absolute -z-10 -top-20 -right-20 w-80 h-80 bg-blue-50 rounded-full blur-2xl opacity-60 transform-gpu" />
         <div className="pointer-events-none absolute -z-10 bottom-0 left-0 w-64 h-64 bg-orange-50 rounded-full blur-2xl opacity-50 transform-gpu" />
         <div className="mx-auto max-w-7xl">
           <div className="text-center mb-12" data-reveal>
-            <SectionHeader badge={<><svg className="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg> Our Programs</>} title="Explore Our" highlight="Professional Courses"
+            <SectionHeader badge={<><svg className="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg> Our Programs</>}
+              title="Explore Our" highlight="Professional Courses"
+              titleSize="text-2xl md:text-4xl"
               subtitle="Diploma, certificate, design, AI and software training programs built for real career growth." />
           </div>
             {/*
@@ -1161,7 +1164,7 @@ export default function Home() {
       </section>
 
       {/* ════════════ GALLERY ════════════ */}
-      <section id="gallery" className="scroll-mt-24 bg-white py-24 sm:py-32 px-4 sm:px-8 relative overflow-hidden ...">
+      <section id="gallery" className="scroll-mt-24 bg-white pt-12 sm:pt-16 pb-4 sm:pb-8 sm:px-8 relative overflow-hidden ...">
         {/* Modern Decorative Accents */}
         <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-40">
           <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-50 rounded-full blur-[80px] transform-gpu" />
@@ -1174,7 +1177,7 @@ export default function Home() {
               <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-slate-900 text-white text-[11px] font-black uppercase tracking-[0.2em] mb-6 shadow-xl">
                 <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping" /> Corporate Showcase
               </div>
-              <h2 className="text-5xl sm:text-6xl font-black text-slate-900 leading-[1.1] tracking-tighter">
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 leading-[1.1]">
                 The Heart of <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-blue-500">Gurukula Excellence</span>
               </h2>
