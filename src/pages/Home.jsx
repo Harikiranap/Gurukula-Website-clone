@@ -75,7 +75,7 @@ const WHY_ITEMS = [
 const GLOBAL_CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap');
   *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  
   body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
   h1, h2,h5 { text-transform: uppercase; }
   .font-display { font-family: 'DM Serif Display', Georgia, serif; }
@@ -754,6 +754,7 @@ export default function Home() {
           <div
             key={i}
             className="break-inside-avoid group relative overflow-hidden rounded-[2.5rem] border border-slate-200 bg-slate-200 p-2.5 transition-[transform,box-shadow] duration-700 hover:shadow-[0_30px_60px_rgba(15,23,42,0.15)] hover:-translate-y-3 cursor-zoom-in transform-gpu"
+            style={{ contentVisibility: 'auto' }}
             onClick={() => onOpen({ ...photo, index: i })}
           >
             <div className={`relative overflow-hidden rounded-[1.8rem] bg-slate-300 ${photo.tall ? "h-[480px]" : "h-[300px]"}`}>
@@ -772,7 +773,7 @@ export default function Home() {
               {/* Professional Glassmorphism Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 pointer-events-none">
                 <div className="translate-y-8 group-hover:translate-y-0 transition-transform duration-500 ease-out transform-gpu">
-                  <span className="inline-block px-4 py-1.5 bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-3 shadow-lg">
+                  <span className="inline-block px-4 py-1.5 bg-blue-600/90 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-3 shadow-lg">
                     {photo.tag || "Gallery"}
                   </span>
                   <h4 className="text-white font-black text-xl leading-tight tracking-tight">{photo.caption}</h4>
@@ -820,7 +821,7 @@ export default function Home() {
         <div className="absolute inset-0 z-0 bg-gradient-to-t from-black/90 via-black/30 to-black/30 pointer-events-none" />
 
         {/* Decorative Background Elements */}
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-full max-w-[800px] rounded-full bg-blue-500/20 opacity-30 blur-[80px] transform-gpu" />
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-full max-w-[800px] rounded-full bg-blue-500/20 opacity-30 blur-[80px] transform-gpu" hidden />
 
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-4 flex flex-col justify-end h-full">
           {/* Main Content Area */}
@@ -924,7 +925,7 @@ export default function Home() {
 
       {/* ════════════ WHY CHOOSE US ════════════ */}
       <section id="why-choose-us" className="scroll-mt-24 pt-10 pb-0 sm:pt-15 sm:pb-0 px-4 sm:px-8 bg-slate-50 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 top-0 left-1/4 w-[500px] h-[500px] bg-blue-100 rounded-full blur-[80px] opacity-40 transform-gpu" />
+        <div className="pointer-events-none absolute -z-10 top-0 left-1/4 w-[500px] h-[500px] bg-blue-100 rounded-full blur-[80px] opacity-40 transform-gpu" hidden />
         <div className="mx-auto max-w-7xl">
           <div className="text-center mb-16 sm:mb-20" data-reveal>
             <div className="inline-flex items-center gap-3 bg-blue-100 border border-blue-200 text-blue-700 text-xs font-bold px-5 py-2 rounded-full mb-6 uppercase tracking-widest shadow-sm">
@@ -944,7 +945,7 @@ export default function Home() {
               <div key={item.title} data-reveal data-reveal-delay={`${i * 50}ms`}
                 className="group relative bg-white rounded-3xl p-8 transition-all duration-500 border border-transparent shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.1)] hover:-translate-y-2 overflow-hidden">
                 <div className="absolute inset-0 border-2 border-transparent group-hover:border-blue-500/20 rounded-3xl transition-colors duration-500" />
-                <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-blue-400/20 to-orange-400/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-blue-400/20 to-orange-400/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" hidden />
                 <div className="absolute right-6 top-6 text-6xl font-black text-slate-100 opacity-50 group-hover:text-blue-50 transition-colors duration-500 select-none pointer-events-none transform group-hover:scale-110">
                   {String(i + 1).padStart(2, "0")}
                 </div>
@@ -963,8 +964,8 @@ export default function Home() {
           {/*
           <div data-reveal data-reveal-delay="200ms" className="mt-16 relative overflow-hidden rounded-[2.5rem] px-8 sm:px-12 py-12 flex flex-col sm:flex-row items-center justify-between gap-8 shadow-2xl"
             style={{ background:"linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#2563eb 100%)" }}>
-            <div className="absolute -top-32 -right-32 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -top-32 -right-32 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none" hidden />
+            <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl pointer-events-none" hidden />
             <div className="relative z-10 text-center sm:text-left max-w-xl">
               <h3 className="text-3xl sm:text-4xl font-black text-white mb-4 leading-tight">Ready to build your digital career? 🚀</h3>
               <p className="text-blue-100 text-base sm:text-lg font-medium">Join <span className="font-bold text-white bg-white/20 px-2 py-0.5 rounded-lg">1000+ students</span> who transformed their futures at Gurukula.</p>
@@ -981,8 +982,8 @@ export default function Home() {
 
       {/* ════════════ COURSES ════════════ */}
       <section id="courses" className="scroll-mt-24 bg-slate-50 pt-20 sm:pt-24 pb-0 px-4 sm:px-8 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 -top-20 -right-20 w-80 h-80 bg-blue-50 rounded-full blur-2xl opacity-60 transform-gpu" />
-        <div className="pointer-events-none absolute -z-10 bottom-0 left-0 w-64 h-64 bg-orange-50 rounded-full blur-2xl opacity-50 transform-gpu" />
+        <div className="pointer-events-none absolute -z-10 -top-20 -right-20 w-80 h-80 bg-blue-50 rounded-full blur-2xl opacity-60 transform-gpu" hidden />
+        <div className="pointer-events-none absolute -z-10 bottom-0 left-0 w-64 h-64 bg-orange-50 rounded-full blur-2xl opacity-50 transform-gpu" hidden />
         <div className="mx-auto max-w-7xl">
           <div className="text-center mb-12" data-reveal>
             <SectionHeader badge={<><svg className="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg> Our Programs</>}
@@ -1111,7 +1112,7 @@ export default function Home() {
             {/* ================= INDIVIDUAL COURSES ================= */}
             {activeCategory === "Individual Courses" && (
               <div className="relative overflow-hidden rounded-[2.5rem] bg-white border border-slate-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] p-6 sm:p-10 mb-14" style={{ animation: `fadeInUp 0.6s ease both` }}>
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-blue-50/50 to-orange-50/50 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/4" />
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-blue-50/50 to-orange-50/50 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/4" hidden />
 
                 <div className="relative z-10">
                   <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
@@ -1167,8 +1168,8 @@ export default function Home() {
       <section id="gallery" className="scroll-mt-24 bg-white pt-12 sm:pt-16 pb-4 sm:pb-8 sm:px-8 relative overflow-hidden ...">
         {/* Modern Decorative Accents */}
         <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-40">
-          <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-50 rounded-full blur-[80px] transform-gpu" />
-          <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-orange-50 rounded-full blur-[80px] transform-gpu" />
+          <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-50 rounded-full blur-[80px] transform-gpu" hidden />
+          <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-orange-50 rounded-full blur-[80px] transform-gpu" hidden />
         </div>
 
         <div className="mx-auto max-w-7xl relative">
@@ -1344,8 +1345,8 @@ export default function Home() {
 
       {/* ════════════ TESTIMONIALS ════════════ */}
       <section id="testimonials" className="scroll-mt-24 bg-slate-50 py-20 sm:py-24 px-4 sm:px-8 relative overflow-hidden">
-        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-72 h-72 bg-blue-50 rounded-full blur-2xl opacity-60 transform-gpu" />
-        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-64 h-64 bg-orange-50 rounded-full blur-2xl opacity-50 transform-gpu" />
+        <div className="pointer-events-none absolute -z-10 -top-20 -left-20 w-72 h-72 bg-blue-50 rounded-full blur-2xl opacity-60 transform-gpu" hidden />
+        <div className="pointer-events-none absolute -z-10 -bottom-20 -right-20 w-64 h-64 bg-orange-50 rounded-full blur-2xl opacity-50 transform-gpu" hidden />
         <div className="mx-auto max-w-7xl">
           <div className="text-center mb-10 sm:mb-14" data-reveal>
             <SectionHeader badge="⭐ Student Reviews" title="What Our" highlight="Students Say"
@@ -1450,8 +1451,8 @@ export default function Home() {
       {/* ════════════ REDESIGNED CONTACT ════════════ */}
       <section id="contact" className="scroll-mt-24 bg-slate-50 px-4 py-24 sm:px-8 relative overflow-hidden">
         {/* Decorative Background */}
-        <div className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 bg-blue-100/50 rounded-full blur-2xl opacity-60 transform-gpu" />
-        <div className="pointer-events-none absolute -bottom-24 -right-24 w-96 h-96 bg-orange-100/40 rounded-full blur-2xl opacity-60 transform-gpu" />
+        <div className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 bg-blue-100/50 rounded-full blur-2xl opacity-60 transform-gpu" hidden />
+        <div className="pointer-events-none absolute -bottom-24 -right-24 w-96 h-96 bg-orange-100/40 rounded-full blur-2xl opacity-60 transform-gpu" hidden />
 
         <div className="mx-auto max-w-7xl relative z-10">
           <div className="mb-16" data-reveal>
@@ -1516,7 +1517,7 @@ export default function Home() {
 
               {/* Detailed Location */}
               <div className="bg-white border border-slate-200 rounded-[2rem] p-6 sm:p-8 shadow-sm relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-100 transition-colors duration-500 transform-gpu" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-100 transition-colors duration-500 transform-gpu" hidden />
                 <div className="relative z-10">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
@@ -1540,8 +1541,8 @@ export default function Home() {
 
               {/* Message Form */}
               <div className="bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/80 border border-blue-100/50 rounded-[2rem] p-6 sm:p-8 shadow-[0_10px_40px_rgba(37,99,235,0.05)] relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-400/20 transition-colors duration-500 transform-gpu" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 group-hover:bg-indigo-400/20 transition-colors duration-500 transform-gpu" />
+                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-400/20 transition-colors duration-500 transform-gpu" hidden />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 group-hover:bg-indigo-400/20 transition-colors duration-500 transform-gpu" hidden />
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-5">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/20">
@@ -1575,7 +1576,7 @@ export default function Home() {
 
               {/* Working Hours Card */}
               <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 text-slate-900 relative overflow-hidden shadow-sm group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-100 transition-colors duration-500 transform-gpu" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-100 transition-colors duration-500 transform-gpu" hidden />
                 <div className="relative z-10">
                   <h3 className="text-sm font-extrabold uppercase tracking-widest text-slate-800 mb-6 flex items-center justify-between">
                     <span className="flex items-center gap-3">
