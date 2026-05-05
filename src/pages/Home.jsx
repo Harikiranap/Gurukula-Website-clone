@@ -804,12 +804,20 @@ export default function Home() {
 
         {/* Background Image Layer */}
         <div className="absolute inset-0 z-0 bg-black">
+          {/* Mobile: Static First Image */}
+          <img 
+            src="images/mbl-background.png"
+            alt="Gurukula Background"
+            className={`absolute inset-0 w-full h-full ${HERO_BACKGROUNDS[0].fitClass} object-center md:hidden block`}
+            loading="eager"
+          />
+          {/* Desktop: Image Slider */}
           {HERO_BACKGROUNDS.map((bg, index) => (
             <img 
               key={bg.src}
               src={bg.src}
               alt={`Gurukula Background ${index + 1}`}
-              className={`absolute inset-0 w-full h-full ${bg.fitClass} object-center transition-opacity duration-1000 ease-in-out ${
+              className={`absolute inset-0 w-full h-full ${bg.fitClass} object-center transition-opacity duration-1000 ease-in-out hidden md:block ${
                 index === currentHeroBg ? "opacity-100" : "opacity-0"
               }`}
               loading={index === 0 ? "eager" : "lazy"}
