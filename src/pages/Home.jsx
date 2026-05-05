@@ -57,10 +57,10 @@ const FAQS = [
 
 const TESTIMONIALS = [
   { name: "Sowjanya", course: "Photoshop", rating: 5, location: "Belthangady", text: "I have successfully completed my photoshop course in this institution. I'm so happy with the training and the trainers. the teaching way is so polite. I highly recommend this institution to anyone who looking forward to improve their computer skills." },
-  { name: "Mohammed Irfan", course: "Tally with GST", rating: 5, location: "Ujire", text: "The Tally course was very detailed and practical. I learned everything about GST entries and accounting. The certificate helped me get an accounts assistant job quickly." },
-  { name: "Divya Poojary", course: "ADCA + AI", rating: 5, location: "Belthangady", text: "Very good institute with experienced teachers. I joined knowing nothing about computers and completed ADCA in 6 months. The AI tools training was a great bonus — very useful for office work." },
-  { name: "Suresh Kumar", course: "Video Editing + AI", rating: 5, location: "Dharmasthala", text: "Learned Premiere Pro and After Effects professionally here. The trainer is very knowledgeable. I now do freelance video editing and YouTube content for local businesses." },
-  { name: "Kavitha Rao", course: "COA + AI", rating: 5, location: "Belthangady", text: "Perfect course for beginners. I joined after 12th and learned MS Office, internet skills and AI tools in 3 months. The government certificate gave me an edge in job interviews." },
+  { name: "Rinwaz", course: "Adv Excel + Tally ERP", rating: 5, location: "Belthangady", text: "I am truly grateful to sir and staff for excellent teaching and experience is very good. The faculty is knowledgeable and explains concept in simple and understanding. faculty are very friendly. This course was very helpful for my future. The classroom is comfortable with faculty. Honestly Gurukula education is usefull to everyone's.So I suggest everyone who's reading this to join Gurukula computer education class." },
+  { name: "Nidhiksha", course: "ADCA", rating: 5, location: "Belthangady", text: "It is the best training centre in belthangady. Faculties are knowledgeable and explain concepts in simple and understanding to us and also faculties are very friendly. Experience is very good. Classroom is super and comfortable. I am so grateful to faculties and Gurukula Computer training centre. So I suggest everyone to join Gurukula Computer training centre and build your career." },
+  { name: "Ashwini", course: "ADCA", rating: 5, location: "Belthangady", text: "I didn't know much about computers but Gurukula computer belthangady taught me very well there. Do you want to take a computer course? You can do it here at Gurukula computer belthangady. They taught me very well from the basics. I didn't know much about Excel. But they taught me very easily here. They taught me Tally, GST very easily. It will be very useful in the future."},
+  { name: "Sathvik", course: "AI for Studies", rating: 5, location: "Belthangady", text: "I had a great experience at Gurukula Computer. The course I learned there was about AI for studies. I had a very good experience in the classes, and all the staff were very kind and helpful. Whenever I faced any problem, they helped me solve it quickly. Overall, I had a very good experience at Gurukula Computer."}
 ];
 
 const WHY_ITEMS = [
@@ -540,9 +540,13 @@ function TestimonialSlider({ testimonials }) {
             >
               <div className="group relative bg-white border border-slate-100 rounded-[2rem] p-6 sm:p-8 shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.08)] hover:-translate-y-2 hover:border-blue-100 transition-all duration-300 h-full flex flex-col overflow-hidden">
                 <div className="absolute -top-4 -right-2 text-[150px] text-blue-50 font-serif leading-none select-none pointer-events-none group-hover:text-blue-100/70 transition-colors">"</div>
-                <div className="relative z-10 flex-1">
+                <div className="relative z-10 flex-1 flex flex-col">
                   <Stars n={t.rating} size={16} />
-                  <p className="mt-6 text-slate-700 text-sm sm:text-base leading-relaxed italic font-medium">"{t.text}"</p>
+                  <div className="flex-1 flex flex-col justify-center mt-6">
+                    <p className="text-slate-700 text-sm sm:text-base leading-relaxed italic font-medium text-justify">
+                      "{t.text}"
+                    </p>
+                  </div>
                 </div>
                 <div className="relative z-10 mt-8 flex items-center gap-3 sm:gap-4 pt-6 border-t border-slate-100 group-hover:border-blue-50 transition-colors">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center text-white text-sm font-black shadow-lg shadow-blue-200 flex-shrink-0">
@@ -1351,6 +1355,33 @@ export default function Home() {
             <SectionHeader badge="⭐ Student Reviews" title="What Our" highlight="Students Say"
               subtitle="Hear from students who trained at Gurukula and built successful careers in the digital world." />
           </div>
+
+          {/* VIDEO REVIEWS */}
+          <div className="flex flex-col md:flex-row justify-center items-center gap-6 sm:gap-10 mb-10 sm:mb-14 px-4" data-reveal data-reveal-delay="50ms">
+            <div className="w-full max-w-[280px] sm:max-w-sm rounded-3xl overflow-hidden shadow-xl border-4 border-white hover:-translate-y-2 transition-all duration-300 bg-black">
+              <video 
+                src="/review/review1.mp4" 
+                controls 
+                controlsList="nodownload noplaybackrate"
+                disablePictureInPicture
+                disableRemotePlayback
+                preload="metadata"
+                className="w-full h-auto block"
+              ></video>
+            </div>
+            <div className="w-full max-w-[280px] sm:max-w-sm rounded-3xl overflow-hidden shadow-xl border-4 border-white hover:-translate-y-2 transition-all duration-300 bg-black">
+              <video 
+                src="/review/review2.mp4" 
+                controls 
+                controlsList="nodownload noplaybackrate"
+                disablePictureInPicture
+                disableRemotePlayback
+                preload="metadata"
+                className="w-full h-auto block"
+              ></video>
+            </div>
+          </div>
+
           <div data-reveal data-reveal-delay="100ms">
             <TestimonialSlider testimonials={TESTIMONIALS} />
           </div>
