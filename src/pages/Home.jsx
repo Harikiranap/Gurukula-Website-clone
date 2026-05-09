@@ -7,13 +7,13 @@ import logoImg from "../images/logo.png";
 
 // ── CONSTANTS ──────────────────────────────────────────────────────────────
 const PHOTOS = [
-  { src: "/images/gallery1.jpg", caption: "Executive Reception Area", tall: false, tag: "Campus" },
   { src: "/images/gallery6.jpg", caption: "Live Training Workshop", tall: true, tag: "Education" },
-  { src: "/images/gallery3.jpg", caption: "Annual Excellence Awards", tall: true, tag: "Events" },
+  { src: "/images/gallery1.jpg", caption: "Executive Reception Area", tall: false, tag: "Campus" },
   { src: "/images/gallery4.jpg", caption: "High-Performance Lab", tall: false, tag: "Infrastructure" },
-  { src: "/images/gallery5.jpg", caption: "Collaborative Learning", tall: false, tag: "Students" },
+  { src: "/images/gallery3.jpg", caption: "Annual Excellence Awards", tall: true, tag: "Events" },
   { src: "/images/gallery2.jpg", caption: "Advanced Computing Suite", tall: true, tag: "Tech" },
   { src: "/images/gallery7.jpg", caption: "Main Campus Wing", tall: true, tag: "Campus" },
+  { src: "/images/gallery5.jpg", caption: "Collaborative Learning", tall: false, tag: "Students" },
   { src: "/images/gallery9.jpeg", caption: "Certificate", tall: false, tag: "Workshop" },
   { src: "/images/gallery10.jpeg", caption: "Certificate", tall: true, tag: "Workshop" },
   { src: "/images/gallery11.jpeg", caption: "Certificate", tall: true, tag: "Workshop" },
