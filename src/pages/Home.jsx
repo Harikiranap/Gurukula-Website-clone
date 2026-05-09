@@ -1583,7 +1583,7 @@ export default function Home() {
                     icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
                     label: "Visit Campus",
                     val: "Belthangady, KA",
-                    link: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.687949643396!2d75.2828432!3d12.991799700000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba4b71e6ff0a71b%3A0xe2e79fb8547f09bb!2sGurukula%20Computer!5e0!3m2!1sen!2sin!4v1778312326032!5m2!1sen!2sin",
+                    link: "https://www.google.com/maps/search/?api=1&query=Gurukula+Computer,+Belthangady",
                     bg: "bg-amber-500"
                   },
                   {
