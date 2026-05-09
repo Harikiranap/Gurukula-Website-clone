@@ -275,7 +275,7 @@ export default function AboutUs() {
                 </div>
 
                 <div className="mt-1 flex justify-start">
-                  <a href="https://wa.me/919999999999" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center bg-[#1db954] hover:bg-[#1ed760] text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition-all hover:-translate-y-0.5">
+                  <a href="https://wa.me/6366564639" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center bg-[#1db954] hover:bg-[#1ed760] text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition-all hover:-translate-y-0.5">
                     Connect on WhatsApp
                   </a>
                 </div>

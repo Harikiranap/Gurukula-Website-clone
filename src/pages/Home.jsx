@@ -8,13 +8,15 @@ import logoImg from "../images/logo.png";
 // ── CONSTANTS ──────────────────────────────────────────────────────────────
 const PHOTOS = [
   { src: "/images/gallery1.jpg", caption: "Executive Reception Area", tall: false, tag: "Campus" },
-  { src: "/images/gallery11.jpg", caption: "Live Training Workshop", tall: true, tag: "Education" },
+  { src: "/images/gallery6.jpg", caption: "Live Training Workshop", tall: true, tag: "Education" },
   { src: "/images/gallery3.jpg", caption: "Annual Excellence Awards", tall: true, tag: "Events" },
   { src: "/images/gallery4.jpg", caption: "High-Performance Lab", tall: false, tag: "Infrastructure" },
   { src: "/images/gallery5.jpg", caption: "Collaborative Learning", tall: false, tag: "Students" },
   { src: "/images/gallery2.jpg", caption: "Advanced Computing Suite", tall: true, tag: "Tech" },
   { src: "/images/gallery7.jpg", caption: "Main Campus Wing", tall: true, tag: "Campus" },
-  { src: "/images/gallery6.jpg", caption: "AI Innovation Seminar", tall: false, tag: "Workshop" },
+  { src: "/images/gallery9.jpeg", caption: "Certificate", tall: false, tag: "Workshop" },
+  { src: "/images/gallery10.jpeg", caption: "Certificate", tall: true, tag: "Workshop" },
+  { src: "/images/gallery11.jpeg", caption: "Certificate", tall: true, tag: "Workshop" },
 ];
 const COURSES = [
   { id: 1, title: "Diploma in Computer Application (DCA) + AI", category: "Diploma Courses", duration: "6 Months", image: "/images/course/dca.png", popular: false, description: "DCA is a foundational computer course designed for beginners who want to build strong computer skills. Students learn computer fundamentals, MS Office applications, internet usage, and typing skills along with basic AI tools to improve productivity.", learn: ["Computer Fundamentals & Windows", "MS Word, Excel, PowerPoint", "MS Access", "Internet & Email usage", "English Typing", "Introduction to AI tools"], careers: ["Data Entry Operator", "Computer Operator", "Office Assistant", "Back Office Executive", "Documentation Assistant"] },
@@ -71,8 +73,6 @@ const WHY_ITEMS = [
   { icon: "badge", title: "Recognized Certificate", desc: "Earn a Govt. recognized certificate that adds real value to your professional resume." },
 ];
 
-// ── GLOBAL STYLES (injected once via a static <style> tag in index.html ideally,
-//    but kept here as a module-level constant so React never recreates it) ──────
 const GLOBAL_CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap');
   *, *::before, *::after { box-sizing: border-box; }
@@ -811,11 +811,11 @@ export default function Home() {
   // ── UPDATED GALLERY GRID COMPONENT (Optimized for Scroll Performance) ──────────────────
   const GalleryGrid = ({ onOpen }) => {
     return (
-      <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
+      <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6">
         {PHOTOS.map((photo, i) => (
           <div
             key={i}
-            className="break-inside-avoid group relative overflow-hidden rounded-[2.5rem] border border-slate-200 bg-slate-200 p-2.5 transition-[transform,box-shadow] duration-700 hover:shadow-[0_30px_60px_rgba(15,23,42,0.15)] hover:-translate-y-3 cursor-zoom-in transform-gpu"
+            className="mb-6 break-inside-avoid inline-block w-full group relative overflow-hidden rounded-[2.5rem] border border-slate-200 bg-slate-200 p-2.5 transition-[transform,box-shadow] duration-700 hover:shadow-[0_30px_60px_rgba(15,23,42,0.15)] hover:-translate-y-3 cursor-zoom-in transform-gpu"
             onClick={() => onOpen({ ...photo, index: i })}
           >
             <div className={`relative overflow-hidden rounded-[1.8rem] bg-slate-300 ${photo.tall ? "h-[480px]" : "h-[300px]"}`}>
@@ -1583,14 +1583,14 @@ export default function Home() {
                     icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
                     label: "Visit Campus",
                     val: "Belthangady, KA",
-                    link: "https://maps.google.com",
+                    link: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.687949643396!2d75.2828432!3d12.991799700000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba4b71e6ff0a71b%3A0xe2e79fb8547f09bb!2sGurukula%20Computer!5e0!3m2!1sen!2sin!4v1778312326032!5m2!1sen!2sin",
                     bg: "bg-amber-500"
                   },
                   {
                     icon: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>,
                     label: "Email Enquiries",
-                    val: "Contact via Web",
-                    link: "https://wa.me/916366564639",
+                    val: "gurukulabelthangady@gmail.com",
+                    link: "mailto:gurukulabelthangady@gmail.com",
                     bg: "bg-slate-800"
                   },
                 ].map((item) => (
@@ -1705,8 +1705,9 @@ export default function Home() {
               <div className="relative group h-[400px] lg:h-[450px]">
                 <div className="absolute inset-0 bg-indigo-600 rounded-[2.5rem] blur-xl opacity-10 group-hover:opacity-20 transition-opacity transform-gpu" />
                 <div className="relative h-full w-full rounded-[2.5rem] overflow-hidden border-4 border-white shadow-2xl">
-                  <iframe className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-700" title="Location"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.3756852431713!2d75.29749597587844!3d12.883584816812836!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba4bb2d244458f3%3A0x67825d19760737a3!2sGurukula%20Computer%20Training%20Centre!5e0!3m2!1sen!2sin!4v1714467000000!5m2!1sen!2sin" loading="lazy" />
+                  <iframe className="w-full h-full border-0" title="Location"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.687949643396!2d75.2828432!3d12.991799700000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba4b71e6ff0a71b%3A0xe2e79fb8547f09bb!2sGurukula%20Computer!5e0!3m2!1sen!2sin!4v1778312326032!5m2!1sen!2sin" loading="lazy" />
+                
                 </div>
               </div>
 
