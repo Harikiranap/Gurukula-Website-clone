@@ -55,7 +55,7 @@ function Footer() {
             </li>
             <li className="flex items-center space-x-3 text-sm">
               <Mail size={18} className="text-blue-400" />
-              <span>info@gurukula.edu</span>
+              <span>gurukulabelthangady@gmail.com</span>
             </li>
           </ul>
         </div>
