@@ -726,13 +726,12 @@ export default function Home() {
 
   const reviewVideo1Ref = useRef(null);
   const reviewVideo2Ref = useRef(null);
+  const reviewVideo3Ref = useRef(null);
 
   const handleReviewPlay = (videoId) => {
-    if (videoId === 1 && reviewVideo2Ref.current) {
-      reviewVideo2Ref.current.pause();
-    } else if (videoId === 2 && reviewVideo1Ref.current) {
-      reviewVideo1Ref.current.pause();
-    }
+    if (videoId !== 1 && reviewVideo1Ref.current) reviewVideo1Ref.current.pause();
+    if (videoId !== 2 && reviewVideo2Ref.current) reviewVideo2Ref.current.pause();
+    if (videoId !== 3 && reviewVideo3Ref.current) reviewVideo3Ref.current.pause();
   };
 
   useEffect(() => {
@@ -1411,7 +1410,7 @@ export default function Home() {
           </div>
 
           {/* VIDEO REVIEWS */}
-          <div className="flex flex-col md:flex-row justify-center items-center gap-6 sm:gap-10 mb-10 sm:mb-14 px-4" data-reveal data-reveal-delay="50ms">
+          <div className="flex flex-col lg:flex-row flex-wrap justify-center items-center gap-6 sm:gap-10 mb-10 sm:mb-14 px-4" data-reveal data-reveal-delay="50ms">
             <div className="w-full max-w-[280px] sm:max-w-sm rounded-3xl overflow-hidden shadow-xl border-4 border-white hover:-translate-y-2 transition-all duration-300 bg-black">
               <video 
                 ref={reviewVideo1Ref}
@@ -1432,6 +1431,21 @@ export default function Home() {
                 ref={reviewVideo2Ref}
                 onPlay={() => handleReviewPlay(2)}
                 src="/review/review2.mp4" 
+                controls 
+                controlsList="nodownload noplaybackrate"
+                disablePictureInPicture
+                disableRemotePlayback
+                preload="metadata"
+                onContextMenu={(e) => e.preventDefault()}
+                style={{ WebkitTouchCallout: 'none' }}
+                className="w-full h-auto block"
+              ></video>
+            </div>
+            <div className="w-full max-w-[280px] sm:max-w-sm rounded-3xl overflow-hidden shadow-xl border-4 border-white hover:-translate-y-2 transition-all duration-300 bg-black">
+              <video 
+                ref={reviewVideo3Ref}
+                onPlay={() => handleReviewPlay(3)}
+                src="/review/review3.mp4" 
                 controls 
                 controlsList="nodownload noplaybackrate"
                 disablePictureInPicture
